@@ -1,0 +1,21 @@
+# Quality Control
+
+::: {.cdi-message}
+Assess read quality, filtering decisions, contamination risks, and reproducibility checks.
+:::
+
+## Learning goal
+
+By the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.
+
+## Why this matters
+
+This section will explain the role of Quality Control in the end-to-end microbiome workflow.
+
+## Practical workflow
+
+
+
+## Takeaway
+
+Microbiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.

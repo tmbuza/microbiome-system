@@ -1,0 +1,21 @@
+# CDI Workforce Readiness
+
+::: {.cdi-message}
+Connect the microbiome workflow to remote, physical, and hybrid work readiness.
+:::
+
+## Learning goal
+
+By the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.
+
+## Why this matters
+
+This section will explain the role of CDI Workforce Readiness in the end-to-end microbiome workflow.
+
+## Practical workflow
+
+
+
+## Takeaway
+
+Microbiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.

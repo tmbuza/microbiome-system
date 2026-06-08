@@ -1,0 +1,21 @@
+# Taxonomic Profiling
+
+::: {.cdi-message}
+Summarize microbial community composition across samples and groups.
+:::
+
+## Learning goal
+
+By the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.
+
+## Why this matters
+
+This section will explain the role of Taxonomic Profiling in the end-to-end microbiome workflow.
+
+## Practical workflow
+
+
+
+## Takeaway
+
+Microbiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.

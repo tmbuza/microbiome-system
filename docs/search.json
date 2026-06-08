@@ -1,0 +1,513 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Microbiome System",
+    "section": "",
+    "text": "Microbiome System: Updated Jun 2026",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>index.html</span>"
+    ]
+  },
+  {
+    "objectID": "00-preface-and-overview.html",
+    "href": "00-preface-and-overview.html",
+    "title": "Preface and System Overview",
+    "section": "",
+    "text": "System map\nCode\nflowchart TD\n  A[Biological Question] --&gt; B[Study Design and Metadata]\n  B --&gt; C[Sampling and Sequencing]\n  C --&gt; D[Data Acquisition]\n  D --&gt; E[Quality Control]\n  E --&gt; F[Feature Generation]\n  F --&gt; G[Taxonomic Profiling]\n  G --&gt; H[Diversity Analysis]\n  H --&gt; I[Functional Profiling]\n  I --&gt; J[Differential Analysis]\n  J --&gt; K[Biological Interpretation]\n  K --&gt; L[Reproducible Reporting]\n  L --&gt; M[CDI Workforce Readiness]\n\n\n\n\n\nflowchart TD\n  A[Biological Question] --&gt; B[Study Design and Metadata]\n  B --&gt; C[Sampling and Sequencing]\n  C --&gt; D[Data Acquisition]\n  D --&gt; E[Quality Control]\n  E --&gt; F[Feature Generation]\n  F --&gt; G[Taxonomic Profiling]\n  G --&gt; H[Diversity Analysis]\n  H --&gt; I[Functional Profiling]\n  I --&gt; J[Differential Analysis]\n  J --&gt; K[Biological Interpretation]\n  K --&gt; L[Reproducible Reporting]\n  L --&gt; M[CDI Workforce Readiness]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and System Overview</span>"
+    ]
+  },
+  {
+    "objectID": "01-study-design-and-metadata.html",
+    "href": "01-study-design-and-metadata.html",
+    "title": "Study Design and Metadata",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Study Design and Metadata</span>"
+    ]
+  },
+  {
+    "objectID": "01-study-design-and-metadata.html#why-this-matters",
+    "href": "01-study-design-and-metadata.html#why-this-matters",
+    "title": "Study Design and Metadata",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Study Design and Metadata in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Study Design and Metadata</span>"
+    ]
+  },
+  {
+    "objectID": "01-study-design-and-metadata.html#practical-workflow",
+    "href": "01-study-design-and-metadata.html#practical-workflow",
+    "title": "Study Design and Metadata",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Study Design and Metadata</span>"
+    ]
+  },
+  {
+    "objectID": "01-study-design-and-metadata.html#takeaway",
+    "href": "01-study-design-and-metadata.html#takeaway",
+    "title": "Study Design and Metadata",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Study Design and Metadata</span>"
+    ]
+  },
+  {
+    "objectID": "02-sampling-and-sequencing.html",
+    "href": "02-sampling-and-sequencing.html",
+    "title": "Sampling and Sequencing",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Sampling and Sequencing</span>"
+    ]
+  },
+  {
+    "objectID": "02-sampling-and-sequencing.html#why-this-matters",
+    "href": "02-sampling-and-sequencing.html#why-this-matters",
+    "title": "Sampling and Sequencing",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Sampling and Sequencing in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Sampling and Sequencing</span>"
+    ]
+  },
+  {
+    "objectID": "02-sampling-and-sequencing.html#practical-workflow",
+    "href": "02-sampling-and-sequencing.html#practical-workflow",
+    "title": "Sampling and Sequencing",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Sampling and Sequencing</span>"
+    ]
+  },
+  {
+    "objectID": "02-sampling-and-sequencing.html#takeaway",
+    "href": "02-sampling-and-sequencing.html#takeaway",
+    "title": "Sampling and Sequencing",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Sampling and Sequencing</span>"
+    ]
+  },
+  {
+    "objectID": "03-data-acquisition.html",
+    "href": "03-data-acquisition.html",
+    "title": "Data Acquisition",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Acquisition</span>"
+    ]
+  },
+  {
+    "objectID": "03-data-acquisition.html#why-this-matters",
+    "href": "03-data-acquisition.html#why-this-matters",
+    "title": "Data Acquisition",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Data Acquisition in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Acquisition</span>"
+    ]
+  },
+  {
+    "objectID": "03-data-acquisition.html#practical-workflow",
+    "href": "03-data-acquisition.html#practical-workflow",
+    "title": "Data Acquisition",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Acquisition</span>"
+    ]
+  },
+  {
+    "objectID": "03-data-acquisition.html#takeaway",
+    "href": "03-data-acquisition.html#takeaway",
+    "title": "Data Acquisition",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Acquisition</span>"
+    ]
+  },
+  {
+    "objectID": "04-quality-control.html",
+    "href": "04-quality-control.html",
+    "title": "Quality Control",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Quality Control</span>"
+    ]
+  },
+  {
+    "objectID": "04-quality-control.html#why-this-matters",
+    "href": "04-quality-control.html#why-this-matters",
+    "title": "Quality Control",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Quality Control in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Quality Control</span>"
+    ]
+  },
+  {
+    "objectID": "04-quality-control.html#practical-workflow",
+    "href": "04-quality-control.html#practical-workflow",
+    "title": "Quality Control",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Quality Control</span>"
+    ]
+  },
+  {
+    "objectID": "04-quality-control.html#takeaway",
+    "href": "04-quality-control.html#takeaway",
+    "title": "Quality Control",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Quality Control</span>"
+    ]
+  },
+  {
+    "objectID": "05-feature-generation.html",
+    "href": "05-feature-generation.html",
+    "title": "Feature Generation",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Feature Generation</span>"
+    ]
+  },
+  {
+    "objectID": "05-feature-generation.html#why-this-matters",
+    "href": "05-feature-generation.html#why-this-matters",
+    "title": "Feature Generation",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Feature Generation in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Feature Generation</span>"
+    ]
+  },
+  {
+    "objectID": "05-feature-generation.html#practical-workflow",
+    "href": "05-feature-generation.html#practical-workflow",
+    "title": "Feature Generation",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Feature Generation</span>"
+    ]
+  },
+  {
+    "objectID": "05-feature-generation.html#takeaway",
+    "href": "05-feature-generation.html#takeaway",
+    "title": "Feature Generation",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Feature Generation</span>"
+    ]
+  },
+  {
+    "objectID": "06-taxonomic-profiling.html",
+    "href": "06-taxonomic-profiling.html",
+    "title": "Taxonomic Profiling",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Taxonomic Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "06-taxonomic-profiling.html#why-this-matters",
+    "href": "06-taxonomic-profiling.html#why-this-matters",
+    "title": "Taxonomic Profiling",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Taxonomic Profiling in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Taxonomic Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "06-taxonomic-profiling.html#practical-workflow",
+    "href": "06-taxonomic-profiling.html#practical-workflow",
+    "title": "Taxonomic Profiling",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Taxonomic Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "06-taxonomic-profiling.html#takeaway",
+    "href": "06-taxonomic-profiling.html#takeaway",
+    "title": "Taxonomic Profiling",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Taxonomic Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "07-diversity-analysis.html",
+    "href": "07-diversity-analysis.html",
+    "title": "Diversity Analysis",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Diversity Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "07-diversity-analysis.html#why-this-matters",
+    "href": "07-diversity-analysis.html#why-this-matters",
+    "title": "Diversity Analysis",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Diversity Analysis in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Diversity Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "07-diversity-analysis.html#practical-workflow",
+    "href": "07-diversity-analysis.html#practical-workflow",
+    "title": "Diversity Analysis",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Diversity Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "07-diversity-analysis.html#takeaway",
+    "href": "07-diversity-analysis.html#takeaway",
+    "title": "Diversity Analysis",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Diversity Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "08-functional-profiling.html",
+    "href": "08-functional-profiling.html",
+    "title": "Functional Profiling",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Functional Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "08-functional-profiling.html#why-this-matters",
+    "href": "08-functional-profiling.html#why-this-matters",
+    "title": "Functional Profiling",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Functional Profiling in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Functional Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "08-functional-profiling.html#practical-workflow",
+    "href": "08-functional-profiling.html#practical-workflow",
+    "title": "Functional Profiling",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Functional Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "08-functional-profiling.html#takeaway",
+    "href": "08-functional-profiling.html#takeaway",
+    "title": "Functional Profiling",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Functional Profiling</span>"
+    ]
+  },
+  {
+    "objectID": "09-differential-analysis.html",
+    "href": "09-differential-analysis.html",
+    "title": "Differential Analysis",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Differential Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "09-differential-analysis.html#why-this-matters",
+    "href": "09-differential-analysis.html#why-this-matters",
+    "title": "Differential Analysis",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Differential Analysis in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Differential Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "09-differential-analysis.html#practical-workflow",
+    "href": "09-differential-analysis.html#practical-workflow",
+    "title": "Differential Analysis",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Differential Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "09-differential-analysis.html#takeaway",
+    "href": "09-differential-analysis.html#takeaway",
+    "title": "Differential Analysis",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Differential Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "10-biological-interpretation.html",
+    "href": "10-biological-interpretation.html",
+    "title": "Biological Interpretation",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Biological Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "10-biological-interpretation.html#why-this-matters",
+    "href": "10-biological-interpretation.html#why-this-matters",
+    "title": "Biological Interpretation",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Biological Interpretation in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Biological Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "10-biological-interpretation.html#practical-workflow",
+    "href": "10-biological-interpretation.html#practical-workflow",
+    "title": "Biological Interpretation",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Biological Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "10-biological-interpretation.html#takeaway",
+    "href": "10-biological-interpretation.html#takeaway",
+    "title": "Biological Interpretation",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Biological Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "11-reproducible-reporting.html",
+    "href": "11-reproducible-reporting.html",
+    "title": "Reproducible Reporting",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Reproducible Reporting</span>"
+    ]
+  },
+  {
+    "objectID": "11-reproducible-reporting.html#why-this-matters",
+    "href": "11-reproducible-reporting.html#why-this-matters",
+    "title": "Reproducible Reporting",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of Reproducible Reporting in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Reproducible Reporting</span>"
+    ]
+  },
+  {
+    "objectID": "11-reproducible-reporting.html#practical-workflow",
+    "href": "11-reproducible-reporting.html#practical-workflow",
+    "title": "Reproducible Reporting",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Reproducible Reporting</span>"
+    ]
+  },
+  {
+    "objectID": "11-reproducible-reporting.html#takeaway",
+    "href": "11-reproducible-reporting.html#takeaway",
+    "title": "Reproducible Reporting",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Reproducible Reporting</span>"
+    ]
+  },
+  {
+    "objectID": "12-workforce-readiness.html",
+    "href": "12-workforce-readiness.html",
+    "title": "CDI Workforce Readiness",
+    "section": "",
+    "text": "Learning goal\nBy the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>CDI Workforce Readiness</span>"
+    ]
+  },
+  {
+    "objectID": "12-workforce-readiness.html#why-this-matters",
+    "href": "12-workforce-readiness.html#why-this-matters",
+    "title": "CDI Workforce Readiness",
+    "section": "Why this matters",
+    "text": "Why this matters\nThis section will explain the role of CDI Workforce Readiness in the end-to-end microbiome workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>CDI Workforce Readiness</span>"
+    ]
+  },
+  {
+    "objectID": "12-workforce-readiness.html#practical-workflow",
+    "href": "12-workforce-readiness.html#practical-workflow",
+    "title": "CDI Workforce Readiness",
+    "section": "Practical workflow",
+    "text": "Practical workflow",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>CDI Workforce Readiness</span>"
+    ]
+  },
+  {
+    "objectID": "12-workforce-readiness.html#takeaway",
+    "href": "12-workforce-readiness.html#takeaway",
+    "title": "CDI Workforce Readiness",
+    "section": "Takeaway",
+    "text": "Takeaway\nMicrobiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>CDI Workforce Readiness</span>"
+    ]
+  },
+  {
+    "objectID": "999-appendix.html",
+    "href": "999-appendix.html",
+    "title": "Appendix A — Technical Appendix",
+    "section": "",
+    "text": "Environment\nCode\nsessionInfo()\n\n\nR version 4.4.1 (2024-06-14)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS 26.5\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Africa/Dar_es_Salaam\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.4.1    fastmap_1.2.0     cli_3.6.5        \n [5] tools_4.4.1       htmltools_0.5.8.1 yaml_2.3.10       rmarkdown_2.30   \n [9] knitr_1.50        jsonlite_2.0.0    xfun_0.54         digest_0.6.37    \n[13] rlang_1.1.6       evaluate_1.0.5",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Technical Appendix</span>"
+    ]
+  }
+]

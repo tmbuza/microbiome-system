@@ -1,0 +1,21 @@
+# Study Design and Metadata
+
+::: {.cdi-message}
+Define the biological question, sample groups, metadata fields, and analysis-ready study structure.
+:::
+
+## Learning goal
+
+By the end of this lesson, the learner should understand how this stage supports the complete Microbiome System.
+
+## Why this matters
+
+This section will explain the role of Study Design and Metadata in the end-to-end microbiome workflow.
+
+## Practical workflow
+
+
+
+## Takeaway
+
+Microbiome analysis is strongest when each technical step is connected back to the study question, metadata, interpretation, and reproducible reporting.

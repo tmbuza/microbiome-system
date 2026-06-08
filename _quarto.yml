@@ -1,0 +1,55 @@
+project:
+  type: book
+  output-dir: docs
+
+bibliography: library/references.bib
+date: last-modified
+date-format: "MMM YYYY"
+
+book:
+  title: "Microbiome System"
+  subtitle: "From Microbial Communities to Defensible Biological Insights"
+  author: "Teresia Mrema Buza | Complex Data Insights"
+  chapters:
+    - index.qmd
+    - 00-preface-and-overview.qmd
+    - 01-study-design-and-metadata.qmd
+    - 02-sampling-and-sequencing.qmd
+    - 03-data-acquisition.qmd
+    - 04-quality-control.qmd
+    - 05-feature-generation.qmd
+    - 06-taxonomic-profiling.qmd
+    - 07-diversity-analysis.qmd
+    - 08-functional-profiling.qmd
+    - 09-differential-analysis.qmd
+    - 10-biological-interpretation.qmd
+    - 11-reproducible-reporting.qmd
+    - 12-workforce-readiness.qmd
+
+  appendices:
+    - 999-appendix.qmd
+    - 999-references.qmd
+
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    number-depth: 2
+    smooth-scroll: true
+    anchor-sections: true
+    link-external-icon: true
+    css: assets/css/cdi.css
+    code-fold: true
+    mermaid:
+      theme: forest
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto
+  working-dir: .
+

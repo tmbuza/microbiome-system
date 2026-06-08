@@ -1,0 +1,8 @@
+# Technical Appendix
+
+## Environment
+
+```{r}
+#| label: technical-appendix-session-info
+sessionInfo()
+```
