@@ -4,70 +4,123 @@
 - **ID:** MICROB-000
 - **Type:** Preface
 - **Audience:** Students, researchers, analysts, and practitioners
-- **Theme:** Microbiome as a complete analytical system
+- **Theme:** Microbiome analysis as a complete analytical system
 :::
 
 ## Welcome
 
-Microbiome research has become one of the fastest-growing areas of modern biology. Advances in sequencing technologies now allow researchers to characterize microbial communities across humans, animals, plants, soils, oceans, and many other environments.
+Microbiome research has become one of the most active areas of modern biology. Advances in sequencing technologies now make it possible to characterize microbial communities across humans, animals, plants, soils, oceans, built environments, and many other ecological settings.
 
-Despite the availability of powerful analytical tools, generating reliable biological insights requires more than processing sequencing data. Every result depends on a chain of decisions that begins with study design and continues through data acquisition, quality control, statistical analysis, interpretation, and reporting.
+However, reliable microbiome insight requires more than sequencing data and software commands. Every conclusion depends on a chain of decisions that begins with the biological question and continues through study design, metadata collection, sample handling, sequencing strategy, data acquisition, quality control, feature generation, statistical analysis, interpretation, and reporting.
 
-This guide approaches microbiome analysis as a complete system rather than a collection of independent analytical steps.
+This guide treats microbiome analysis as a complete system.
+
+The goal is not simply to produce taxonomic tables, diversity plots, or differential abundance results. The goal is to move from microbial community data to defensible biological insight.
 
 ## Why a System Matters
 
-Microbiome analysis is often presented as a series of software commands:
+Microbiome workflows are often presented as a sequence of computational steps:
 
-- Process sequencing data
-- Generate taxonomic profiles
-- Calculate diversity metrics
-- Perform statistical analyses
-- Create visualizations
+- process sequencing data
+- generate taxonomic profiles
+- calculate diversity metrics
+- perform statistical analyses
+- create visualizations
+- write a report
 
-While these steps are important, they represent only part of the process.
+These steps are important, but they are only part of the analytical process.
 
-A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine otherwise correct computational analyses.
+A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inconsistent sample handling, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine results even when the code runs successfully.
 
 A systems perspective helps connect each stage of the workflow to the biological question being investigated.
 
+In the Microbiome Analysis System, each step is treated as part of a larger chain of evidence:
+
+```{mermaid}
+flowchart LR
+  A[Biological Question] --> B[Study Design]
+  B --> C[Metadata]
+  C --> D[Sampling and Sequencing]
+  D --> E[Data Acquisition]
+  E --> F[Quality Control]
+  F --> G[Feature Generation]
+  G --> H[Taxonomic and Functional Profiles]
+  H --> I[Statistical Analysis]
+  I --> J[Biological Interpretation]
+  J --> K[Reproducible Report]
+```
+
 ## The CDI Perspective
 
-Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks.
+Complex Data Insights emphasizes systems thinking, reproducibility, and interpretation.
 
-The objective is not simply to generate outputs but to understand:
+Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks. The objective is not only to generate outputs, but to understand how those outputs were produced and what they can reasonably support.
 
-- What was measured
-- How the data were generated
-- How the data were processed
-- What assumptions were made
-- What conclusions are supported by the evidence
+The key questions are:
 
-By understanding these connections, researchers can produce results that are reproducible, interpretable, and defensible.
+- What biological question is being asked?
+- What samples were collected?
+- What metadata are available?
+- How were the data generated?
+- How were the data acquired?
+- How were low-quality reads, samples, or features handled?
+- What assumptions were made during analysis?
+- What conclusions are supported by the evidence?
+- What limitations remain?
+
+This perspective makes the workflow more transparent, reproducible, interpretable, and defensible.
+
+## Relationship to Other CDI Systems
+
+The Microbiome Analysis System is part of the broader CDI Omics Systems framework.
+
+Two upstream CDI systems support this guide:
+
+```{mermaid}
+flowchart TB
+  A[CDI Systematic Dataset Discovery] --> B[CDI Data Acquisition System]
+  B --> C[Microbiome Analysis System]
+  C --> D[Defensible Biological Insight]
+```
+
+The **CDI Systematic Dataset Discovery System** supports structured identification, screening, and prioritization of public omics studies.
+
+The **CDI Data Acquisition System** supports reproducible retrieval, validation, and organization of public sequencing datasets.
+
+The **Microbiome Analysis System** begins once the biological question, study context, metadata, and sequencing data are ready for analysis.
+
+Together, these systems support a reproducible path from study discovery to biological interpretation.
 
 ## What You Will Learn
 
 By working through this guide, you will learn how to:
 
-- Understand the role of study design in microbiome research
-- Evaluate microbiome sequencing data quality
-- Generate and interpret taxonomic profiles
-- Understand functional profiling approaches
-- Perform diversity analyses
-- Conduct differential analyses
-- Interpret results within a biological context
-- Translate statistical findings into biological insights
-- Produce reproducible analytical reports
+- understand the role of study design in microbiome research
+- evaluate metadata completeness and biological relevance
+- recognize how sample collection and sequencing choices affect analysis
+- acquire microbiome sequencing data in a reproducible way
+- assess sequencing data quality
+- generate microbiome features for downstream analysis
+- interpret taxonomic profiles
+- understand functional profiling approaches
+- perform alpha and beta diversity analyses
+- conduct differential abundance analysis
+- connect statistical findings to biological meaning
+- document limitations and assumptions
+- produce reproducible analytical reports
 
 ## Who This Guide Is For
 
 This guide is intended for:
 
-- Students learning microbiome analysis
-- Biologists working with microbial community data
-- Bioinformaticians building reproducible workflows
-- Data scientists interested in omics analyses
-- Researchers seeking stronger interpretation practices
+- students learning microbiome analysis
+- biologists working with microbial community data
+- bioinformaticians building reproducible workflows
+- data scientists interested in omics analysis
+- researchers seeking stronger interpretation practices
+- analysts preparing microbiome reports for academic, clinical, environmental, agricultural, or industry contexts
+
+The guide is written for readers who want to understand both the computational workflow and the reasoning behind it.
 
 ## How to Use This Guide
 
@@ -77,28 +130,31 @@ Readers are encouraged to think beyond individual analysis steps and focus on ho
 
 For example:
 
-- Study design influences statistical power.
-- Metadata influences interpretation.
-- Sample collection influences data quality.
-- Quality control influences reliability.
-- Statistical analysis influences conclusions.
+- study design influences statistical power
+- metadata influences interpretation
+- sample collection influences data quality
+- sequencing strategy influences detectable signals
+- quality control influences reliability
+- feature generation influences downstream statistics
+- statistical methods influence conclusions
+- interpretation determines whether results become biological insight
 
-Understanding these relationships is essential for producing trustworthy biological insights.
+The most important habit is to ask not only *what result was produced*, but also *whether the result is supported by the study design, data quality, metadata, methods, and biological context*.
 
 ## CDI Philosophy
 
-Complex Data Insights (CDI) emphasizes systems thinking, reproducibility, and interpretation.
+The CDI approach emphasizes that analysis should produce evidence, not just output.
 
-The goal is not simply to perform an analysis, but to produce conclusions that are:
+A strong microbiome workflow should be:
 
-- Reproducible
-- Transparent
-- Interpretable
-- Defensible
-- Reusable
+- **reproducible**: the analysis can be rerun and inspected
+- **transparent**: methods, assumptions, and decisions are documented
+- **interpretable**: results are connected to biological meaning
+- **defensible**: conclusions are supported by the evidence
+- **reusable**: outputs can support future analysis, reporting, and training
 
 The most valuable microbiome workflow is not the one that produces the largest number of figures. It is the one that produces conclusions that can be understood, justified, and reproduced.
 
 ## What Comes Next
 
-The next chapter introduces the Microbiome System Architecture and provides a high-level view of the complete workflow before we examine individual components in detail.
+The next chapter introduces the Microbiome Analysis System architecture and provides a high-level view of the complete workflow before we examine individual components in detail.

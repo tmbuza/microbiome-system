@@ -1,0 +1,594 @@
+# Differential Analysis
+
+:::cdi-message
+- **ID:** MICROB-010
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Comparing microbiome features, taxa, or functions across groups
+:::
+
+## Introduction
+
+Differential analysis is the stage where microbiome features are compared across groups, conditions, time points, treatments, or other metadata-defined variables.
+
+After feature generation, taxonomic profiling, diversity analysis, and functional profiling, the Microbiome Analysis System contains structured abundance tables that can support statistical comparisons.
+
+Differential analysis asks questions such as:
+
+```text
+Which microbial features differ between groups?
+```
+
+or:
+
+```text
+Which taxa or pathways are associated with a condition?
+```
+
+This chapter introduces differential analysis as an interpretation-facing statistical step. The goal is not simply to produce p-values, but to identify results that can be interpreted cautiously within the context of study design, metadata, and data quality.
+
+## Why Differential Analysis Matters
+
+Differential analysis helps identify microbiome features that may be associated with biological conditions.
+
+Examples include:
+
+- taxa enriched in one group compared with another
+- pathways that differ between treatment and control samples
+- features associated with disease status
+- functions associated with environmental gradients
+- microbial signals that may support biological interpretation
+
+Differential analysis is often one of the most requested outputs in microbiome studies because it provides candidate features for interpretation.
+
+However, differential results must be handled carefully.
+
+## Position in the Microbiome Analysis System
+
+Differential analysis occurs after feature generation and descriptive profiling.
+
+```{mermaid}
+flowchart LR
+  A[Feature Table] --> B[Differential Analysis]
+  C[Sample Metadata] --> B
+  D[Taxonomic Profiles] --> B
+  E[Functional Profiles] --> B
+  B --> F[Biological Interpretation]
+  B --> G[Reproducible Reporting]
+```
+
+This stage should only proceed when sample metadata are suitable for defining meaningful comparisons.
+
+## Differential Analysis Is Not Just a Test
+
+Differential analysis is not simply choosing a statistical test and running it.
+
+It requires decisions about:
+
+- biological comparison
+- sample grouping
+- feature filtering
+- normalization
+- compositionality
+- statistical model
+- multiple testing correction
+- effect size interpretation
+- metadata covariates
+- confounding variables
+- reporting thresholds
+
+A result is only useful if the comparison is biologically meaningful and the assumptions are clearly documented.
+
+## Defining the Comparison
+
+The first step is to define the comparison clearly.
+
+Examples include:
+
+```text
+healthy vs diseased
+treated vs untreated
+baseline vs follow-up
+high exposure vs low exposure
+site A vs site B
+```
+
+A poorly defined comparison can produce statistically interesting but biologically unclear results.
+
+For the toy MAS example, all samples are currently labeled `healthy`, so there is no real group contrast. To demonstrate the structure of differential analysis, this chapter creates a small example comparison variable.
+
+This demonstration is for workflow testing only.
+
+## Counts, Relative Abundance, and Compositionality
+
+Microbiome abundance data require careful interpretation.
+
+Raw counts depend on sequencing depth.
+
+Relative abundances are compositional, meaning that values are constrained by the total abundance within each sample.
+
+This creates challenges for differential analysis because an apparent increase in one feature can affect the relative abundance of other features.
+
+For real studies, microbiome-specific tools and approaches should be considered. These may include methods designed for compositional data, count models, prevalence filtering, transformations, or other approaches appropriate to the study design.
+
+## Multiple Testing
+
+Microbiome feature tables can contain many features.
+
+Testing many features increases the chance of false-positive results.
+
+Therefore, differential analysis should usually include multiple testing correction, such as false discovery rate adjustment.
+
+In this lightweight MAS example, the script calculates simple group summaries, log2 fold change, a basic test statistic where possible, and an adjusted p-value. This is only a structural demonstration, not a recommended full statistical method for real microbiome studies.
+
+## Example Differential Analysis Scripts
+
+The following scripts provide a lightweight MAS-side differential analysis example.
+
+These scripts do not replace specialized tools such as ANCOM-BC, ALDEx2, DESeq2, MaAsLin2, edgeR, limma-voom, corncob, songbird, or other microbiome-specific modeling approaches.
+
+The workflow uses two scripts:
+
+```text
+scripts/R/10a-run-example-differential-analysis.R
+scripts/R/10b-plot-differential-results.R
+```
+
+The first script creates a demonstration grouping variable, calculates simple group summaries and log2 fold changes for toy feature counts, and writes a differential results table.
+
+The second script creates a simple volcano-style plot and top-feature bar plot.
+
+## 10a: Run Example Differential Analysis
+
+Save this script as:
+
+```text
+scripts/R/10a-run-example-differential-analysis.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 10a-run-example-differential-analysis.R
+#
+# Purpose:
+#   Run a lightweight example differential analysis on the toy feature table.
+#
+# Important:
+#   This is a workflow demonstration only. It is not a recommended statistical
+#   method for real microbiome differential abundance analysis.
+#
+# Usage:
+#   Rscript scripts/R/10a-run-example-differential-analysis.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(tidyr)
+library(tibble)
+
+feature_dir <- "data/features"
+metadata_dir <- "data/metadata"
+diff_dir <- "data/differential"
+report_dir <- "data/reports"
+
+dir.create(diff_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+
+feature_table_file <- file.path(feature_dir, "feature-table.tsv")
+feature_metadata_file <- file.path(feature_dir, "feature-metadata.tsv")
+sample_metadata_file <- file.path(metadata_dir, "sample-metadata.tsv")
+
+if (!file.exists(feature_table_file)) {
+  stop(
+    "Missing feature table: ",
+    feature_table_file,
+    "\nRun: bash scripts/bash/06a-create-example-feature-table.sh"
+  )
+}
+
+if (!file.exists(feature_metadata_file)) {
+  stop(
+    "Missing feature metadata: ",
+    feature_metadata_file,
+    "\nRun: bash scripts/bash/06a-create-example-feature-table.sh"
+  )
+}
+
+if (!file.exists(sample_metadata_file)) {
+  stop(
+    "Missing sample metadata: ",
+    sample_metadata_file,
+    "\nRun: bash scripts/bash/06a-create-example-feature-table.sh"
+  )
+}
+
+feature_table <- read_tsv(feature_table_file, show_col_types = FALSE)
+feature_metadata <- read_tsv(feature_metadata_file, show_col_types = FALSE)
+sample_metadata <- read_tsv(sample_metadata_file, show_col_types = FALSE)
+
+# Create a toy comparison variable for demonstration.
+# This is not a biological grouping variable.
+comparison_metadata <- sample_metadata %>%
+  mutate(
+    comparison_group = case_when(
+      sample_id %in% c("SRR17868090", "SRR17868091") ~ "Group_A",
+      sample_id %in% c("SRR17868092") ~ "Group_B",
+      TRUE ~ "Unassigned"
+    )
+  )
+
+write_tsv(
+  comparison_metadata,
+  file.path(metadata_dir, "sample-metadata-with-comparison.tsv")
+)
+
+feature_long <- feature_table %>%
+  pivot_longer(
+    cols = -feature_id,
+    names_to = "sample_id",
+    values_to = "count"
+  ) %>%
+  left_join(comparison_metadata, by = "sample_id") %>%
+  left_join(feature_metadata, by = "feature_id")
+
+# Add a small pseudocount for log-ratio demonstration.
+pseudocount <- 1
+
+group_summary <- feature_long %>%
+  group_by(feature_id, comparison_group) %>%
+  summarise(
+    mean_count = mean(count),
+    median_count = median(count),
+    total_count = sum(count),
+    sample_count = n(),
+    .groups = "drop"
+  )
+
+wide_summary <- group_summary %>%
+  select(feature_id, comparison_group, mean_count) %>%
+  pivot_wider(
+    names_from = comparison_group,
+    values_from = mean_count
+  )
+
+results <- wide_summary %>%
+  mutate(
+    Group_A = ifelse(is.na(Group_A), 0, Group_A),
+    Group_B = ifelse(is.na(Group_B), 0, Group_B),
+    log2_fold_change = log2((Group_B + pseudocount) / (Group_A + pseudocount))
+  ) %>%
+  left_join(feature_metadata, by = "feature_id")
+
+# A simple demonstration p-value.
+# With this tiny toy example, formal inference is not meaningful.
+toy_p_values <- feature_long %>%
+  group_by(feature_id) %>%
+  summarise(
+    p_value = {
+      values_a <- count[comparison_group == "Group_A"]
+      values_b <- count[comparison_group == "Group_B"]
+      if (length(values_a) >= 2 && length(values_b) >= 2) {
+        t.test(values_b, values_a)$p.value
+      } else {
+        NA_real_
+      }
+    },
+    .groups = "drop"
+  ) %>%
+  mutate(
+    adjusted_p_value = p.adjust(p_value, method = "BH")
+  )
+
+results <- results %>%
+  left_join(toy_p_values, by = "feature_id") %>%
+  mutate(
+    direction = case_when(
+      log2_fold_change > 0 ~ "Higher_in_Group_B",
+      log2_fold_change < 0 ~ "Higher_in_Group_A",
+      TRUE ~ "No_change"
+    ),
+    interpretation_status = "toy_result_do_not_interpret_biologically"
+  ) %>%
+  select(
+    feature_id,
+    taxonomy,
+    Group_A,
+    Group_B,
+    log2_fold_change,
+    p_value,
+    adjusted_p_value,
+    direction,
+    confidence,
+    interpretation_status
+  )
+
+write_tsv(
+  results,
+  file.path(diff_dir, "example-differential-results.tsv")
+)
+
+report <- tibble(
+  metric = c(
+    "comparison",
+    "feature_count",
+    "method",
+    "pseudocount",
+    "status",
+    "interpretation_warning"
+  ),
+  value = c(
+    "Group_B vs Group_A",
+    nrow(results),
+    "toy mean-count log2 fold change",
+    pseudocount,
+    "READY_FOR_PLOTTING",
+    "Toy data; not suitable for biological interpretation"
+  )
+)
+
+write_tsv(
+  report,
+  file.path(report_dir, "differential-analysis-report.tsv")
+)
+
+message("Created:")
+message("  ", file.path(metadata_dir, "sample-metadata-with-comparison.tsv"))
+message("  ", file.path(diff_dir, "example-differential-results.tsv"))
+message("  ", file.path(report_dir, "differential-analysis-report.tsv"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/10a-run-example-differential-analysis.R
+```
+
+This creates:
+
+```text
+data/metadata/sample-metadata-with-comparison.tsv
+data/differential/example-differential-results.tsv
+data/reports/differential-analysis-report.tsv
+```
+
+## 10b: Plot Differential Results
+
+Save this script as:
+
+```text
+scripts/R/10b-plot-differential-results.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 10b-plot-differential-results.R
+#
+# Purpose:
+#   Plot toy differential analysis results.
+#
+# Usage:
+#   Rscript scripts/R/10b-plot-differential-results.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+
+diff_dir <- "data/differential"
+figure_dir <- "figures"
+table_dir <- "tables"
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+
+results_file <- file.path(diff_dir, "example-differential-results.tsv")
+
+if (!file.exists(results_file)) {
+  stop(
+    "Missing differential results file: ",
+    results_file,
+    "\nRun: Rscript scripts/R/10a-run-example-differential-analysis.R"
+  )
+}
+
+results <- read_tsv(results_file, show_col_types = FALSE) %>%
+  mutate(
+    genus = str_extract(taxonomy, "[^;]+$"),
+    genus = str_trim(genus),
+    plot_p_value = ifelse(is.na(p_value), 1, p_value),
+    neg_log10_p = -log10(plot_p_value)
+  )
+
+write_tsv(
+  results,
+  file.path(table_dir, "example-differential-results-for-plot.tsv")
+)
+
+p_volcano <- ggplot(
+  results,
+  aes(
+    x = log2_fold_change,
+    y = neg_log10_p,
+    label = genus
+  )
+) +
+  geom_point(size = 3) +
+  geom_text(vjust = -0.8) +
+  labs(
+    title = "Example Differential Analysis Results",
+    subtitle = "Toy MAS data for workflow testing only",
+    x = "Log2 fold change: Group_B vs Group_A",
+    y = "-log10(p-value)"
+  ) +
+  theme_minimal(base_size = 12)
+
+ggsave(
+  filename = file.path(figure_dir, "example-differential-volcano.png"),
+  plot = p_volcano,
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+top_results <- results %>%
+  arrange(desc(abs(log2_fold_change))) %>%
+  slice_head(n = 10) %>%
+  mutate(
+    genus = factor(genus, levels = genus[order(log2_fold_change)])
+  )
+
+p_bar <- ggplot(
+  top_results,
+  aes(
+    x = genus,
+    y = log2_fold_change
+  )
+) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Top Example Log2 Fold Changes",
+    subtitle = "Toy MAS data for workflow testing only",
+    x = "Feature genus label",
+    y = "Log2 fold change"
+  ) +
+  theme_minimal(base_size = 12)
+
+ggsave(
+  filename = file.path(figure_dir, "example-differential-log2fc.png"),
+  plot = p_bar,
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+message("Created:")
+message("  ", file.path(table_dir, "example-differential-results-for-plot.tsv"))
+message("  ", file.path(figure_dir, "example-differential-volcano.png"))
+message("  ", file.path(figure_dir, "example-differential-log2fc.png"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/10b-plot-differential-results.R
+```
+
+This creates:
+
+```text
+tables/example-differential-results-for-plot.tsv
+figures/example-differential-volcano.png
+figures/example-differential-log2fc.png
+```
+
+## Running the Complete Differential Analysis Example
+
+If you are continuing from Chapter 06, first make sure the example feature table exists:
+
+```bash
+bash scripts/bash/06a-create-example-feature-table.sh
+bash scripts/bash/06b-check-feature-table.sh
+```
+
+Then run the differential analysis example:
+
+```bash
+Rscript scripts/R/10a-run-example-differential-analysis.R
+Rscript scripts/R/10b-plot-differential-results.R
+cat data/reports/differential-analysis-report.tsv
+cat data/differential/example-differential-results.tsv
+```
+
+The grouping variable used here is artificial and only supports workflow testing.
+
+## Example Differential Results Table
+
+The generated table may look like this:
+
+```text
+feature_id	taxonomy	Group_A	Group_B	log2_fold_change	p_value	adjusted_p_value	direction
+ASV_001	Bacteria; ...; Lactobacillus	102.5	40	-1.32	NA	NA	Higher_in_Group_A
+ASV_002	Bacteria; ...; Bacteroides	22.5	75	1.69	NA	NA	Higher_in_Group_B
+```
+
+Because the toy example contains only three samples, inferential p-values are not meaningful.
+
+## Interpreting Differential Results
+
+Differential analysis results should be interpreted in relation to:
+
+- study design
+- group definitions
+- sample size
+- sequencing depth
+- feature filtering
+- normalization approach
+- statistical model
+- multiple testing correction
+- metadata covariates
+- biological plausibility
+
+A differential result is not automatically a biological conclusion. It is a candidate observation that needs interpretation.
+
+## Common Differential Analysis Issues
+
+Common issues include:
+
+- testing poorly defined groups
+- ignoring confounders
+- using inappropriate tests
+- ignoring compositionality
+- failing to correct for multiple testing
+- overinterpreting small sample sizes
+- reporting p-values without effect sizes
+- reporting effect sizes without uncertainty
+- using taxonomy labels as if they are exact species identification
+- ignoring sequencing batch or sample processing batch
+- interpreting toy or exploratory results as confirmatory
+
+These issues should be addressed before results are reported as biological findings.
+
+## Differential Analysis Outputs
+
+At the end of this stage, MAS should have:
+
+- differential results table
+- comparison metadata
+- differential analysis report
+- plot-ready results table
+- volcano-style plot
+- log2 fold-change plot
+- documented interpretation cautions
+
+```{mermaid}
+flowchart LR
+  A[Feature Table] --> B[Differential Analysis]
+  C[Sample Metadata] --> B
+  B --> D[Differential Results]
+  D --> E[Plots]
+  D --> F[Biological Interpretation]
+```
+
+## Key Takeaways
+
+Differential analysis identifies microbiome features that may differ across groups or conditions.
+
+A strong differential analysis stage ensures that:
+
+- comparisons are biologically meaningful
+- metadata support the comparison
+- methods are appropriate for the data type
+- effect sizes and uncertainty are considered
+- multiple testing is addressed
+- results are interpreted cautiously
+- limitations are documented
+
+Differential analysis is a bridge between statistical output and biological interpretation.
+
+## What Comes Next
+
+The next chapter examines **Biological Interpretation**, where analytical results are translated into defensible biological insights.

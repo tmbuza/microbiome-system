@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Preface – Microbiome System</title>
+<title>Preface – Microbiome Analysis System</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -19,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -38,10 +76,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d3f7f8e73c8d287b30bcf59c2b563615.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -70,6 +108,10 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="forest">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="assets/css/cdi.css">
@@ -99,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Microbiome System</a> 
+      <a href="./">Microbiome Analysis System</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -120,30 +162,146 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-system-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">System Overview</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./02-study-design-and-metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Study Design and Metadata</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./03-sample-collection-and-sequencing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Sample Collection and Sequencing</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
+ <span class="menu-text">Part I: Microbiome Analysis System Foundation</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-system-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">System Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-study-design-and-metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Study Design and Metadata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-sample-collection-and-sequencing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Sample Collection and Sequencing</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II: Data Acquisition and Quality Control</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-data-acquisition.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Data Acquisition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-quality-control.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Quality Control</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III: Microbiome Feature Generation and Profiling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-feature-generation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Feature Generation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-taxonomic-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Taxonomic Profiling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-functional-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Functional Profiling</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV: Microbiome Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-diversity-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Diversity Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-differential-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Differential Analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part V: Biological Interpretation and Reporting</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-biological-interpretation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Biological Interpretation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-reproducible-reporting.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Reproducible Reporting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VI: Workforce Readiness</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-workforce-readiness.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Workforce Readiness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./999-appendix.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Technical Appendix</span></a>
@@ -170,6 +328,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
   <li><a href="#why-a-system-matters" id="toc-why-a-system-matters" class="nav-link" data-scroll-target="#why-a-system-matters">Why a System Matters</a></li>
   <li><a href="#the-cdi-perspective" id="toc-the-cdi-perspective" class="nav-link" data-scroll-target="#the-cdi-perspective">The CDI Perspective</a></li>
+  <li><a href="#relationship-to-other-cdi-systems" id="toc-relationship-to-other-cdi-systems" class="nav-link" data-scroll-target="#relationship-to-other-cdi-systems">Relationship to Other CDI Systems</a></li>
   <li><a href="#what-you-will-learn" id="toc-what-you-will-learn" class="nav-link" data-scroll-target="#what-you-will-learn">What You Will Learn</a></li>
   <li><a href="#who-this-guide-is-for" id="toc-who-this-guide-is-for" class="nav-link" data-scroll-target="#who-this-guide-is-for">Who This Guide Is For</a></li>
   <li><a href="#how-to-use-this-guide" id="toc-how-to-use-this-guide" class="nav-link" data-scroll-target="#how-to-use-this-guide">How to Use This Guide</a></li>
@@ -183,7 +342,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Preface</h1>
+<div class="quarto-title-block"><div><h1 class="title">Preface</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -211,67 +370,148 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>ID:</strong> MICROB-000</li>
 <li><strong>Type:</strong> Preface</li>
 <li><strong>Audience:</strong> Students, researchers, analysts, and practitioners</li>
-<li><strong>Theme:</strong> Microbiome as a complete analytical system</li>
+<li><strong>Theme:</strong> Microbiome analysis as a complete analytical system</li>
 </ul>
 </div>
 <section id="welcome" class="level2">
 <h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
-<p>Microbiome research has become one of the fastest-growing areas of modern biology. Advances in sequencing technologies now allow researchers to characterize microbial communities across humans, animals, plants, soils, oceans, and many other environments.</p>
-<p>Despite the availability of powerful analytical tools, generating reliable biological insights requires more than processing sequencing data. Every result depends on a chain of decisions that begins with study design and continues through data acquisition, quality control, statistical analysis, interpretation, and reporting.</p>
-<p>This guide approaches microbiome analysis as a complete system rather than a collection of independent analytical steps.</p>
+<p>Microbiome research has become one of the most active areas of modern biology. Advances in sequencing technologies now make it possible to characterize microbial communities across humans, animals, plants, soils, oceans, built environments, and many other ecological settings.</p>
+<p>However, reliable microbiome insight requires more than sequencing data and software commands. Every conclusion depends on a chain of decisions that begins with the biological question and continues through study design, metadata collection, sample handling, sequencing strategy, data acquisition, quality control, feature generation, statistical analysis, interpretation, and reporting.</p>
+<p>This guide treats microbiome analysis as a complete system.</p>
+<p>The goal is not simply to produce taxonomic tables, diversity plots, or differential abundance results. The goal is to move from microbial community data to defensible biological insight.</p>
 </section>
 <section id="why-a-system-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-a-system-matters">Why a System Matters</h2>
-<p>Microbiome analysis is often presented as a series of software commands:</p>
+<p>Microbiome workflows are often presented as a sequence of computational steps:</p>
 <ul>
-<li>Process sequencing data</li>
-<li>Generate taxonomic profiles</li>
-<li>Calculate diversity metrics</li>
-<li>Perform statistical analyses</li>
-<li>Create visualizations</li>
+<li>process sequencing data</li>
+<li>generate taxonomic profiles</li>
+<li>calculate diversity metrics</li>
+<li>perform statistical analyses</li>
+<li>create visualizations</li>
+<li>write a report</li>
 </ul>
-<p>While these steps are important, they represent only part of the process.</p>
-<p>A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine otherwise correct computational analyses.</p>
+<p>These steps are important, but they are only part of the analytical process.</p>
+<p>A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inconsistent sample handling, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine results even when the code runs successfully.</p>
 <p>A systems perspective helps connect each stage of the workflow to the biological question being investigated.</p>
+<p>In the Microbiome Analysis System, each step is treated as part of a larger chain of evidence:</p>
+<div class="cell" data-layout-align="default">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  A[Biological Question] --&gt; B[Study Design]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Metadata]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Sampling and Sequencing]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  D --&gt; E[Data Acquisition]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  E --&gt; F[Quality Control]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  F --&gt; G[Feature Generation]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  G --&gt; H[Taxonomic and Functional Profiles]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  H --&gt; I[Statistical Analysis]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  I --&gt; J[Biological Interpretation]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  J --&gt; K[Reproducible Report]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Biological Question] --&gt; B[Study Design]
+  B --&gt; C[Metadata]
+  C --&gt; D[Sampling and Sequencing]
+  D --&gt; E[Data Acquisition]
+  E --&gt; F[Quality Control]
+  F --&gt; G[Feature Generation]
+  G --&gt; H[Taxonomic and Functional Profiles]
+  H --&gt; I[Statistical Analysis]
+  I --&gt; J[Biological Interpretation]
+  J --&gt; K[Reproducible Report]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="the-cdi-perspective" class="level2">
 <h2 class="anchored" data-anchor-id="the-cdi-perspective">The CDI Perspective</h2>
-<p>Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks.</p>
-<p>The objective is not simply to generate outputs but to understand:</p>
+<p>Complex Data Insights emphasizes systems thinking, reproducibility, and interpretation.</p>
+<p>Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks. The objective is not only to generate outputs, but to understand how those outputs were produced and what they can reasonably support.</p>
+<p>The key questions are:</p>
 <ul>
-<li>What was measured</li>
-<li>How the data were generated</li>
-<li>How the data were processed</li>
-<li>What assumptions were made</li>
-<li>What conclusions are supported by the evidence</li>
+<li>What biological question is being asked?</li>
+<li>What samples were collected?</li>
+<li>What metadata are available?</li>
+<li>How were the data generated?</li>
+<li>How were the data acquired?</li>
+<li>How were low-quality reads, samples, or features handled?</li>
+<li>What assumptions were made during analysis?</li>
+<li>What conclusions are supported by the evidence?</li>
+<li>What limitations remain?</li>
 </ul>
-<p>By understanding these connections, researchers can produce results that are reproducible, interpretable, and defensible.</p>
+<p>This perspective makes the workflow more transparent, reproducible, interpretable, and defensible.</p>
+</section>
+<section id="relationship-to-other-cdi-systems" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-to-other-cdi-systems">Relationship to Other CDI Systems</h2>
+<p>The Microbiome Analysis System is part of the broader CDI Omics Systems framework.</p>
+<p>Two upstream CDI systems support this guide:</p>
+<div class="cell" data-layout-align="default">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>flowchart TB</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  A[CDI Systematic Dataset Discovery] --&gt; B[CDI Data Acquisition System]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Microbiome Analysis System]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Defensible Biological Insight]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+  A[CDI Systematic Dataset Discovery] --&gt; B[CDI Data Acquisition System]
+  B --&gt; C[Microbiome Analysis System]
+  C --&gt; D[Defensible Biological Insight]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>The <strong>CDI Systematic Dataset Discovery System</strong> supports structured identification, screening, and prioritization of public omics studies.</p>
+<p>The <strong>CDI Data Acquisition System</strong> supports reproducible retrieval, validation, and organization of public sequencing datasets.</p>
+<p>The <strong>Microbiome Analysis System</strong> begins once the biological question, study context, metadata, and sequencing data are ready for analysis.</p>
+<p>Together, these systems support a reproducible path from study discovery to biological interpretation.</p>
 </section>
 <section id="what-you-will-learn" class="level2">
 <h2 class="anchored" data-anchor-id="what-you-will-learn">What You Will Learn</h2>
 <p>By working through this guide, you will learn how to:</p>
 <ul>
-<li>Understand the role of study design in microbiome research</li>
-<li>Evaluate microbiome sequencing data quality</li>
-<li>Generate and interpret taxonomic profiles</li>
-<li>Understand functional profiling approaches</li>
-<li>Perform diversity analyses</li>
-<li>Conduct differential analyses</li>
-<li>Interpret results within a biological context</li>
-<li>Translate statistical findings into biological insights</li>
-<li>Produce reproducible analytical reports</li>
+<li>understand the role of study design in microbiome research</li>
+<li>evaluate metadata completeness and biological relevance</li>
+<li>recognize how sample collection and sequencing choices affect analysis</li>
+<li>acquire microbiome sequencing data in a reproducible way</li>
+<li>assess sequencing data quality</li>
+<li>generate microbiome features for downstream analysis</li>
+<li>interpret taxonomic profiles</li>
+<li>understand functional profiling approaches</li>
+<li>perform alpha and beta diversity analyses</li>
+<li>conduct differential abundance analysis</li>
+<li>connect statistical findings to biological meaning</li>
+<li>document limitations and assumptions</li>
+<li>produce reproducible analytical reports</li>
 </ul>
 </section>
 <section id="who-this-guide-is-for" class="level2">
 <h2 class="anchored" data-anchor-id="who-this-guide-is-for">Who This Guide Is For</h2>
 <p>This guide is intended for:</p>
 <ul>
-<li>Students learning microbiome analysis</li>
-<li>Biologists working with microbial community data</li>
-<li>Bioinformaticians building reproducible workflows</li>
-<li>Data scientists interested in omics analyses</li>
-<li>Researchers seeking stronger interpretation practices</li>
+<li>students learning microbiome analysis</li>
+<li>biologists working with microbial community data</li>
+<li>bioinformaticians building reproducible workflows</li>
+<li>data scientists interested in omics analysis</li>
+<li>researchers seeking stronger interpretation practices</li>
+<li>analysts preparing microbiome reports for academic, clinical, environmental, agricultural, or industry contexts</li>
 </ul>
+<p>The guide is written for readers who want to understand both the computational workflow and the reasoning behind it.</p>
 </section>
 <section id="how-to-use-this-guide" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-use-this-guide">How to Use This Guide</h2>
@@ -279,31 +519,36 @@ ul.task-list li input[type="checkbox"] {
 <p>Readers are encouraged to think beyond individual analysis steps and focus on how decisions made at one stage influence downstream results.</p>
 <p>For example:</p>
 <ul>
-<li>Study design influences statistical power.</li>
-<li>Metadata influences interpretation.</li>
-<li>Sample collection influences data quality.</li>
-<li>Quality control influences reliability.</li>
-<li>Statistical analysis influences conclusions.</li>
+<li>study design influences statistical power</li>
+<li>metadata influences interpretation</li>
+<li>sample collection influences data quality</li>
+<li>sequencing strategy influences detectable signals</li>
+<li>quality control influences reliability</li>
+<li>feature generation influences downstream statistics</li>
+<li>statistical methods influence conclusions</li>
+<li>interpretation determines whether results become biological insight</li>
 </ul>
-<p>Understanding these relationships is essential for producing trustworthy biological insights.</p>
+<p>The most important habit is to ask not only <em>what result was produced</em>, but also <em>whether the result is supported by the study design, data quality, metadata, methods, and biological context</em>.</p>
 </section>
 <section id="cdi-philosophy" class="level2">
 <h2 class="anchored" data-anchor-id="cdi-philosophy">CDI Philosophy</h2>
-<p>Complex Data Insights (CDI) emphasizes systems thinking, reproducibility, and interpretation.</p>
-<p>The goal is not simply to perform an analysis, but to produce conclusions that are:</p>
+<p>The CDI approach emphasizes that analysis should produce evidence, not just output.</p>
+<p>A strong microbiome workflow should be:</p>
 <ul>
-<li>Reproducible</li>
-<li>Transparent</li>
-<li>Interpretable</li>
-<li>Defensible</li>
-<li>Reusable</li>
+<li><strong>reproducible</strong>: the analysis can be rerun and inspected</li>
+<li><strong>transparent</strong>: methods, assumptions, and decisions are documented</li>
+<li><strong>interpretable</strong>: results are connected to biological meaning</li>
+<li><strong>defensible</strong>: conclusions are supported by the evidence</li>
+<li><strong>reusable</strong>: outputs can support future analysis, reporting, and training</li>
 </ul>
 <p>The most valuable microbiome workflow is not the one that produces the largest number of figures. It is the one that produces conclusions that can be understood, justified, and reproduced.</p>
 </section>
 <section id="what-comes-next" class="level2">
 <h2 class="anchored" data-anchor-id="what-comes-next">What Comes Next</h2>
-<p>The next chapter introduces the Microbiome System Architecture and provides a high-level view of the complete workflow before we examine individual components in detail.</p>
+<p>The next chapter introduces the Microbiome Analysis System architecture and provides a high-level view of the complete workflow before we examine individual components in detail.</p>
 
+
+<!-- -->
 
 </section>
 
@@ -359,13 +604,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -377,6 +623,57 @@ ul.task-list li input[type="checkbox"] {
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -720,7 +1017,169 @@ ul.task-list li input[type="checkbox"] {
         <span class="nav-page-text"><span class="chapter-title">System Overview</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Preface {-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>:::cdi-message</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ID:** MICROB-000</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Type:** Preface</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Audience:** Students, researchers, analysts, and practitioners</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Theme:** Microbiome analysis as a complete analytical system</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## Welcome</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>Microbiome research has become one of the most active areas of modern biology. Advances in sequencing technologies now make it possible to characterize microbial communities across humans, animals, plants, soils, oceans, built environments, and many other ecological settings.</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>However, reliable microbiome insight requires more than sequencing data and software commands. Every conclusion depends on a chain of decisions that begins with the biological question and continues through study design, metadata collection, sample handling, sequencing strategy, data acquisition, quality control, feature generation, statistical analysis, interpretation, and reporting.</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>This guide treats microbiome analysis as a complete system.</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>The goal is not simply to produce taxonomic tables, diversity plots, or differential abundance results. The goal is to move from microbial community data to defensible biological insight.</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why a System Matters</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>Microbiome workflows are often presented as a sequence of computational steps:</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>process sequencing data</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>generate taxonomic profiles</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>calculate diversity metrics</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>perform statistical analyses</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>create visualizations</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>write a report</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>These steps are important, but they are only part of the analytical process.</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inconsistent sample handling, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine results even when the code runs successfully.</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>A systems perspective helps connect each stage of the workflow to the biological question being investigated.</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>In the Microbiome Analysis System, each step is treated as part of a larger chain of evidence:</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  A[Biological Question] --&gt; B[Study Design]</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Metadata]</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Sampling <span class="ot">and</span> Sequencing]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  D --&gt; E[Data Acquisition]</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  E --&gt; F[Quality Control]</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  F --&gt; G[Feature Generation]</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  G --&gt; H[Taxonomic <span class="ot">and</span> Functional Profiles]</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  H --&gt; I[Statistical Analysis]</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  I --&gt; J[Biological Interpretation]</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  J --&gt; K[Reproducible Report]</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## The CDI Perspective</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>Complex Data Insights emphasizes systems thinking, reproducibility, and interpretation.</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks. The objective is not only to generate outputs, but to understand how those outputs were produced and what they can reasonably support.</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>The key questions are:</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What biological question is being asked?</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What samples were collected?</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What metadata are available?</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>How were the data generated?</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>How were the data acquired?</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>How were low-quality reads, samples, or features handled?</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What assumptions were made during analysis?</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What conclusions are supported by the evidence?</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What limitations remain?</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>This perspective makes the workflow more transparent, reproducible, interpretable, and defensible.</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Relationship to Other CDI Systems</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>The Microbiome Analysis System is part of the broader CDI Omics Systems framework.</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>Two upstream CDI systems support this guide:</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>flowchart TB</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>  A[CDI Systematic Dataset Discovery] --&gt; B[CDI Data Acquisition System]</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Microbiome Analysis System]</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Defensible Biological Insight]</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>The **CDI Systematic Dataset Discovery System** supports structured identification, screening, and prioritization of public omics studies.</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>The **CDI Data Acquisition System** supports reproducible retrieval, validation, and organization of public sequencing datasets.</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>The **Microbiome Analysis System** begins once the biological question, study context, metadata, and sequencing data are ready for analysis.</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>Together, these systems support a reproducible path from study discovery to biological interpretation.</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## What You Will Learn</span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>By working through this guide, you will learn how to:</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>understand the role of study design in microbiome research</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>evaluate metadata completeness and biological relevance</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>recognize how sample collection and sequencing choices affect analysis</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>acquire microbiome sequencing data in a reproducible way</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>assess sequencing data quality</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>generate microbiome features for downstream analysis</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>interpret taxonomic profiles</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>understand functional profiling approaches</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>perform alpha and beta diversity analyses</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>conduct differential abundance analysis</span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>connect statistical findings to biological meaning</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>document limitations and assumptions</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>produce reproducible analytical reports</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who This Guide Is For</span></span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>This guide is intended for:</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>students learning microbiome analysis</span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>biologists working with microbial community data</span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>bioinformaticians building reproducible workflows</span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data scientists interested in omics analysis</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>researchers seeking stronger interpretation practices</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>analysts preparing microbiome reports for academic, clinical, environmental, agricultural, or industry contexts</span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>The guide is written for readers who want to understand both the computational workflow and the reasoning behind it.</span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to Use This Guide</span></span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>The chapters are organized according to the progression of a complete microbiome workflow.</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>Readers are encouraged to think beyond individual analysis steps and focus on how decisions made at one stage influence downstream results.</span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>For example:</span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>study design influences statistical power</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>metadata influences interpretation</span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sample collection influences data quality</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sequencing strategy influences detectable signals</span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>quality control influences reliability</span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>feature generation influences downstream statistics</span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>statistical methods influence conclusions</span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>interpretation determines whether results become biological insight</span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a>The most important habit is to ask not only *what result was produced*, but also *whether the result is supported by the study design, data quality, metadata, methods, and biological context*.</span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## CDI Philosophy</span></span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a>The CDI approach emphasizes that analysis should produce evidence, not just output.</span>
+<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a>A strong microbiome workflow should be:</span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reproducible**: the analysis can be rerun and inspected</span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**transparent**: methods, assumptions, and decisions are documented</span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**interpretable**: results are connected to biological meaning</span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**defensible**: conclusions are supported by the evidence</span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reusable**: outputs can support future analysis, reporting, and training</span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a>The most valuable microbiome workflow is not the one that produces the largest number of figures. It is the one that produces conclusions that can be understood, justified, and reproduced.</span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a><span class="fu">## What Comes Next</span></span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a>The next chapter introduces the Microbiome Analysis System architecture and provides a high-level view of the complete workflow before we examine individual components in detail.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

@@ -7,30 +7,48 @@ date: last-modified
 date-format: "MMM YYYY"
 
 book:
-  title: "Microbiome AnalysisSystem"
+  title: "Microbiome Analysis System"
   subtitle: "From Microbial Communities to Defensible Biological Insights"
   author: "Teresia Mrema Buza | Complex Data Insights"
+
   chapters:
     - index.qmd
     - 00-preface.qmd
-    - 01-system-overview.qmd
-    - 02-study-design-and-metadata.qmd
-    - 03-sample-collection-and-sequencing.qmd
-    - 04-data-acquisition.qmd
-    - 05-quality-control.qmd
-    - 06-feature-generation.qmd
-    - 07-taxonomic-profiling.qmd
-    - 08-diversity-analysis.qmd
-    - 09-functional-profiling.qmd
-    - 10-differential-analysis.qmd
-    - 11-biological-interpretation.qmd
-    - 12-reproducible-reporting.qmd
-    - 13-workforce-readiness.qmd
+
+    - part: "Part I: Microbiome Analysis System Foundation"
+      chapters:
+        - 01-system-overview.qmd
+        - 02-study-design-and-metadata.qmd
+        - 03-sample-collection-and-sequencing.qmd
+
+    - part: "Part II: Data Acquisition and Quality Control"
+      chapters:
+        - 04-data-acquisition.qmd
+        - 05-quality-control.qmd
+
+    - part: "Part III: Microbiome Feature Generation and Profiling"
+      chapters:
+        - 06-feature-generation.qmd
+        - 07-taxonomic-profiling.qmd
+        - 09-functional-profiling.qmd
+
+    - part: "Part IV: Microbiome Statistical Analysis"
+      chapters:
+        - 08-diversity-analysis.qmd
+        - 10-differential-analysis.qmd
+
+    - part: "Part V: Biological Interpretation and Reporting"
+      chapters:
+        - 11-biological-interpretation.qmd
+        - 12-reproducible-reporting.qmd
+
+    - part: "Part VI: Workforce Readiness"
+      chapters:
+        - 13-workforce-readiness.qmd
 
   appendices:
     - 999-appendix.qmd
     - 999-references.qmd
-
 
 format:
   html:
@@ -39,11 +57,13 @@ format:
     toc-depth: 3
     number-sections: false
     number-depth: 2
-    smooth-scroll: true
     anchor-sections: true
     link-external-icon: true
     css: assets/css/cdi.css
     code-fold: true
+    code-summary: "Show code"
+    code-tools: true
+    smooth-scroll: true
     mermaid:
       theme: forest
 
@@ -53,4 +73,3 @@ execute:
   message: false
   freeze: auto
   working-dir: .
-

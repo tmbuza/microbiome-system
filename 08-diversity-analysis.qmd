@@ -1,0 +1,538 @@
+# Diversity Analysis
+
+:::cdi-message
+- **ID:** MICROB-008
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Comparing microbial diversity within and between samples
+:::
+
+## Introduction
+
+Diversity analysis is the stage where microbiome communities are compared within samples and between samples.
+
+After feature generation and taxonomic profiling, the analysis contains structured feature abundance tables and taxonomic summaries. Diversity analysis uses these tables to evaluate microbial richness, evenness, and community dissimilarity.
+
+Diversity analysis is often one of the central components of microbiome reporting because it provides a compact way to describe community structure.
+
+## Why Diversity Analysis Matters
+
+Diversity analysis helps answer questions such as:
+
+- How many microbial features are observed in each sample?
+- Are some samples more diverse than others?
+- Are microbial communities similar or different across samples?
+- Do groups separate based on community composition?
+- Are observed patterns consistent with metadata or study design?
+
+Diversity analysis provides both descriptive and comparative views of microbial communities.
+
+## Position in the Microbiome Analysis System
+
+Diversity analysis occurs after feature generation and taxonomic profiling.
+
+```{mermaid}
+flowchart LR
+  A[Feature Table] --> B[Diversity Analysis]
+  C[Sample Metadata] --> B
+  B --> D[Biological Interpretation]
+  B --> E[Reproducible Reporting]
+```
+
+Diversity results should always be interpreted together with study design, metadata, sequencing depth, feature generation choices, and quality control decisions.
+
+## Alpha Diversity
+
+Alpha diversity describes diversity within a sample.
+
+Common alpha diversity measures include:
+
+- observed features
+- Shannon diversity
+- Simpson diversity
+- Faith's phylogenetic diversity
+- evenness
+
+In this lightweight MAS example, we calculate two simple alpha diversity metrics:
+
+- observed features
+- Shannon diversity
+
+Observed features count how many features have nonzero abundance in each sample.
+
+Shannon diversity incorporates both richness and evenness.
+
+## Beta Diversity
+
+Beta diversity describes differences between samples.
+
+Common beta diversity measures include:
+
+- Bray-Curtis dissimilarity
+- Jaccard distance
+- UniFrac distances
+- Aitchison distance
+
+In this lightweight MAS example, we calculate a simple Bray-Curtis dissimilarity matrix from the toy feature table.
+
+Bray-Curtis dissimilarity compares differences in abundance between pairs of samples.
+
+## Interpretation Cautions
+
+Diversity metrics are useful summaries, but they are not conclusions by themselves.
+
+Important cautions include:
+
+- sequencing depth can influence diversity estimates
+- rare feature filtering affects observed richness
+- different metrics emphasize different properties
+- beta diversity patterns may reflect batch effects
+- ordination plots can be visually persuasive but require careful interpretation
+- small sample sizes limit statistical confidence
+- toy example data should not be biologically interpreted
+
+For real microbiome studies, diversity analysis should be paired with appropriate statistical testing and careful metadata review.
+
+## Example Diversity Analysis Scripts
+
+The following scripts provide a lightweight MAS-side diversity analysis example.
+
+The workflow uses two scripts:
+
+```text
+scripts/R/08a-calculate-diversity-metrics.R
+scripts/R/08b-plot-diversity-results.R
+```
+
+The first script calculates simple alpha diversity metrics and a Bray-Curtis distance matrix.
+
+The second script creates simple alpha diversity and beta diversity plots.
+
+## 08a: Calculate Diversity Metrics
+
+Save this script as:
+
+```text
+scripts/R/08a-calculate-diversity-metrics.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 08a-calculate-diversity-metrics.R
+#
+# Purpose:
+#   Calculate simple alpha and beta diversity metrics from the example
+#   feature table.
+#
+# Usage:
+#   Rscript scripts/R/08a-calculate-diversity-metrics.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(tidyr)
+library(tibble)
+
+feature_dir <- "data/features"
+metadata_dir <- "data/metadata"
+diversity_dir <- "data/diversity"
+report_dir <- "data/reports"
+
+dir.create(diversity_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+
+feature_table_file <- file.path(feature_dir, "feature-table.tsv")
+sample_metadata_file <- file.path(metadata_dir, "sample-metadata.tsv")
+
+if (!file.exists(feature_table_file)) {
+  stop(
+    "Missing feature table: ",
+    feature_table_file,
+    "\nRun: bash scripts/bash/06a-create-example-feature-table.sh"
+  )
+}
+
+if (!file.exists(sample_metadata_file)) {
+  stop(
+    "Missing sample metadata: ",
+    sample_metadata_file,
+    "\nRun: bash scripts/bash/06a-create-example-feature-table.sh"
+  )
+}
+
+feature_table <- read_tsv(feature_table_file, show_col_types = FALSE)
+sample_metadata <- read_tsv(sample_metadata_file, show_col_types = FALSE)
+
+feature_matrix <- feature_table %>%
+  column_to_rownames("feature_id") %>%
+  as.matrix()
+
+sample_matrix <- t(feature_matrix)
+
+shannon_index <- function(x) {
+  total <- sum(x)
+  if (total == 0) {
+    return(0)
+  }
+  p <- x[x > 0] / total
+  -sum(p * log(p))
+}
+
+alpha_diversity <- tibble(
+  sample_id = rownames(sample_matrix),
+  total_reads = rowSums(sample_matrix),
+  observed_features = rowSums(sample_matrix > 0),
+  shannon_diversity = apply(sample_matrix, 1, shannon_index)
+) %>%
+  left_join(sample_metadata, by = "sample_id")
+
+write_tsv(
+  alpha_diversity,
+  file.path(diversity_dir, "alpha-diversity.tsv")
+)
+
+bray_curtis <- function(x, y) {
+  numerator <- sum(abs(x - y))
+  denominator <- sum(x + y)
+  if (denominator == 0) {
+    return(0)
+  }
+  numerator / denominator
+}
+
+sample_ids <- rownames(sample_matrix)
+bray_matrix <- matrix(
+  0,
+  nrow = length(sample_ids),
+  ncol = length(sample_ids),
+  dimnames = list(sample_ids, sample_ids)
+)
+
+for (i in seq_along(sample_ids)) {
+  for (j in seq_along(sample_ids)) {
+    bray_matrix[i, j] <- bray_curtis(sample_matrix[i, ], sample_matrix[j, ])
+  }
+}
+
+bray_table <- as.data.frame(bray_matrix) %>%
+  rownames_to_column("sample_id")
+
+write_tsv(
+  bray_table,
+  file.path(diversity_dir, "bray-curtis-distance-matrix.tsv")
+)
+
+pcoa <- cmdscale(as.dist(bray_matrix), k = 2, eig = TRUE)
+
+ordination <- tibble(
+  sample_id = rownames(pcoa$points),
+  axis1 = pcoa$points[, 1],
+  axis2 = pcoa$points[, 2]
+) %>%
+  left_join(sample_metadata, by = "sample_id")
+
+write_tsv(
+  ordination,
+  file.path(diversity_dir, "bray-curtis-pcoa.tsv")
+)
+
+report <- tibble(
+  metric = c(
+    "sample_count",
+    "feature_count",
+    "alpha_metrics",
+    "beta_metric",
+    "ordination_method",
+    "diversity_status"
+  ),
+  value = c(
+    nrow(sample_matrix),
+    ncol(sample_matrix),
+    "observed_features; shannon_diversity",
+    "Bray-Curtis",
+    "PCoA using cmdscale",
+    "READY_FOR_PLOTTING"
+  )
+)
+
+write_tsv(
+  report,
+  file.path(report_dir, "diversity-analysis-report.tsv")
+)
+
+message("Created:")
+message("  ", file.path(diversity_dir, "alpha-diversity.tsv"))
+message("  ", file.path(diversity_dir, "bray-curtis-distance-matrix.tsv"))
+message("  ", file.path(diversity_dir, "bray-curtis-pcoa.tsv"))
+message("  ", file.path(report_dir, "diversity-analysis-report.tsv"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/08a-calculate-diversity-metrics.R
+```
+
+This creates:
+
+```text
+data/diversity/alpha-diversity.tsv
+data/diversity/bray-curtis-distance-matrix.tsv
+data/diversity/bray-curtis-pcoa.tsv
+data/reports/diversity-analysis-report.tsv
+```
+
+## 08b: Plot Diversity Results
+
+Save this script as:
+
+```text
+scripts/R/08b-plot-diversity-results.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 08b-plot-diversity-results.R
+#
+# Purpose:
+#   Plot simple alpha diversity and beta diversity results.
+#
+# Usage:
+#   Rscript scripts/R/08b-plot-diversity-results.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+diversity_dir <- "data/diversity"
+figure_dir <- "figures"
+table_dir <- "tables"
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+
+alpha_file <- file.path(diversity_dir, "alpha-diversity.tsv")
+ordination_file <- file.path(diversity_dir, "bray-curtis-pcoa.tsv")
+
+if (!file.exists(alpha_file)) {
+  stop(
+    "Missing alpha diversity file: ",
+    alpha_file,
+    "\nRun: Rscript scripts/R/08a-calculate-diversity-metrics.R"
+  )
+}
+
+if (!file.exists(ordination_file)) {
+  stop(
+    "Missing ordination file: ",
+    ordination_file,
+    "\nRun: Rscript scripts/R/08a-calculate-diversity-metrics.R"
+  )
+}
+
+alpha <- read_tsv(alpha_file, show_col_types = FALSE)
+ordination <- read_tsv(ordination_file, show_col_types = FALSE)
+
+write_tsv(
+  alpha,
+  file.path(table_dir, "alpha-diversity-for-plot.tsv")
+)
+
+write_tsv(
+  ordination,
+  file.path(table_dir, "bray-curtis-pcoa-for-plot.tsv")
+)
+
+p_alpha <- ggplot(
+  alpha,
+  aes(
+    x = sample_id,
+    y = shannon_diversity
+  )
+) +
+  geom_col() +
+  labs(
+    title = "Example Shannon Diversity",
+    subtitle = "Toy MAS example data for workflow testing",
+    x = "Sample",
+    y = "Shannon diversity"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggsave(
+  filename = file.path(figure_dir, "alpha-shannon-diversity.png"),
+  plot = p_alpha,
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+p_beta <- ggplot(
+  ordination,
+  aes(
+    x = axis1,
+    y = axis2,
+    label = sample_id
+  )
+) +
+  geom_point(size = 3) +
+  geom_text(vjust = -0.8) +
+  labs(
+    title = "Example Bray-Curtis PCoA",
+    subtitle = "Toy MAS example data for workflow testing",
+    x = "PCoA axis 1",
+    y = "PCoA axis 2"
+  ) +
+  theme_minimal(base_size = 12)
+
+ggsave(
+  filename = file.path(figure_dir, "bray-curtis-pcoa.png"),
+  plot = p_beta,
+  width = 7,
+  height = 5,
+  dpi = 300
+)
+
+message("Created:")
+message("  ", file.path(table_dir, "alpha-diversity-for-plot.tsv"))
+message("  ", file.path(table_dir, "bray-curtis-pcoa-for-plot.tsv"))
+message("  ", file.path(figure_dir, "alpha-shannon-diversity.png"))
+message("  ", file.path(figure_dir, "bray-curtis-pcoa.png"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/08b-plot-diversity-results.R
+```
+
+This creates:
+
+```text
+tables/alpha-diversity-for-plot.tsv
+tables/bray-curtis-pcoa-for-plot.tsv
+figures/alpha-shannon-diversity.png
+figures/bray-curtis-pcoa.png
+```
+
+## Running the Complete Diversity Example
+
+If you are continuing from Chapter 06 or 07, first make sure the example feature table exists:
+
+```bash
+bash scripts/bash/06a-create-example-feature-table.sh
+bash scripts/bash/06b-check-feature-table.sh
+```
+
+Then calculate and plot diversity results:
+
+```bash
+Rscript scripts/R/08a-calculate-diversity-metrics.R
+Rscript scripts/R/08b-plot-diversity-results.R
+cat data/reports/diversity-analysis-report.tsv
+cat data/diversity/alpha-diversity.tsv
+```
+
+The toy example contains only three samples and five features. This is enough to test workflow structure, but it is not enough for real statistical interpretation.
+
+## Example Alpha Diversity Output
+
+The generated alpha diversity table may look like this:
+
+```text
+sample_id	total_reads	observed_features	shannon_diversity	group	sample_type	description
+SRR17868090	185	4	0.978	healthy	stool	toy example sample 1
+SRR17868091	169	4	1.253	healthy	stool	toy example sample 2
+SRR17868092	186	5	1.417	healthy	stool	toy example sample 3
+```
+
+Values will depend on the feature table used.
+
+## Example Beta Diversity Output
+
+The Bray-Curtis distance matrix summarizes pairwise community dissimilarity.
+
+```text
+sample_id	SRR17868090	SRR17868091	SRR17868092
+SRR17868090	0.000	0.231	0.542
+SRR17868091	0.231	0.000	0.328
+SRR17868092	0.542	0.328	0.000
+```
+
+Lower values indicate more similar samples. Higher values indicate more different samples.
+
+## Interpreting Diversity Results
+
+Diversity results should be interpreted in relation to:
+
+- sample type
+- sequencing depth
+- feature generation method
+- filtering decisions
+- biological group
+- metadata completeness
+- batch effects
+- study design
+- sample size
+
+A diversity difference may be biologically interesting, but it should not be interpreted in isolation.
+
+## Common Diversity Analysis Issues
+
+Common issues include:
+
+- comparing samples with very different sequencing depths
+- interpreting ordination separation without statistical support
+- ignoring batch effects
+- using metrics that do not match the biological question
+- overinterpreting small sample sizes
+- mixing datasets generated by different methods
+- failing to document filtering and normalization choices
+
+These issues should be considered before reporting diversity findings.
+
+## MAS Diversity Outputs
+
+At the end of this stage, MAS should have:
+
+- alpha diversity table
+- beta diversity distance matrix
+- ordination coordinates
+- diversity analysis report
+- alpha diversity plot
+- beta diversity plot
+- notes on diversity metrics and limitations
+
+```{mermaid}
+flowchart LR
+  A[Feature Table] --> B[Alpha Diversity]
+  A --> C[Beta Diversity]
+  B --> D[Diversity Report]
+  C --> D
+  D --> E[Biological Interpretation]
+```
+
+## Key Takeaways
+
+Diversity analysis summarizes microbial community structure.
+
+A strong diversity analysis stage ensures that:
+
+- alpha diversity is calculated and interpreted carefully
+- beta diversity is linked to sample metadata
+- ordination plots are not overinterpreted
+- sequencing depth and feature filtering are considered
+- diversity metrics match the biological question
+- limitations are documented
+
+Diversity analysis provides important evidence, but it is one part of the broader microbiome interpretation system.
+
+## What Comes Next
+
+The next chapter examines **Functional Profiling**, where microbiome data are used to explore gene families, pathways, and microbial functional potential.

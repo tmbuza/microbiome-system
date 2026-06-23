@@ -1,0 +1,477 @@
+# Taxonomic Profiling
+
+:::cdi-message
+- **ID:** MICROB-007
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Connecting microbiome features to microbial identities
+:::
+
+## Introduction
+
+Taxonomic profiling is the stage where microbiome features are connected to microbial identities and summarized across samples.
+
+After feature generation, the analysis contains a feature table. However, a feature identifier such as `ASV_001` is not biologically meaningful on its own. Taxonomic profiling adds interpretation by linking features to microbial groups such as phylum, family, genus, or species.
+
+This chapter uses the example feature table created in Chapter 06 to demonstrate a lightweight taxonomic profiling workflow.
+
+The example data are toy data for workflow testing and should not be used for biological interpretation.
+
+## Why Taxonomic Profiling Matters
+
+Taxonomic profiling helps answer the question:
+
+```text
+Which microbes are present, and how abundant are they across samples?
+```
+
+Taxonomic profiles support:
+
+- community composition summaries
+- dominant taxon identification
+- group-level microbial comparisons
+- relative abundance visualization
+- downstream biological interpretation
+- report-ready microbiome summaries
+
+Taxonomic profiling is often one of the first outputs stakeholders expect from microbiome analysis.
+
+## Position in the Microbiome Analysis System
+
+Taxonomic profiling occurs after feature generation and before diversity analysis, functional profiling, differential analysis, and biological interpretation.
+
+```{mermaid}
+flowchart LR
+  A[Feature Generation] --> B[Taxonomic Profiling]
+  B --> C[Diversity Analysis]
+  B --> D[Differential Analysis]
+  B --> E[Biological Interpretation]
+```
+
+At this stage, features are summarized into microbial taxonomic groups.
+
+## From Features to Taxa
+
+A feature table may look like this:
+
+```text
+feature_id    SRR17868090    SRR17868091    SRR17868092
+ASV_001       120            85             40
+ASV_002       15             30             75
+```
+
+Feature metadata may provide taxonomy:
+
+```text
+feature_id    taxonomy
+ASV_001       Bacteria; Firmicutes; ...; Lactobacillus
+ASV_002       Bacteria; Bacteroidota; ...; Bacteroides
+```
+
+Taxonomic profiling joins these two files and summarizes abundance by taxonomic rank.
+
+## Taxonomic Ranks
+
+Common taxonomic ranks include:
+
+- kingdom
+- phylum
+- class
+- order
+- family
+- genus
+- species
+
+Marker-gene datasets often provide confident assignments at higher ranks, while species-level assignment may be less reliable depending on the target region, reference database, and classifier.
+
+Shotgun metagenomic datasets may provide species- or strain-level information depending on method and database.
+
+## Relative Abundance
+
+Raw feature counts are useful, but many taxonomic summaries are shown as relative abundance.
+
+Relative abundance is calculated within each sample:
+
+```text
+relative abundance = taxon count / total sample count
+```
+
+This makes samples easier to compare visually when sequencing depth differs.
+
+However, relative abundance is compositional. An increase in one taxon can change the apparent proportion of others, even if their absolute abundance did not change. This should be considered during interpretation.
+
+## Example Taxonomic Profiling Scripts
+
+The following scripts provide a lightweight MAS-side taxonomic profiling example.
+
+The workflow uses two scripts:
+
+```text
+scripts/bash/07a-build-taxonomic-profile.sh
+scripts/R/07b-plot-taxonomic-profile.R
+```
+
+The first script joins the example feature table with feature metadata, extracts genus-level labels, and summarizes counts and relative abundance.
+
+The second script creates simple taxonomic profile plots using `ggplot2`.
+
+## 07a: Build a Taxonomic Profile
+
+Save this script as:
+
+```bash
+scripts/bash/07a-build-taxonomic-profile.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 07a-build-taxonomic-profile.sh
+#
+# Purpose:
+#   Build a simple genus-level taxonomic profile from the example feature table.
+#
+# Inputs:
+#   data/features/feature-table.tsv
+#   data/features/feature-metadata.tsv
+#
+# Outputs:
+#   data/taxonomy/feature-taxonomy-long.tsv
+#   data/taxonomy/genus-counts-long.tsv
+#   data/taxonomy/genus-relative-abundance.tsv
+#
+# Usage:
+#   bash scripts/bash/07a-build-taxonomic-profile.sh
+###############################################################################
+
+set -e
+
+FEATURE_DIR="data/features"
+TAXONOMY_DIR="data/taxonomy"
+REPORT_DIR="data/reports"
+
+FEATURE_TABLE="${FEATURE_DIR}/feature-table.tsv"
+FEATURE_METADATA="${FEATURE_DIR}/feature-metadata.tsv"
+
+LONG_FEATURE_TAXONOMY="${TAXONOMY_DIR}/feature-taxonomy-long.tsv"
+GENUS_COUNTS="${TAXONOMY_DIR}/genus-counts-long.tsv"
+GENUS_REL_ABUND="${TAXONOMY_DIR}/genus-relative-abundance.tsv"
+REPORT_FILE="${REPORT_DIR}/taxonomic-profile-report.tsv"
+
+mkdir -p "${TAXONOMY_DIR}"
+mkdir -p "${REPORT_DIR}"
+
+if [ ! -s "${FEATURE_TABLE}" ]; then
+  echo "Missing feature table: ${FEATURE_TABLE}"
+  echo "Run: bash scripts/bash/06a-create-example-feature-table.sh"
+  exit 1
+fi
+
+if [ ! -s "${FEATURE_METADATA}" ]; then
+  echo "Missing feature metadata: ${FEATURE_METADATA}"
+  echo "Run: bash scripts/bash/06a-create-example-feature-table.sh"
+  exit 1
+fi
+
+echo "Building genus-level taxonomic profile..."
+
+awk -F '\t' '
+NR == FNR {
+  if (FNR > 1) {
+    taxonomy=$3;
+    n=split(taxonomy, parts, ";");
+    genus=parts[n];
+    gsub(/^ +| +$/, "", genus);
+    if (genus == "" || genus == "NA") genus="Unclassified";
+    tax[$1]=taxonomy;
+    genus_map[$1]=genus;
+  }
+  next;
+}
+FNR == 1 {
+  for (i=2; i<=NF; i++) {
+    sample[i]=$i;
+  }
+  print "feature_id\tsample_id\tcount\ttaxonomy\tgenus";
+  next;
+}
+{
+  feature=$1;
+  for (i=2; i<=NF; i++) {
+    print feature "\t" sample[i] "\t" $i "\t" tax[feature] "\t" genus_map[feature];
+  }
+}
+' "${FEATURE_METADATA}" "${FEATURE_TABLE}" > "${LONG_FEATURE_TAXONOMY}"
+
+awk -F '\t' '
+BEGIN {OFS="\t"}
+NR == 1 {next}
+{
+  key=$2 "\t" $5;
+  counts[key]+=$3;
+}
+END {
+  print "sample_id", "genus", "count";
+  for (key in counts) {
+    print key, counts[key];
+  }
+}
+' "${LONG_FEATURE_TAXONOMY}" | sort -k1,1 -k2,2 > "${GENUS_COUNTS}"
+
+awk -F '\t' '
+BEGIN {OFS="\t"}
+NR == 1 {next}
+{
+  total[$1]+=$3;
+  count[$1 "\t" $2]+=$3;
+}
+END {
+  print "sample_id", "genus", "count", "relative_abundance";
+  for (key in count) {
+    split(key, parts, "\t");
+    sample=parts[1];
+    genus=parts[2];
+    rel=0;
+    if (total[sample] > 0) rel=count[key]/total[sample];
+    print sample, genus, count[key], rel;
+  }
+}
+' "${GENUS_COUNTS}" | sort -k1,1 -k2,2 > "${GENUS_REL_ABUND}"
+
+feature_count=$(tail -n +2 "${FEATURE_TABLE}" | wc -l | tr -d ' ')
+sample_count=$(head -n 1 "${FEATURE_TABLE}" | awk -F '\t' '{print NF-1}')
+genus_count=$(tail -n +2 "${GENUS_COUNTS}" | awk -F '\t' '{print $2}' | sort -u | wc -l | tr -d ' ')
+
+printf "metric\tvalue\n" > "${REPORT_FILE}"
+printf "feature_count\t%s\n" "${feature_count}" >> "${REPORT_FILE}"
+printf "sample_count\t%s\n" "${sample_count}" >> "${REPORT_FILE}"
+printf "genus_count\t%s\n" "${genus_count}" >> "${REPORT_FILE}"
+printf "taxonomic_rank\tgenus\n" >> "${REPORT_FILE}"
+printf "profile_status\tREADY_FOR_PLOTTING\n" >> "${REPORT_FILE}"
+
+echo "Created:"
+echo "  ${LONG_FEATURE_TAXONOMY}"
+echo "  ${GENUS_COUNTS}"
+echo "  ${GENUS_REL_ABUND}"
+echo "  ${REPORT_FILE}"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/07a-build-taxonomic-profile.sh
+```
+
+This creates:
+
+```text
+data/taxonomy/feature-taxonomy-long.tsv
+data/taxonomy/genus-counts-long.tsv
+data/taxonomy/genus-relative-abundance.tsv
+data/reports/taxonomic-profile-report.tsv
+```
+
+## 07b: Plot the Taxonomic Profile
+
+Save this script as:
+
+```text
+scripts/R/07b-plot-taxonomic-profile.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 07b-plot-taxonomic-profile.R
+#
+# Purpose:
+#   Plot a simple genus-level relative abundance profile.
+#
+# Usage:
+#   Rscript scripts/R/07b-plot-taxonomic-profile.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+
+taxonomy_dir <- "data/taxonomy"
+figure_dir <- "figures"
+table_dir <- "tables"
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+
+rel_abund_file <- file.path(taxonomy_dir, "genus-relative-abundance.tsv")
+
+if (!file.exists(rel_abund_file)) {
+  stop(
+    "Missing genus relative abundance file: ",
+    rel_abund_file,
+    "\nRun: bash scripts/bash/07a-build-taxonomic-profile.sh"
+  )
+}
+
+taxa <- read_tsv(rel_abund_file, show_col_types = FALSE)
+
+taxa_plot <- taxa %>%
+  mutate(
+    relative_abundance_percent = relative_abundance * 100,
+    genus = str_replace_all(genus, "_", " ")
+  )
+
+write_tsv(
+  taxa_plot,
+  file.path(table_dir, "genus-relative-abundance-for-plot.tsv")
+)
+
+p <- ggplot(
+  taxa_plot,
+  aes(
+    x = sample_id,
+    y = relative_abundance_percent,
+    fill = genus
+  )
+) +
+  geom_col() +
+  labs(
+    title = "Example Genus-Level Taxonomic Profile",
+    subtitle = "Toy MAS example data for workflow testing",
+    x = "Sample",
+    y = "Relative abundance (%)",
+    fill = "Genus"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+ggsave(
+  filename = file.path(figure_dir, "genus-relative-abundance-profile.png"),
+  plot = p,
+  width = 8,
+  height = 5,
+  dpi = 300
+)
+
+message("Created:")
+message("  ", file.path(table_dir, "genus-relative-abundance-for-plot.tsv"))
+message("  ", file.path(figure_dir, "genus-relative-abundance-profile.png"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/07b-plot-taxonomic-profile.R
+```
+
+This creates:
+
+```text
+tables/genus-relative-abundance-for-plot.tsv
+figures/genus-relative-abundance-profile.png
+```
+
+## Running the Complete Taxonomic Profiling Example
+
+If you are continuing from Chapter 06, first make sure the example feature table exists:
+
+```bash
+bash scripts/bash/06a-create-example-feature-table.sh
+bash scripts/bash/06b-check-feature-table.sh
+```
+
+Then build and plot the taxonomic profile:
+
+```bash
+bash scripts/bash/07a-build-taxonomic-profile.sh
+Rscript scripts/R/07b-plot-taxonomic-profile.R
+cat data/reports/taxonomic-profile-report.tsv
+```
+
+This produces genus-level count and relative abundance tables, plus a simple stacked bar plot.
+
+## Example Genus Relative Abundance Table
+
+The generated table may look like this:
+
+```text
+sample_id	genus	count	relative_abundance
+SRR17868090	Akkermansia	5	0.027027
+SRR17868090	Bacteroides	15	0.081081
+SRR17868090	Bifidobacterium	0	0
+SRR17868090	Escherichia-Shigella	45	0.243243
+SRR17868090	Lactobacillus	120	0.648649
+```
+
+Relative abundance values should be interpreted as proportions within each sample.
+
+## Interpreting Taxonomic Profiles
+
+Taxonomic profiles provide a biological overview of microbial community composition.
+
+They can help identify:
+
+- dominant taxa
+- rare taxa
+- sample-level patterns
+- possible group differences
+- taxa that may require closer investigation
+
+However, a taxonomic profile is usually descriptive. It should not be overinterpreted as evidence of disease, function, causality, or mechanism without additional analysis and biological context.
+
+## Common Taxonomic Profiling Issues
+
+Common issues include:
+
+- incomplete taxonomic assignments
+- inconsistent rank names
+- ambiguous genus or species labels
+- database-dependent classifications
+- low-confidence assignments
+- different naming conventions across tools
+- overinterpretation of species-level labels
+- compositional effects in relative abundance data
+
+These issues should be documented during reporting.
+
+## Taxonomic Profiling Outputs
+
+At the end of this stage, MAS should have:
+
+- feature-taxonomy long table
+- taxon-level count table
+- taxon-level relative abundance table
+- taxonomic profile report
+- taxonomic profile plot
+- notes on taxonomy source and limitations
+
+```{mermaid}
+flowchart LR
+  A[Feature Table] --> B[Feature Metadata]
+  B --> C[Taxonomic Profile]
+  C --> D[Relative Abundance Table]
+  D --> E[Taxonomic Plot]
+  E --> F[Biological Interpretation]
+```
+
+## Key Takeaways
+
+Taxonomic profiling connects microbiome features to microbial identities.
+
+A strong taxonomic profiling stage ensures that:
+
+- feature identifiers are linked to taxonomy
+- abundance is summarized at meaningful ranks
+- relative abundance tables are generated carefully
+- plots are descriptive and not overinterpreted
+- taxonomy source and limitations are documented
+
+Taxonomic profiling provides one of the first interpretable views of the microbial community.
+
+## What Comes Next
+
+The next chapter examines **Diversity Analysis**, where microbial communities are compared within and between samples.

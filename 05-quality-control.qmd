@@ -1,0 +1,565 @@
+# Quality Control
+
+:::cdi-message
+- **ID:** MICROB-005
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Assessing sequencing data before feature generation
+:::
+
+## Introduction
+
+Quality control is the stage where acquired sequencing files are evaluated before they are used to generate microbiome features.
+
+In the Microbiome Analysis System, quality control is not only a technical filtering step. It is a decision point. The analyst must decide whether the sequencing data are complete, readable, structurally valid, and suitable for downstream processing.
+
+A workflow can only produce defensible microbiome results if the input data are reliable enough to support analysis.
+
+## Why Quality Control Matters
+
+Raw sequencing data can contain technical problems that affect downstream results.
+
+Common issues include:
+
+- incomplete downloads
+- corrupted compressed files
+- empty FASTQ files
+- inconsistent file naming
+- missing paired-end mates
+- low read counts
+- short reads
+- variable read lengths
+- poor sequencing quality
+- adapter contamination
+- primer contamination
+- sample-level outliers
+- sequencing batch effects
+
+If these issues are not detected early, they can affect feature generation, taxonomic assignment, diversity analysis, differential analysis, and biological interpretation.
+
+Quality control helps determine whether the data are ready to move forward.
+
+## Position in the Microbiome Analysis System
+
+Quality control occurs after data acquisition and before feature generation.
+
+```{mermaid}
+flowchart LR
+  A[Data Acquisition] --> B[Quality Control]
+  B --> C[Feature Generation]
+  C --> D[Taxonomic Profiling]
+  C --> E[Functional Profiling]
+```
+
+At this stage, the analyst should confirm that the acquired sequencing files are present, readable, organized, and consistent with the expected study design.
+
+## Quality Control Is a Decision Stage
+
+Quality control should produce a decision, not only a collection of plots.
+
+The key question is:
+
+> Are these sequencing files suitable for downstream microbiome feature generation?
+
+Possible decisions include:
+
+- proceed to feature generation
+- proceed with documented limitations
+- exclude specific files or samples
+- re-download missing or corrupted files
+- return to metadata or acquisition checks
+- request clarification from the sequencing provider
+- use a different workflow for single-end or paired-end data
+
+The decision should be documented because it affects all downstream conclusions.
+
+## QC Layers
+
+MAS separates quality control into several layers.
+
+```{mermaid}
+flowchart TB
+  A[FASTQ Presence] --> B[Compression Integrity]
+  B --> C[FASTQ Structure]
+  C --> D[Read Count Summary]
+  D --> E[Read Length Summary]
+  E --> F[Pairing Check]
+  F --> G[QC Readiness Decision]
+```
+
+Each layer answers a different question.
+
+## FASTQ Presence
+
+The first check is whether FASTQ files are present in the expected directories.
+
+For the MAS example package, FASTQ files are expected under:
+
+```text
+data/raw/ena/
+```
+
+or:
+
+```text
+data/raw/ncbi/
+```
+
+A project may use one repository or both. Finding zero files in one directory is not automatically a problem if the dataset was intentionally acquired from the other source.
+
+## Compression Integrity
+
+Most sequencing files are stored as compressed FASTQ files ending in:
+
+```text
+.fastq.gz
+```
+
+or:
+
+```text
+.fq.gz
+```
+
+Before analysis, compressed files should be tested to confirm that they can be decompressed successfully.
+
+A corrupted gzip file may indicate an interrupted download or storage problem.
+
+## FASTQ Structure
+
+A valid FASTQ record contains four lines:
+
+```text
+@read_identifier
+sequence
++
+quality_scores
+```
+
+Therefore, a FASTQ file should have a total line count divisible by four.
+
+This structural check does not confirm biological quality, but it helps detect incomplete or malformed files.
+
+## Read Count Summary
+
+Read counts provide a basic summary of sequencing depth.
+
+For each FASTQ file, MAS records:
+
+- file name
+- repository directory
+- number of lines
+- number of reads
+- minimum read length
+- maximum read length
+- average read length
+- gzip status
+- FASTQ structure status
+
+Very low read counts may indicate incomplete data, failed sequencing, aggressive filtering, or toy example data.
+
+## Read Length Summary
+
+Read length affects downstream processing.
+
+For example, 16S amplicon workflows often depend on expected read length, target region, primer design, overlap, and quality profile.
+
+Shotgun metagenomic workflows may use different filtering, host-removal, assembly, or profiling approaches.
+
+Read length summaries help the analyst confirm whether the data are consistent with the expected sequencing strategy.
+
+## Paired-End Consistency
+
+For paired-end data, each run should usually have two files:
+
+```text
+SRR17868090_1.fastq.gz
+SRR17868090_2.fastq.gz
+```
+
+A missing mate file can prevent paired-end processing.
+
+The MAS example package uses paired-end toy FASTQ files, so each run accession has both `_1` and `_2` files.
+
+## Example QC Scripts
+
+The following scripts provide a lightweight MAS-side quality control check for the example acquisition package created in Chapter 04.
+
+These scripts are not replacements for tools such as FastQC, MultiQC, Cutadapt, Trimmomatic, fastp, DADA2, QIIME 2, mothur, KneadData, or other full microbiome processing workflows. They provide early file-level checks before feature generation.
+
+The workflow uses two scripts:
+
+```text
+scripts/bash/05a-check-fastq-files.sh
+scripts/bash/05b-build-qc-readiness-report.sh
+```
+
+The first script checks FASTQ file integrity and summarizes read counts and read lengths.
+
+The second script builds a simple QC readiness report.
+
+## 05a: Check FASTQ Files
+
+Save this script as:
+
+```bash
+scripts/bash/05a-check-fastq-files.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 05a-check-fastq-files.sh
+#
+# Purpose:
+#   Perform lightweight FASTQ quality-control checks before feature generation.
+#
+# Checks:
+#   - FASTQ files exist
+#   - gzip integrity for compressed files
+#   - FASTQ line count is divisible by 4
+#   - read count
+#   - minimum, maximum, and average read length
+#
+# Usage:
+#   bash scripts/bash/05a-check-fastq-files.sh
+###############################################################################
+
+set -e
+
+RAW_DIRS="data/raw/ena data/raw/ncbi"
+QC_DIR="data/qc"
+REPORT_DIR="data/reports"
+
+mkdir -p "${QC_DIR}"
+mkdir -p "${REPORT_DIR}"
+
+SUMMARY_FILE="${QC_DIR}/fastq-qc-summary.tsv"
+STATUS_FILE="${QC_DIR}/fastq-qc-status.tsv"
+
+printf "file\tdirectory\tlines\treads\tmin_read_length\tmax_read_length\tmean_read_length\tgzip_status\tfastq_structure_status\n" > "${SUMMARY_FILE}"
+printf "check\tstatus\tnotes\n" > "${STATUS_FILE}"
+
+echo "Microbiome Analysis System: FASTQ QC Check"
+echo
+
+fastq_count=0
+failed_count=0
+
+for dir in ${RAW_DIRS}; do
+  if [ ! -d "${dir}" ]; then
+    echo "Directory not found: ${dir}"
+    continue
+  fi
+
+  for file in "${dir}"/*.fastq.gz "${dir}"/*.fq.gz "${dir}"/*.fastq "${dir}"/*.fq; do
+    [ -e "${file}" ] || continue
+
+    fastq_count=$((fastq_count + 1))
+    filename=$(basename "${file}")
+
+    gzip_status="NOT_COMPRESSED"
+    fastq_structure_status="UNKNOWN"
+
+    if echo "${file}" | grep -Eq "\\.(fastq|fq)\\.gz$"; then
+      if gzip -t "${file}" 2>/dev/null; then
+        gzip_status="OK"
+      else
+        gzip_status="FAIL"
+        failed_count=$((failed_count + 1))
+      fi
+      line_count=$(gzip -cd "${file}" | wc -l | tr -d ' ')
+      read_stats=$(gzip -cd "${file}" | awk 'NR % 4 == 2 {
+        len=length($0);
+        count++;
+        total+=len;
+        if (min=="" || len < min) min=len;
+        if (len > max) max=len;
+      }
+      END {
+        if (count > 0) {
+          printf "%d\t%d\t%.2f", min, max, total/count;
+        } else {
+          printf "0\t0\t0";
+        }
+      }')
+    else
+      line_count=$(wc -l < "${file}" | tr -d ' ')
+      read_stats=$(awk 'NR % 4 == 2 {
+        len=length($0);
+        count++;
+        total+=len;
+        if (min=="" || len < min) min=len;
+        if (len > max) max=len;
+      }
+      END {
+        if (count > 0) {
+          printf "%d\t%d\t%.2f", min, max, total/count;
+        } else {
+          printf "0\t0\t0";
+        }
+      }' "${file}")
+    fi
+
+    reads=$((line_count / 4))
+
+    if [ $((line_count % 4)) -eq 0 ] && [ "${line_count}" -gt 0 ]; then
+      fastq_structure_status="OK"
+    else
+      fastq_structure_status="FAIL"
+      failed_count=$((failed_count + 1))
+    fi
+
+    min_len=$(echo "${read_stats}" | awk -F '\t' '{print $1}')
+    max_len=$(echo "${read_stats}" | awk -F '\t' '{print $2}')
+    mean_len=$(echo "${read_stats}" | awk -F '\t' '{print $3}')
+
+    printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
+      "${filename}" "${dir}" "${line_count}" "${reads}" \
+      "${min_len}" "${max_len}" "${mean_len}" \
+      "${gzip_status}" "${fastq_structure_status}" >> "${SUMMARY_FILE}"
+
+    echo "Checked: ${file}"
+  done
+done
+
+if [ "${fastq_count}" -eq 0 ]; then
+  printf "FASTQ presence\tFAIL\tNo FASTQ files found in expected raw data directories\n" >> "${STATUS_FILE}"
+  echo
+  echo "No FASTQ files found."
+  exit 1
+else
+  printf "FASTQ presence\tOK\t%s FASTQ files found\n" "${fastq_count}" >> "${STATUS_FILE}"
+fi
+
+if [ "${failed_count}" -eq 0 ]; then
+  printf "FASTQ file checks\tOK\tNo failed gzip or structure checks\n" >> "${STATUS_FILE}"
+else
+  printf "FASTQ file checks\tWARN\t%s failed checks detected\n" "${failed_count}" >> "${STATUS_FILE}"
+fi
+
+echo
+echo "FASTQ files checked: ${fastq_count}"
+echo "Failed checks: ${failed_count}"
+echo
+echo "Summary written to: ${SUMMARY_FILE}"
+echo "Status written to:  ${STATUS_FILE}"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/05a-check-fastq-files.sh
+```
+
+This creates:
+
+```text
+data/qc/fastq-qc-summary.tsv
+data/qc/fastq-qc-status.tsv
+```
+
+## 05b: Build the QC Readiness Report
+
+Save this script as:
+
+```bash
+scripts/bash/05b-build-qc-readiness-report.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 05b-build-qc-readiness-report.sh
+#
+# Purpose:
+#   Build a simple QC readiness report from FASTQ QC outputs.
+#
+# Usage:
+#   bash scripts/bash/05b-build-qc-readiness-report.sh
+###############################################################################
+
+set -e
+
+QC_DIR="data/qc"
+REPORT_DIR="data/reports"
+
+SUMMARY_FILE="${QC_DIR}/fastq-qc-summary.tsv"
+STATUS_FILE="${QC_DIR}/fastq-qc-status.tsv"
+READINESS_REPORT="${REPORT_DIR}/qc-readiness-report.tsv"
+
+mkdir -p "${REPORT_DIR}"
+
+if [ ! -s "${SUMMARY_FILE}" ]; then
+  echo "Missing FASTQ QC summary: ${SUMMARY_FILE}"
+  echo "Run: bash scripts/bash/05a-check-fastq-files.sh"
+  exit 1
+fi
+
+if [ ! -s "${STATUS_FILE}" ]; then
+  echo "Missing FASTQ QC status: ${STATUS_FILE}"
+  echo "Run: bash scripts/bash/05a-check-fastq-files.sh"
+  exit 1
+fi
+
+total_files=$(tail -n +2 "${SUMMARY_FILE}" | wc -l | tr -d ' ')
+failed_structure=$(awk -F '\t' 'NR > 1 && $9 != "OK" {count++} END {print count+0}' "${SUMMARY_FILE}")
+failed_gzip=$(awk -F '\t' 'NR > 1 && $8 == "FAIL" {count++} END {print count+0}' "${SUMMARY_FILE}")
+total_reads=$(awk -F '\t' 'NR > 1 {sum += $4} END {print sum+0}' "${SUMMARY_FILE}")
+min_reads=$(awk -F '\t' 'NR == 2 {min=$4} NR > 2 && $4 < min {min=$4} END {if (min=="") print 0; else print min}' "${SUMMARY_FILE}")
+max_reads=$(awk -F '\t' 'NR == 2 {max=$4} NR > 2 && $4 > max {max=$4} END {if (max=="") print 0; else print max}' "${SUMMARY_FILE}")
+
+decision="READY_FOR_NEXT_STEP"
+notes="FASTQ files passed lightweight file-level checks"
+
+if [ "${total_files}" -eq 0 ]; then
+  decision="NOT_READY"
+  notes="No FASTQ files were found"
+elif [ "${failed_structure}" -gt 0 ] || [ "${failed_gzip}" -gt 0 ]; then
+  decision="REVIEW_REQUIRED"
+  notes="One or more FASTQ files failed gzip or structure checks"
+fi
+
+printf "metric\tvalue\n" > "${READINESS_REPORT}"
+printf "total_fastq_files\t%s\n" "${total_files}" >> "${READINESS_REPORT}"
+printf "total_reads\t%s\n" "${total_reads}" >> "${READINESS_REPORT}"
+printf "minimum_reads_per_file\t%s\n" "${min_reads}" >> "${READINESS_REPORT}"
+printf "maximum_reads_per_file\t%s\n" "${max_reads}" >> "${READINESS_REPORT}"
+printf "failed_gzip_checks\t%s\n" "${failed_gzip}" >> "${READINESS_REPORT}"
+printf "failed_fastq_structure_checks\t%s\n" "${failed_structure}" >> "${READINESS_REPORT}"
+printf "qc_decision\t%s\n" "${decision}" >> "${READINESS_REPORT}"
+printf "notes\t%s\n" "${notes}" >> "${READINESS_REPORT}"
+
+echo "QC readiness report written to: ${READINESS_REPORT}"
+echo
+cat "${READINESS_REPORT}"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/05b-build-qc-readiness-report.sh
+```
+
+This creates:
+
+```text
+data/reports/qc-readiness-report.tsv
+```
+
+## Running the Complete QC Example
+
+If you are continuing from Chapter 04, first make sure the example acquisition package exists:
+
+```bash
+bash scripts/bash/04a-create-example-acquisition-data.sh
+bash scripts/bash/04b-check-data-acquisition.sh
+```
+
+Then run the QC scripts:
+
+```bash
+bash scripts/bash/05a-check-fastq-files.sh
+bash scripts/bash/05b-build-qc-readiness-report.sh
+cat data/qc/fastq-qc-summary.tsv
+cat data/reports/qc-readiness-report.tsv
+```
+
+The expected example dataset contains six tiny paired-end FASTQ files. Because the reads are toy sequences, the read counts are intentionally very small. This is acceptable for workflow testing, but not for biological interpretation.
+
+## Example QC Summary
+
+A small example `fastq-qc-summary.tsv` may look like this:
+
+```text
+file	directory	lines	reads	min_read_length	max_read_length	mean_read_length	gzip_status	fastq_structure_status
+SRR17868090_1.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+SRR17868090_2.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+SRR17868091_1.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+SRR17868091_2.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+SRR17868092_1.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+SRR17868092_2.fastq.gz	data/raw/ena	4	1	12	12	12.00	OK	OK
+```
+
+A real dataset should usually contain many more reads per file.
+
+## Interpreting QC Results
+
+The lightweight MAS QC checks answer basic file-level questions:
+
+- Are FASTQ files present?
+- Can compressed files be decompressed?
+- Does each file have valid FASTQ structure?
+- How many reads are present?
+- What are the basic read length summaries?
+
+These checks do not replace full sequencing quality assessment. They should be followed by appropriate microbiome-specific processing and quality evaluation.
+
+For real analysis, additional checks may include:
+
+- per-base sequence quality
+- adapter content
+- primer content
+- sequence duplication
+- ambiguous bases
+- expected amplicon length
+- host contamination
+- negative control evaluation
+- sample-level outlier detection
+- batch effect assessment
+
+## When to Stop
+
+The analyst should stop and review the data before feature generation if:
+
+- FASTQ files are missing
+- gzip integrity checks fail
+- FASTQ structure checks fail
+- paired-end mates are missing
+- metadata cannot be linked to FASTQ files
+- read counts are unexpectedly low
+- sequencing strategy is unclear
+- batch or sample identity problems are detected
+
+Stopping early is better than generating downstream outputs from unreliable inputs.
+
+## MAS QC Outputs
+
+At the end of this stage, MAS should have:
+
+- FASTQ QC summary
+- FASTQ QC status table
+- QC readiness report
+- notes on limitations or issues
+- decision about whether to proceed
+
+```{mermaid}
+flowchart LR
+  A[FASTQ Files] --> B[QC Summary]
+  B --> C[QC Readiness Report]
+  C --> D[Feature Generation]
+```
+
+## Key Takeaways
+
+Quality control is the bridge between acquired data and microbiome feature generation.
+
+A strong QC stage helps ensure that:
+
+- sequencing files are present
+- compressed files are readable
+- FASTQ structure is valid
+- read counts are summarized
+- read lengths are summarized
+- problems are detected before feature generation
+- the decision to proceed is documented
+
+Quality control does not make a weak dataset strong, but it helps prevent weak or corrupted inputs from silently entering the analysis workflow.
+
+## What Comes Next
+
+The next chapter examines **Feature Generation**, where quality-checked sequencing reads are transformed into microbiome features such as ASVs, OTUs, taxonomic profiles, or functional profiles.

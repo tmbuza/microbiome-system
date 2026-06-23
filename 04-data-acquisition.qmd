@@ -1,0 +1,730 @@
+# Data Acquisition
+
+:::cdi-message
+- **ID:** MICROB-004
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Reproducible acquisition of microbiome sequencing data
+:::
+
+## Introduction
+
+Data acquisition is the stage where microbiome analysis moves from study planning to usable sequencing data.
+
+In the Microbiome Analysis System, data acquisition means more than downloading FASTQ files. It includes identifying the correct study accessions, retrieving metadata, confirming sample availability, organizing files, recording data sources, validating downloads, and preparing the dataset for quality control.
+
+This chapter connects MAS to the **CDI Data Acquisition System**. Rather than duplicating the full CDI-DAS workflow, this chapter explains how MAS receives sequencing data and metadata in a reproducible, analysis-ready form.
+
+## Why Data Acquisition Matters
+
+Microbiome analysis depends on the integrity of the data entering the workflow.
+
+If the wrong samples are downloaded, metadata are incomplete, files are missing, or read pairs are mismatched, downstream results can become unreliable even if the analysis code is correct.
+
+A strong data acquisition stage helps ensure that:
+
+- sequencing files correspond to the intended study
+- sample identifiers are traceable
+- metadata are available for interpretation
+- FASTQ files are organized consistently
+- paired-end files are matched correctly
+- public accession numbers are recorded
+- download steps are reproducible
+- file completeness can be checked before quality control
+
+Data acquisition is therefore both a technical and interpretive step.
+
+## Position in the Microbiome Analysis System
+
+Data acquisition occurs after study design, metadata planning, and sequencing strategy are understood.
+
+```{mermaid}
+flowchart LR
+  A[Study Design and Metadata] --> B[Sample Collection and Sequencing]
+  B --> C[Data Acquisition]
+  C --> D[Quality Control]
+  D --> E[Feature Generation]
+```
+
+For newly generated data, data acquisition may involve receiving FASTQ files from a sequencing provider or institutional storage system.
+
+For public data, data acquisition may involve retrieving metadata and sequencing files from repositories such as NCBI SRA, ENA, DDBJ, MGnify, Qiita, or other study-specific repositories.
+
+## Microbiome Analysis System and CDI-DAS
+
+The recommended CDI workflow separates public data acquisition from downstream analysis.
+
+```{mermaid}
+flowchart TB
+  A[CDI Systematic Dataset Discovery] --> B[Selected BioProject or Study Accessions]
+  B --> C[CDI Data Acquisition System]
+  C --> D[Metadata Tables]
+  C --> E[FASTQ Files]
+  C --> F[Download Manifests]
+  C --> G[Validation Reports]
+  D --> H[Microbiome Analysis System]
+  E --> H
+  F --> H
+  G --> H
+```
+
+The **CDI Data Acquisition System (DAS)** is responsible for reproducible retrieval and validation of public sequencing data.
+
+The **Microbiome Analysis System (MAS)** begins downstream analysis after data and metadata have been acquired, organized, and checked.
+
+This separation keeps MAS focused on microbiome analysis while still preserving reproducibility from study discovery to final interpretation.
+
+## Expected Inputs
+
+A microbiome data acquisition package should contain the files needed to begin quality control and downstream analysis.
+
+At minimum, MAS expects:
+
+- sequencing files, usually FASTQ or FASTQ.gz
+- metadata table linking samples to biological variables
+- sample identifiers that match sequencing files or run accessions
+- study accession information
+- download manifest or file inventory
+- notes about sequencing strategy
+- validation or checksum report, when available
+
+For public data acquired through CDI-DAS, the expected structure may look like this:
+
+```text
+data/
+├── metadata/
+│   ├── runinfo-PRJNA802976.csv
+│   ├── ena-PRJNA802976.tsv
+│   └── srr-accessions.txt
+├── manifests/
+│   ├── download-manifest.tsv
+│   └── test-manifest.tsv
+├── raw/
+│   ├── ena/
+│   │   ├── SRR17868090_1.fastq.gz
+│   │   ├── SRR17868090_2.fastq.gz
+│   │   └── ...
+│   └── ncbi/
+├── inventory/
+│   └── fastq-inventory-ena.tsv
+└── validation/
+    ├── file-summary.tsv
+    ├── validation-report.tsv
+    └── validation-log.txt
+```
+
+The exact file names may vary by project, but the principle is the same: raw data, metadata, manifests, inventories, and validation outputs should be separated and traceable.
+
+## Public Data Acquisition
+
+Public microbiome datasets are often accessed through study or run accessions.
+
+Common accession types include:
+
+- BioProject accessions
+- BioSample accessions
+- SRA run accessions
+- ENA run accessions
+- DDBJ accessions
+- study-specific repository identifiers
+
+A BioProject accession can often be used to retrieve run-level metadata and FASTQ links.
+
+For example, a human gut microbiome study may be represented by a BioProject accession such as:
+
+```text
+PRJNA802976
+```
+
+The accession itself is not enough for analysis. It must be converted into a structured dataset package containing metadata, run accessions, FASTQ files, and validation outputs.
+
+## Recommended Acquisition Strategy
+
+For MAS, the recommended public-data workflow is:
+
+```{mermaid}
+flowchart TB
+  A[BioProject or Study Accession] --> B[Retrieve NCBI RunInfo]
+  A --> C[Retrieve ENA Metadata]
+  B --> D[Build SRR Accession List]
+  C --> E[Build Download Manifest]
+  E --> F[Download FASTQ Files]
+  F --> G[Build File Inventory]
+  G --> H[Validate Downloads]
+  H --> I[MAS-Ready Data Package]
+```
+
+This mirrors the CDI-DAS approach:
+
+1. retrieve run-level metadata
+2. retrieve ENA metadata and FASTQ URLs
+3. build a manifest
+4. download a test subset first
+5. download the full dataset when ready
+6. inventory files
+7. validate downloads
+8. hand off data to MAS
+
+The test-first approach is important because public datasets can be large, file paths can change, and download problems are easier to diagnose on a small subset.
+
+## MAS Example and Handoff Scripts
+
+The following scripts do not replace CDI-DAS. They provide a lightweight MAS-side example and handoff check that confirm whether a CDI-DAS-style data package is present and ready for the next chapter.
+
+The workflow uses two scripts:
+
+```text
+scripts/bash/04a-create-example-acquisition-data.sh
+scripts/bash/04b-check-data-acquisition.sh
+```
+
+The first script creates a small example acquisition package for testing the MAS workflow structure. The FASTQ reads are toy sequences and are not intended for biological interpretation.
+
+The second script checks whether the expected metadata files, manifests, FASTQ files, inventory outputs, and validation reports are present.
+
+
+## 04a: Create the Example Acquisition Package
+
+Save this script as:
+
+```bash
+scripts/bash/04a-create-example-acquisition-data.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 04a-create-example-acquisition-data.sh
+#
+# Purpose:
+#   Create a small example data acquisition package for testing the MAS
+#   data acquisition handoff workflow.
+#
+# Important:
+#   This script creates toy FASTQ reads and mock metadata for workflow testing.
+#   These files are not real biological data and should not be used for
+#   biological interpretation.
+#
+# Usage:
+#   bash scripts/bash/04a-create-example-acquisition-data.sh
+###############################################################################
+
+set -e
+
+BIOPROJECT="${BIOPROJECT:-PRJNA802976}"
+
+echo "Creating MAS example acquisition package..."
+echo "BioProject: ${BIOPROJECT}"
+echo
+
+mkdir -p data/metadata
+mkdir -p data/manifests
+mkdir -p data/raw/ena
+mkdir -p data/raw/ncbi
+mkdir -p data/inventory
+mkdir -p data/validation
+mkdir -p data/reports
+
+###############################################################################
+# Example BioProject metadata
+###############################################################################
+
+cat > "data/metadata/runinfo-${BIOPROJECT}.csv" <<'EOF'
+Run,BioProject,BioSample,LibraryStrategy,LibraryLayout,Platform,Model
+SRR17868090,PRJNA802976,SAMN00000001,AMPLICON,PAIRED,ILLUMINA,Illumina MiSeq
+SRR17868091,PRJNA802976,SAMN00000002,AMPLICON,PAIRED,ILLUMINA,Illumina MiSeq
+SRR17868092,PRJNA802976,SAMN00000003,AMPLICON,PAIRED,ILLUMINA,Illumina MiSeq
+EOF
+
+cat > "data/metadata/ena-${BIOPROJECT}.tsv" <<'EOF'
+run_accession	sample_accession	study_accession	fastq_ftp
+SRR17868090	SAMN00000001	PRJNA802976	ftp://example/SRR17868090_1.fastq.gz;ftp://example/SRR17868090_2.fastq.gz
+SRR17868091	SAMN00000002	PRJNA802976	ftp://example/SRR17868091_1.fastq.gz;ftp://example/SRR17868091_2.fastq.gz
+SRR17868092	SAMN00000003	PRJNA802976	ftp://example/SRR17868092_1.fastq.gz;ftp://example/SRR17868092_2.fastq.gz
+EOF
+
+cat > data/metadata/srr-accessions.txt <<'EOF'
+SRR17868090
+SRR17868091
+SRR17868092
+EOF
+
+###############################################################################
+# Example manifests
+###############################################################################
+
+cat > data/manifests/download-manifest.tsv <<'EOF'
+run_accession	layout	repository	expected_fastq_files
+SRR17868090	PAIRED	ENA	2
+SRR17868091	PAIRED	ENA	2
+SRR17868092	PAIRED	ENA	2
+EOF
+
+cat > data/manifests/test-manifest.tsv <<'EOF'
+run_accession	layout	repository	expected_fastq_files
+SRR17868090	PAIRED	ENA	2
+SRR17868091	PAIRED	ENA	2
+SRR17868092	PAIRED	ENA	2
+EOF
+
+###############################################################################
+# Tiny toy FASTQ files
+###############################################################################
+
+tmpdir=$(mktemp -d)
+
+cat > "${tmpdir}/SRR17868090_1.fastq" <<'EOF'
+@SRR17868090.1/1
+ACGTACGTACGT
++
+FFFFFFFFFFFF
+EOF
+
+cat > "${tmpdir}/SRR17868090_2.fastq" <<'EOF'
+@SRR17868090.1/2
+TGCATGCATGCA
++
+FFFFFFFFFFFF
+EOF
+
+cat > "${tmpdir}/SRR17868091_1.fastq" <<'EOF'
+@SRR17868091.1/1
+ACGTACGTACGT
++
+FFFFFFFFFFFF
+EOF
+
+cat > "${tmpdir}/SRR17868091_2.fastq" <<'EOF'
+@SRR17868091.1/2
+TGCATGCATGCA
++
+FFFFFFFFFFFF
+EOF
+
+cat > "${tmpdir}/SRR17868092_1.fastq" <<'EOF'
+@SRR17868092.1/1
+ACGTACGTACGT
++
+FFFFFFFFFFFF
+EOF
+
+cat > "${tmpdir}/SRR17868092_2.fastq" <<'EOF'
+@SRR17868092.1/2
+TGCATGCATGCA
++
+FFFFFFFFFFFF
+EOF
+
+gzip -c "${tmpdir}/SRR17868090_1.fastq" > data/raw/ena/SRR17868090_1.fastq.gz
+gzip -c "${tmpdir}/SRR17868090_2.fastq" > data/raw/ena/SRR17868090_2.fastq.gz
+gzip -c "${tmpdir}/SRR17868091_1.fastq" > data/raw/ena/SRR17868091_1.fastq.gz
+gzip -c "${tmpdir}/SRR17868091_2.fastq" > data/raw/ena/SRR17868091_2.fastq.gz
+gzip -c "${tmpdir}/SRR17868092_1.fastq" > data/raw/ena/SRR17868092_1.fastq.gz
+gzip -c "${tmpdir}/SRR17868092_2.fastq" > data/raw/ena/SRR17868092_2.fastq.gz
+
+rm -rf "${tmpdir}"
+
+###############################################################################
+# Example inventory and validation outputs
+###############################################################################
+
+cat > data/inventory/fastq-inventory-ena.tsv <<'EOF'
+file	run_accession	read	directory
+SRR17868090_1.fastq.gz	SRR17868090	1	data/raw/ena
+SRR17868090_2.fastq.gz	SRR17868090	2	data/raw/ena
+SRR17868091_1.fastq.gz	SRR17868091	1	data/raw/ena
+SRR17868091_2.fastq.gz	SRR17868091	2	data/raw/ena
+SRR17868092_1.fastq.gz	SRR17868092	1	data/raw/ena
+SRR17868092_2.fastq.gz	SRR17868092	2	data/raw/ena
+EOF
+
+cat > data/validation/validation-report.tsv <<'EOF'
+item	status	notes
+metadata	OK	example metadata present
+fastq_files	OK	six paired-end example FASTQ files present
+manifest	OK	example manifest present
+EOF
+
+echo "Example acquisition package created."
+echo
+echo "Created:"
+echo "  data/metadata/runinfo-${BIOPROJECT}.csv"
+echo "  data/metadata/ena-${BIOPROJECT}.tsv"
+echo "  data/metadata/srr-accessions.txt"
+echo "  data/manifests/download-manifest.tsv"
+echo "  data/manifests/test-manifest.tsv"
+echo "  data/raw/ena/*.fastq.gz"
+echo "  data/inventory/fastq-inventory-ena.tsv"
+echo "  data/validation/validation-report.tsv"
+echo
+echo "Next:"
+echo "  bash scripts/bash/04b-check-data-acquisition.sh"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/04a-create-example-acquisition-data.sh
+```
+
+This creates a small example dataset structure containing mock metadata, manifests, tiny FASTQ files, an inventory table, and a validation report.
+
+
+## 04b: Check the Data Acquisition Package
+
+Save this script as:
+
+```bash
+scripts/bash/04b-check-data-acquisition.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 04b-check-data-acquisition.sh
+#
+# Purpose:
+#   Check whether a CDI-DAS-style microbiome data acquisition package is present
+#   and summarize files needed before quality control.
+#
+# Usage:
+#   bash scripts/bash/04b-check-data-acquisition.sh
+#
+# Optional:
+#   BIOPROJECT=PRJNA802976 bash scripts/bash/04b-check-data-acquisition.sh
+###############################################################################
+
+set -e
+
+BIOPROJECT="${BIOPROJECT:-PRJNA802976}"
+
+METADATA_DIR="data/metadata"
+MANIFEST_DIR="data/manifests"
+RAW_ENA_DIR="data/raw/ena"
+RAW_NCBI_DIR="data/raw/ncbi"
+INVENTORY_DIR="data/inventory"
+VALIDATION_DIR="data/validation"
+REPORT_DIR="data/reports"
+
+RUNINFO_FILE="${METADATA_DIR}/runinfo-${BIOPROJECT}.csv"
+ENA_FILE="${METADATA_DIR}/ena-${BIOPROJECT}.tsv"
+SRR_FILE="${METADATA_DIR}/srr-accessions.txt"
+MANIFEST_FILE="${MANIFEST_DIR}/download-manifest.tsv"
+TEST_MANIFEST_FILE="${MANIFEST_DIR}/test-manifest.tsv"
+ENA_INVENTORY_FILE="${INVENTORY_DIR}/fastq-inventory-ena.tsv"
+VALIDATION_REPORT="${VALIDATION_DIR}/validation-report.tsv"
+
+mkdir -p "${REPORT_DIR}"
+
+SUMMARY_FILE="${REPORT_DIR}/data-acquisition-summary.tsv"
+
+echo "Microbiome Analysis System: Data Acquisition Check"
+echo "BioProject: ${BIOPROJECT}"
+echo
+
+printf "item\tstatus\tpath_or_count\n" > "${SUMMARY_FILE}"
+
+check_file() {
+  label="$1"
+  file="$2"
+
+  if [ -s "${file}" ]; then
+    lines=$(wc -l < "${file}" | tr -d ' ')
+    echo "FOUND: ${label} (${lines} lines) -> ${file}"
+    printf "%s\tFOUND\t%s lines; %s\n" "${label}" "${lines}" "${file}" >> "${SUMMARY_FILE}"
+  else
+    echo "MISSING: ${label} -> ${file}"
+    printf "%s\tMISSING\t%s\n" "${label}" "${file}" >> "${SUMMARY_FILE}"
+  fi
+}
+
+check_dir_fastq() {
+  label="$1"
+  dir="$2"
+
+  if [ -d "${dir}" ]; then
+    count=$(find "${dir}" -type f \( -name "*.fastq.gz" -o -name "*.fq.gz" -o -name "*.fastq" -o -name "*.fq" \) | wc -l | tr -d ' ')
+    echo "FASTQ files in ${label}: ${count}"
+    printf "%s\tCOUNT\t%s FASTQ files; %s\n" "${label}" "${count}" "${dir}" >> "${SUMMARY_FILE}"
+  else
+    echo "MISSING DIRECTORY: ${label} -> ${dir}"
+    printf "%s\tMISSING\t%s\n" "${label}" "${dir}" >> "${SUMMARY_FILE}"
+  fi
+}
+
+check_file "NCBI RunInfo metadata" "${RUNINFO_FILE}"
+check_file "ENA metadata" "${ENA_FILE}"
+check_file "SRR accession list" "${SRR_FILE}"
+check_file "Download manifest" "${MANIFEST_FILE}"
+check_file "Test manifest" "${TEST_MANIFEST_FILE}"
+check_dir_fastq "ENA raw data" "${RAW_ENA_DIR}"
+check_dir_fastq "NCBI raw data" "${RAW_NCBI_DIR}"
+check_file "ENA FASTQ inventory" "${ENA_INVENTORY_FILE}"
+check_file "Validation report" "${VALIDATION_REPORT}"
+
+echo
+echo "Summary written to: ${SUMMARY_FILE}"
+echo
+echo "Next MAS step:"
+echo "  Review the summary, confirm metadata and FASTQ files are present,"
+echo "  then continue to 05-quality-control.qmd."
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/04b-check-data-acquisition.sh
+```
+
+For a different BioProject:
+
+```bash
+BIOPROJECT=PRJNA802976 bash scripts/bash/04b-check-data-acquisition.sh
+```
+
+The script creates:
+
+```text
+data/reports/data-acquisition-summary.tsv
+```
+
+This file records which acquisition components were found and whether the dataset is ready to move into quality control.
+
+## Running the Complete Example
+
+To test the full MAS data acquisition handoff workflow, run:
+
+```bash
+bash scripts/bash/04a-create-example-acquisition-data.sh
+bash scripts/bash/04b-check-data-acquisition.sh
+cat data/reports/data-acquisition-summary.tsv
+```
+
+The first command creates the example acquisition package. The second command checks whether the expected files are present. The third command displays the generated summary table.
+
+Example output from `04a-create-example-acquisition-data.sh`:
+
+```text
+Creating MAS example acquisition package...
+BioProject: PRJNA802976
+
+Example acquisition package created.
+
+Created:
+  data/metadata/runinfo-PRJNA802976.csv
+  data/metadata/ena-PRJNA802976.tsv
+  data/metadata/srr-accessions.txt
+  data/manifests/download-manifest.tsv
+  data/manifests/test-manifest.tsv
+  data/raw/ena/*.fastq.gz
+  data/inventory/fastq-inventory-ena.tsv
+  data/validation/validation-report.tsv
+
+Next:
+  bash scripts/bash/04b-check-data-acquisition.sh
+```
+
+Example output from `04b-check-data-acquisition.sh`:
+
+```text
+Microbiome Analysis System: Data Acquisition Check
+BioProject: PRJNA802976
+
+FOUND: NCBI RunInfo metadata (4 lines) -> data/metadata/runinfo-PRJNA802976.csv
+FOUND: ENA metadata (4 lines) -> data/metadata/ena-PRJNA802976.tsv
+FOUND: SRR accession list (3 lines) -> data/metadata/srr-accessions.txt
+FOUND: Download manifest (4 lines) -> data/manifests/download-manifest.tsv
+FOUND: Test manifest (4 lines) -> data/manifests/test-manifest.tsv
+FASTQ files in ENA raw data: 6
+FASTQ files in NCBI raw data: 0
+FOUND: ENA FASTQ inventory (7 lines) -> data/inventory/fastq-inventory-ena.tsv
+FOUND: Validation report (4 lines) -> data/validation/validation-report.tsv
+
+Summary written to: data/reports/data-acquisition-summary.tsv
+
+Next MAS step:
+  Review the summary, confirm metadata and FASTQ files are present,
+  then continue to 05-quality-control.qmd.
+```
+
+In this example, `NCBI raw data: 0` is acceptable because the toy example package uses the ENA raw data directory.
+
+## Inspecting the Summary Table
+
+After running the handoff check, inspect the generated summary table:
+
+```bash
+cat data/reports/data-acquisition-summary.tsv
+```
+
+Example summary:
+
+```text
+item	status	path_or_count
+NCBI RunInfo metadata	FOUND	4 lines; data/metadata/runinfo-PRJNA802976.csv
+ENA metadata	FOUND	4 lines; data/metadata/ena-PRJNA802976.tsv
+SRR accession list	FOUND	3 lines; data/metadata/srr-accessions.txt
+Download manifest	FOUND	4 lines; data/manifests/download-manifest.tsv
+Test manifest	FOUND	4 lines; data/manifests/test-manifest.tsv
+ENA raw data	COUNT	6 FASTQ files; data/raw/ena
+NCBI raw data	COUNT	0 FASTQ files; data/raw/ncbi
+ENA FASTQ inventory	FOUND	7 lines; data/inventory/fastq-inventory-ena.tsv
+Validation report	FOUND	4 lines; data/validation/validation-report.tsv
+```
+
+This summary becomes the MAS handoff record for the next chapter.
+
+
+## Minimal Data Acquisition Checklist
+
+Before continuing to quality control, confirm that:
+
+- raw FASTQ files are present
+- paired-end files are matched when applicable
+- metadata are available
+- sample identifiers can be connected to FASTQ files
+- study accession numbers are recorded
+- download manifests are preserved
+- file inventories are available
+- validation reports are available or planned
+- sequencing strategy is known
+- the dataset has a clear analysis objective
+
+This checklist prevents downstream analysis from starting with unclear or incomplete data.
+
+## FASTQ File Organization
+
+A consistent file organization makes microbiome workflows easier to automate.
+
+For paired-end sequencing, file names commonly follow patterns such as:
+
+```text
+SRR17868090_1.fastq.gz
+SRR17868090_2.fastq.gz
+SRR17868091_1.fastq.gz
+SRR17868091_2.fastq.gz
+```
+
+For single-end sequencing, file names may look like:
+
+```text
+SRR12345678.fastq.gz
+SRR12345679.fastq.gz
+```
+
+Before quality control, the analyst should confirm whether the dataset is single-end or paired-end.
+
+This matters because many downstream workflows require different parameters for single-end and paired-end data.
+
+## Metadata and FASTQ Matching
+
+Metadata must connect to sequencing files.
+
+A common relationship is:
+
+```text
+sample_id ↔ run_accession ↔ FASTQ file
+```
+
+For public data, `Run` or `run_accession` often provides the connection between metadata and FASTQ files.
+
+A simplified metadata table might contain:
+
+```text
+sample_id    run_accession    group      sample_type
+S1           SRR17868090      healthy    stool
+S2           SRR17868091      healthy    stool
+S3           SRR17868092      healthy    stool
+```
+
+The corresponding FASTQ files might be:
+
+```text
+SRR17868090_1.fastq.gz
+SRR17868090_2.fastq.gz
+SRR17868091_1.fastq.gz
+SRR17868091_2.fastq.gz
+SRR17868092_1.fastq.gz
+SRR17868092_2.fastq.gz
+```
+
+If metadata and FASTQ files cannot be linked, downstream analysis becomes difficult or impossible to interpret.
+
+## What to Record
+
+A reproducible data acquisition record should include:
+
+- study accession
+- repository source
+- date of acquisition
+- metadata files retrieved
+- number of runs expected
+- number of FASTQ files expected
+- number of FASTQ files downloaded
+- download method
+- test or production mode
+- validation status
+- known limitations
+
+These details can be summarized in a simple report table and referenced during reporting.
+
+## Common Problems
+
+Common data acquisition problems include:
+
+- missing FASTQ files
+- incomplete metadata
+- mismatched run accessions
+- paired-end files missing one mate
+- duplicate sample identifiers
+- failed downloads
+- changed repository links
+- compressed and uncompressed files mixed together
+- public metadata that lack key biological variables
+- study accessions that include multiple sample types or sub-studies
+
+These issues should be resolved or documented before moving into quality control.
+
+## MAS Data Acquisition Outputs
+
+At the end of this stage, MAS should have:
+
+- organized raw sequencing files
+- metadata tables
+- run accession list
+- download manifest
+- FASTQ inventory
+- validation report
+- data acquisition summary
+
+These outputs support the next stage of the system.
+
+```{mermaid}
+flowchart LR
+  A[Raw FASTQ Files] --> D[Quality Control]
+  B[Metadata Tables] --> D
+  C[Acquisition Summary] --> D
+```
+
+## Key Takeaways
+
+Data acquisition is not just downloading files.
+
+It is the process of turning study accessions, repository records, and sequencing links into a structured dataset package that can support reproducible microbiome analysis.
+
+A strong data acquisition stage ensures that:
+
+- data sources are traceable
+- metadata are preserved
+- files are organized
+- downloads are validated
+- sample identifiers are linkable
+- downstream quality control can begin confidently
+
+## What Comes Next
+
+The next chapter examines **Quality Control**, where acquired sequencing data are assessed before feature generation and downstream microbiome analysis.

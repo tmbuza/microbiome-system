@@ -9,70 +9,219 @@
 
 ## Introduction
 
-Every microbiome project begins with a biological question and ends with a biological conclusion. Between these two points lies a sequence of analytical stages that collectively form the Microbiome System.
+Every microbiome project begins with a biological question and ends with a biological conclusion. Between these two points lies a connected sequence of design, experimental, computational, statistical, and interpretive decisions.
 
-Each stage contributes information that influences downstream analyses and ultimately affects the conclusions that can be drawn from the data.
+Together, these stages form the **Microbiome Analysis System**.
 
-Understanding how these components connect is essential for producing reliable, reproducible, and defensible microbiome research.
+This system is not only a software workflow. It is a chain of evidence that connects biological context, metadata, sequencing data, analytical methods, statistical results, and interpretation.
 
-## The Microbiome System
+Understanding how these components connect is essential for producing microbiome analyses that are reliable, reproducible, interpretable, and defensible.
 
-```text
-Biological Question
-        ↓
-Study Design & Metadata
-        ↓
-Sample Collection
-        ↓
-DNA Extraction
-        ↓
-Sequencing
-        ↓
-Data Acquisition
-        ↓
-Quality Control
-        ↓
-Taxonomic Profiling
-        ↓
-Functional Profiling
-        ↓
-Diversity Analysis
-        ↓
-Differential Analysis
-        ↓
-Biological Interpretation
-        ↓
-Reproducible Reporting
+## The Microbiome Analysis System
+
+The Microbiome Analysis System follows the full path from biological question to reproducible report.
+
+```{mermaid}
+flowchart TB
+  A[Biological Question] --> B[Study Design and Metadata]
+  B --> C[Sample Collection and Sequencing]
+  C --> D[Data Acquisition]
+  D --> E[Quality Control]
+  E --> F[Feature Generation]
+  F --> G[Taxonomic Profiling]
+  F --> H[Functional Profiling]
+  G --> I[Diversity Analysis]
+  H --> I
+  I --> J[Differential Analysis]
+  J --> K[Biological Interpretation]
+  K --> L[Reproducible Reporting]
 ```
+
+Each stage influences the next. A weakness early in the system can limit what can be concluded later, even if downstream analyses are technically correct.
+
+For this reason, MAS emphasizes the connection between analytical steps rather than treating each step as an isolated task.
+
+## System Logic
+
+The Microbiome Analysis System can be understood as four connected layers:
+
+```{mermaid}
+flowchart LR
+  A[Design Layer] --> B[Data Layer]
+  B --> C[Analysis Layer]
+  C --> D[Interpretation Layer]
+```
+
+The **design layer** defines the biological question, study population, sampling strategy, metadata requirements, and sequencing approach.
+
+The **data layer** includes data acquisition, organization, validation, and quality control.
+
+The **analysis layer** includes feature generation, taxonomic profiling, functional profiling, diversity analysis, and differential analysis.
+
+The **interpretation layer** connects statistical findings to biological meaning and produces a reproducible report.
 
 ## From Question to Data
 
-Every successful microbiome study begins with a clearly defined biological question. The question influences study design, sampling strategy, metadata collection, sequencing approach, and downstream analyses.
+Every successful microbiome study begins with a clearly defined biological question.
+
+The biological question influences:
+
+- study design
+- sample selection
+- metadata collection
+- sequencing strategy
+- statistical comparisons
+- interpretation of results
+
+A clear question helps determine whether the analysis is descriptive, comparative, exploratory, diagnostic, ecological, clinical, agricultural, environmental, or mechanistic.
+
+Without a clear question, microbiome analysis can easily produce many plots without producing a defensible conclusion.
 
 ## From Samples to Sequencing Data
 
-Biological samples are collected, processed, and sequenced. The resulting sequencing reads provide the raw material for microbiome analysis.
+Microbiome data are shaped long before computational analysis begins.
+
+Sample collection, storage, DNA extraction, library preparation, sequencing platform, target region, and sequencing depth all influence the data that enter the analysis workflow.
+
+For example:
+
+- sample type affects microbial biomass and community composition
+- storage conditions can introduce technical variation
+- DNA extraction methods can bias organism recovery
+- 16S and shotgun metagenomics answer different questions
+- sequencing depth affects sensitivity and feature detection
+
+These upstream choices must be considered when interpreting downstream results.
 
 ## From Raw Data to Features
 
-Raw sequencing data undergo quality control before microbial features are generated. These features may include ASVs, OTUs, taxonomic profiles, and functional profiles.
+Raw sequencing reads are not yet biological results.
+
+They must first pass through quality control and feature generation. Depending on the sequencing strategy and workflow, features may include:
+
+- ASVs
+- OTUs
+- taxonomic profiles
+- gene family profiles
+- pathway profiles
+- functional potential summaries
+
+Feature generation transforms sequencing reads into structured tables that can be analyzed statistically.
+
+The quality of these feature tables determines the reliability of downstream diversity analysis, differential analysis, and interpretation.
 
 ## From Features to Biological Patterns
 
-Researchers explore biological patterns using taxonomic profiling, functional profiling, diversity analyses, and differential analyses.
+Once microbiome features are generated, researchers begin looking for biological patterns.
+
+Common analytical outputs include:
+
+- taxonomic composition summaries
+- alpha diversity metrics
+- beta diversity ordinations
+- group-wise community comparisons
+- differentially abundant taxa
+- functional pathway summaries
+- associations between microbiome features and metadata variables
+
+These outputs help describe how microbial communities differ across samples, groups, conditions, time points, or environments.
+
+However, patterns are not automatically conclusions. They must be evaluated in relation to the study design, metadata, statistical assumptions, biological plausibility, and known limitations.
 
 ## From Results to Biological Insight
 
-Analytical outputs must be interpreted within their biological context. Statistical significance alone does not guarantee biological relevance.
+The goal of MAS is not simply to generate outputs. The goal is to produce biological insight.
+
+A defensible microbiome conclusion should answer:
+
+- What pattern was observed?
+- Which data support the pattern?
+- Which method produced the result?
+- What comparison was tested?
+- What assumptions were made?
+- What biological explanation is plausible?
+- What limitations affect interpretation?
+- What should be reported cautiously?
+
+Statistical significance alone does not guarantee biological relevance. A result becomes meaningful only when it is interpreted within the biological and technical context of the study.
+
+## Relationship to CDI-SDD and CDI-DAS
+
+MAS connects naturally with two upstream CDI systems.
+
+```{mermaid}
+flowchart TB
+  A[CDI Systematic Dataset Discovery] --> B[Study Selection]
+  B --> C[CDI Data Acquisition System]
+  C --> D[Sequencing Data and Metadata]
+  D --> E[Microbiome Analysis System]
+  E --> F[Biological Interpretation and Reporting]
+```
+
+The **CDI Systematic Dataset Discovery System** supports structured identification and selection of public studies.
+
+The **CDI Data Acquisition System** supports reproducible acquisition, validation, and organization of public sequencing data.
+
+The **Microbiome Analysis System** then supports downstream microbiome analysis, interpretation, and reporting.
+
+This relationship prevents MAS from becoming isolated from the upstream decisions that determine data quality and biological relevance.
 
 ## Reproducibility Throughout the System
 
-Reproducibility should be incorporated throughout the workflow through transparent methods, documented metadata, and reproducible analytical practices.
+Reproducibility should be built into every stage of the workflow.
+
+This includes:
+
+- documenting study design decisions
+- preserving metadata tables
+- recording data sources and accession numbers
+- using scripted data acquisition where possible
+- documenting quality control thresholds
+- saving intermediate outputs
+- using version-controlled code
+- reporting software versions and parameters
+- producing reproducible reports
+
+A reproducible microbiome workflow should allow another analyst to understand what was done, why it was done, and how the conclusions were reached.
 
 ## How the Chapters Connect
 
-The remaining chapters follow the progression of the Microbiome System. Each chapter focuses on one component while maintaining its connection to the larger workflow.
+The remaining chapters follow the progression of the Microbiome Analysis System.
+
+```{mermaid}
+flowchart TB
+  A[Part I: Foundation] --> B[Part II: Data Acquisition and QC]
+  B --> C[Part III: Feature Generation and Profiling]
+  C --> D[Part IV: Statistical Analysis]
+  D --> E[Part V: Interpretation and Reporting]
+  E --> F[Part VI: Workforce Readiness]
+```
+
+Each chapter focuses on one component of the system while maintaining its connection to the larger workflow.
+
+The chapters are organized as follows:
+
+- **Study Design and Metadata** establishes the biological and analytical foundation.
+- **Sample Collection and Sequencing** explains how upstream laboratory decisions affect data.
+- **Data Acquisition** connects MAS to reproducible public data retrieval.
+- **Quality Control** evaluates whether the data are suitable for analysis.
+- **Feature Generation** converts reads into analyzable microbiome features.
+- **Taxonomic Profiling** describes community composition.
+- **Functional Profiling** explores functional potential.
+- **Diversity Analysis** evaluates within-sample and between-sample variation.
+- **Differential Analysis** identifies features associated with groups or conditions.
+- **Biological Interpretation** translates outputs into evidence-based insight.
+- **Reproducible Reporting** documents the workflow and results.
+- **Workforce Readiness** connects technical skills to professional microbiome analysis practice.
+
+## Core Principle
+
+The central principle of MAS is:
+
+> Microbiome results are only as defensible as the study design, metadata, sample handling, sequencing strategy, data quality, analytical methods, and biological interpretation that support them.
+
+This principle applies throughout the guide.
 
 ## What Comes Next
 
-The next chapter begins with Study Design and Metadata, the foundation upon which every successful microbiome project is built.
+The next chapter begins with **Study Design and Metadata**, the foundation upon which every successful microbiome project is built.

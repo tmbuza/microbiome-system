@@ -1,0 +1,547 @@
+# Feature Generation
+
+:::cdi-message
+- **ID:** MICROB-006
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Transforming quality-checked reads into microbiome features
+:::
+
+## Introduction
+
+Feature generation is the stage where quality-checked sequencing reads are transformed into analyzable microbiome features.
+
+In microbiome analysis, features are the units that enter downstream profiling, diversity analysis, differential analysis, and biological interpretation. Depending on the sequencing strategy and workflow, features may represent amplicon sequence variants, operational taxonomic units, taxa, genes, gene families, pathways, or other microbial measurements.
+
+Feature generation is therefore one of the most important transitions in the Microbiome Analysis System.
+
+It changes the data from raw sequencing files into structured tables.
+
+## Why Feature Generation Matters
+
+Raw FASTQ files are not yet microbiome results.
+
+They contain sequencing reads and quality scores, but they do not directly tell us which microbial features are present, how abundant they are, or how samples compare.
+
+Feature generation creates the analysis-ready tables that support downstream work.
+
+A feature table allows the analyst to ask:
+
+- Which microbial features were detected?
+- Which samples contain each feature?
+- How abundant is each feature in each sample?
+- Which features are rare or common?
+- Which features can be assigned taxonomy?
+- Which features may support diversity or differential analysis?
+
+The quality of the feature table strongly influences every downstream conclusion.
+
+## Position in the Microbiome Analysis System
+
+Feature generation occurs after quality control and before taxonomic, functional, and statistical analysis.
+
+```{mermaid}
+flowchart LR
+  A[Quality Control] --> B[Feature Generation]
+  B --> C[Taxonomic Profiling]
+  B --> D[Functional Profiling]
+  B --> E[Diversity Analysis]
+  B --> F[Differential Analysis]
+```
+
+At this stage, the analyst converts sequencing reads into structured feature-level data.
+
+## Feature Types
+
+Different microbiome workflows generate different types of features.
+
+Common feature types include:
+
+- ASVs
+- OTUs
+- taxonomic abundance profiles
+- gene family abundance profiles
+- pathway abundance profiles
+- metagenome-assembled genome summaries
+- functional potential profiles
+
+The correct feature type depends on the biological question, sequencing strategy, and analysis workflow.
+
+## ASVs
+
+Amplicon sequence variants are high-resolution sequence features commonly generated from 16S, ITS, or other marker-gene sequencing.
+
+ASV workflows attempt to distinguish true biological sequences from sequencing errors.
+
+Common ASV workflows include tools such as DADA2 and Deblur.
+
+ASV tables usually contain exact sequence variants as rows and samples as columns.
+
+## OTUs
+
+Operational taxonomic units group similar sequences based on a similarity threshold.
+
+Historically, OTUs were widely used in marker-gene microbiome studies.
+
+Although ASVs are now common in many workflows, OTUs may still appear in older datasets, legacy analyses, or some specific analysis contexts.
+
+## Taxonomic Profiles
+
+A taxonomic profile summarizes microbial abundance at taxonomic ranks such as:
+
+- kingdom
+- phylum
+- class
+- order
+- family
+- genus
+- species
+
+Taxonomic profiles may be generated from marker-gene data or shotgun metagenomic data.
+
+For marker-gene sequencing, taxonomy is typically assigned to ASVs or OTUs using reference databases.
+
+For shotgun metagenomics, taxonomic profiles may be generated using tools that classify reads, markers, or k-mers.
+
+## Functional Profiles
+
+Functional profiles summarize genes, gene families, pathways, enzymes, or other functional units.
+
+Functional profiling is more common with shotgun metagenomic data, but functional potential may also be inferred from marker-gene data using specialized approaches.
+
+Functional profiles help shift the question from:
+
+```text
+Who is there?
+```
+
+to:
+
+```text
+What might the community be able to do?
+```
+
+Functional results should be interpreted carefully because detected functional potential does not always imply expression or activity.
+
+## Feature Table Structure
+
+A basic feature table contains microbial features and their abundances across samples.
+
+For example:
+
+```text
+feature_id    SRR17868090    SRR17868091    SRR17868092
+Feature_001   120            85             40
+Feature_002   15             30             75
+Feature_003   0              12             20
+```
+
+Rows represent features.
+
+Columns represent samples.
+
+Values represent counts, abundances, or another measurement depending on the workflow.
+
+## Feature Metadata
+
+Feature tables are more useful when they are linked to feature metadata.
+
+Feature metadata may include:
+
+- feature identifier
+- representative sequence
+- taxonomic assignment
+- confidence score
+- functional annotation
+- database source
+- sequence length
+- prevalence
+- total abundance
+
+Feature metadata helps connect numerical features to biological meaning.
+
+## Sample Metadata Linkage
+
+A feature table must connect cleanly to sample metadata.
+
+The sample identifiers in the feature table should match sample identifiers in the metadata table.
+
+```text
+feature table columns ↔ metadata sample_id values
+```
+
+If this relationship breaks, downstream analysis becomes difficult to interpret.
+
+## Example Feature Generation Scripts
+
+The following scripts provide a lightweight MAS-side example for feature table creation and validation.
+
+These scripts do not perform real ASV inference, OTU clustering, taxonomic assignment, or shotgun metagenomic profiling. They create and check a small example feature table so the MAS workflow can continue into taxonomic profiling, diversity analysis, and reporting.
+
+The workflow uses two scripts:
+
+```text
+scripts/bash/06a-create-example-feature-table.sh
+scripts/bash/06b-check-feature-table.sh
+```
+
+The first script creates a small toy feature table, sample metadata table, and feature metadata table.
+
+The second script checks whether the feature table is present, structurally valid, numeric, and linkable to sample metadata.
+
+## 06a: Create the Example Feature Table
+
+Save this script as:
+
+```bash
+scripts/bash/06a-create-example-feature-table.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 06a-create-example-feature-table.sh
+#
+# Purpose:
+#   Create a small example microbiome feature table and metadata files.
+#
+# Important:
+#   This script creates toy feature counts for workflow testing.
+#   These are not real microbiome features and should not be used for
+#   biological interpretation.
+#
+# Usage:
+#   bash scripts/bash/06a-create-example-feature-table.sh
+###############################################################################
+
+set -e
+
+FEATURE_DIR="data/features"
+METADATA_DIR="data/metadata"
+REPORT_DIR="data/reports"
+
+mkdir -p "${FEATURE_DIR}"
+mkdir -p "${METADATA_DIR}"
+mkdir -p "${REPORT_DIR}"
+
+FEATURE_TABLE="${FEATURE_DIR}/feature-table.tsv"
+FEATURE_METADATA="${FEATURE_DIR}/feature-metadata.tsv"
+SAMPLE_METADATA="${METADATA_DIR}/sample-metadata.tsv"
+
+echo "Creating MAS example feature table..."
+
+cat > "${FEATURE_TABLE}" <<'EOF'
+feature_id	SRR17868090	SRR17868091	SRR17868092
+ASV_001	120	85	40
+ASV_002	15	30	75
+ASV_003	0	12	20
+ASV_004	45	42	43
+ASV_005	5	0	8
+EOF
+
+cat > "${FEATURE_METADATA}" <<'EOF'
+feature_id	sequence	taxonomy	confidence
+ASV_001	ACGTACGTACGT	Bacteria; Firmicutes; Bacilli; Lactobacillales; Lactobacillaceae; Lactobacillus	0.98
+ASV_002	TGCATGCATGCA	Bacteria; Bacteroidota; Bacteroidia; Bacteroidales; Bacteroidaceae; Bacteroides	0.97
+ASV_003	GGTTCCAAGGTT	Bacteria; Actinobacteriota; Actinobacteria; Bifidobacteriales; Bifidobacteriaceae; Bifidobacterium	0.96
+ASV_004	CCGGAATTCCGG	Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacterales; Enterobacteriaceae; Escherichia-Shigella	0.94
+ASV_005	TTGGAACCTTGG	Bacteria; Verrucomicrobiota; Verrucomicrobiae; Verrucomicrobiales; Akkermansiaceae; Akkermansia	0.95
+EOF
+
+cat > "${SAMPLE_METADATA}" <<'EOF'
+sample_id	group	sample_type	description
+SRR17868090	healthy	stool	toy example sample 1
+SRR17868091	healthy	stool	toy example sample 2
+SRR17868092	healthy	stool	toy example sample 3
+EOF
+
+echo "Example feature table created."
+echo
+echo "Created:"
+echo "  ${FEATURE_TABLE}"
+echo "  ${FEATURE_METADATA}"
+echo "  ${SAMPLE_METADATA}"
+echo
+echo "Next:"
+echo "  bash scripts/bash/06b-check-feature-table.sh"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/06a-create-example-feature-table.sh
+```
+
+This creates:
+
+```text
+data/features/feature-table.tsv
+data/features/feature-metadata.tsv
+data/metadata/sample-metadata.tsv
+```
+
+## 06b: Check the Feature Table
+
+Save this script as:
+
+```bash
+scripts/bash/06b-check-feature-table.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 06b-check-feature-table.sh
+#
+# Purpose:
+#   Check a microbiome feature table before downstream profiling and statistics.
+#
+# Checks:
+#   - feature table exists
+#   - sample metadata exists
+#   - feature metadata exists
+#   - feature table has at least one feature and one sample
+#   - count values are numeric
+#   - feature table sample columns match sample metadata sample_id values
+#
+# Usage:
+#   bash scripts/bash/06b-check-feature-table.sh
+###############################################################################
+
+set -e
+
+FEATURE_DIR="data/features"
+METADATA_DIR="data/metadata"
+REPORT_DIR="data/reports"
+
+FEATURE_TABLE="${FEATURE_DIR}/feature-table.tsv"
+FEATURE_METADATA="${FEATURE_DIR}/feature-metadata.tsv"
+SAMPLE_METADATA="${METADATA_DIR}/sample-metadata.tsv"
+REPORT_FILE="${REPORT_DIR}/feature-table-check-report.tsv"
+
+mkdir -p "${REPORT_DIR}"
+
+printf "check\tstatus\tnotes\n" > "${REPORT_FILE}"
+
+echo "Microbiome Analysis System: Feature Table Check"
+echo
+
+check_file() {
+  label="$1"
+  file="$2"
+
+  if [ -s "${file}" ]; then
+    echo "FOUND: ${label} -> ${file}"
+    printf "%s\tOK\t%s\n" "${label}" "${file}" >> "${REPORT_FILE}"
+  else
+    echo "MISSING: ${label} -> ${file}"
+    printf "%s\tFAIL\t%s\n" "${label}" "${file}" >> "${REPORT_FILE}"
+    exit 1
+  fi
+}
+
+check_file "feature_table" "${FEATURE_TABLE}"
+check_file "feature_metadata" "${FEATURE_METADATA}"
+check_file "sample_metadata" "${SAMPLE_METADATA}"
+
+feature_count=$(tail -n +2 "${FEATURE_TABLE}" | wc -l | tr -d ' ')
+sample_count=$(head -n 1 "${FEATURE_TABLE}" | awk -F '\t' '{print NF-1}')
+
+if [ "${feature_count}" -gt 0 ] && [ "${sample_count}" -gt 0 ]; then
+  printf "feature_table_dimensions\tOK\t%s features and %s samples\n" "${feature_count}" "${sample_count}" >> "${REPORT_FILE}"
+else
+  printf "feature_table_dimensions\tFAIL\t%s features and %s samples\n" "${feature_count}" "${sample_count}" >> "${REPORT_FILE}"
+fi
+
+non_numeric=$(awk -F '\t' '
+NR > 1 {
+  for (i = 2; i <= NF; i++) {
+    if ($i !~ /^[0-9]+([.][0-9]+)?$/) {
+      count++;
+    }
+  }
+}
+END {print count+0}
+' "${FEATURE_TABLE}")
+
+if [ "${non_numeric}" -eq 0 ]; then
+  printf "numeric_values\tOK\tAll feature abundance values are numeric\n" >> "${REPORT_FILE}"
+else
+  printf "numeric_values\tFAIL\t%s non-numeric abundance values detected\n" "${non_numeric}" >> "${REPORT_FILE}"
+fi
+
+tmp_feature_samples=$(mktemp)
+tmp_metadata_samples=$(mktemp)
+
+head -n 1 "${FEATURE_TABLE}" | tr '\t' '\n' | tail -n +2 | sort > "${tmp_feature_samples}"
+tail -n +2 "${SAMPLE_METADATA}" | awk -F '\t' '{print $1}' | sort > "${tmp_metadata_samples}"
+
+missing_in_metadata=$(comm -23 "${tmp_feature_samples}" "${tmp_metadata_samples}" | wc -l | tr -d ' ')
+missing_in_feature_table=$(comm -13 "${tmp_feature_samples}" "${tmp_metadata_samples}" | wc -l | tr -d ' ')
+
+if [ "${missing_in_metadata}" -eq 0 ] && [ "${missing_in_feature_table}" -eq 0 ]; then
+  printf "sample_id_linkage\tOK\tFeature table samples match sample metadata\n" >> "${REPORT_FILE}"
+else
+  printf "sample_id_linkage\tFAIL\t%s feature-table samples missing in metadata; %s metadata samples missing in feature table\n" \
+    "${missing_in_metadata}" "${missing_in_feature_table}" >> "${REPORT_FILE}"
+fi
+
+rm -f "${tmp_feature_samples}" "${tmp_metadata_samples}"
+
+echo
+echo "Feature table check report written to: ${REPORT_FILE}"
+echo
+cat "${REPORT_FILE}"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/06b-check-feature-table.sh
+```
+
+This creates:
+
+```text
+data/reports/feature-table-check-report.tsv
+```
+
+## Running the Complete Feature Generation Example
+
+If you are continuing from Chapter 05, first make sure the example acquisition and QC outputs exist:
+
+```bash
+bash scripts/bash/04a-create-example-acquisition-data.sh
+bash scripts/bash/04b-check-data-acquisition.sh
+bash scripts/bash/05a-check-fastq-files.sh
+bash scripts/bash/05b-build-qc-readiness-report.sh
+```
+
+Then create and check the example feature table:
+
+```bash
+bash scripts/bash/06a-create-example-feature-table.sh
+bash scripts/bash/06b-check-feature-table.sh
+cat data/reports/feature-table-check-report.tsv
+```
+
+The example feature table is intentionally small. It is designed to test the workflow structure, not to represent real microbiome biology.
+
+## Example Feature Table
+
+The generated feature table looks like this:
+
+```text
+feature_id	SRR17868090	SRR17868091	SRR17868092
+ASV_001	120	85	40
+ASV_002	15	30	75
+ASV_003	0	12	20
+ASV_004	45	42	43
+ASV_005	5	0	8
+```
+
+This table can support downstream demonstration of:
+
+- taxonomic profiling
+- relative abundance calculation
+- simple diversity summaries
+- differential analysis structure
+- reproducible reporting
+
+## Feature Table Checks
+
+Before downstream analysis, the feature table should be checked for:
+
+- file presence
+- dimensions
+- numeric abundance values
+- sample identifier linkage
+- feature metadata linkage
+- zero-heavy features
+- duplicated feature IDs
+- duplicated sample IDs
+- unexpected missing values
+
+The example script performs a small subset of these checks.
+
+## Real Feature Generation Workflows
+
+For real microbiome analysis, feature generation is performed using specialized tools.
+
+For marker-gene sequencing, common workflows include:
+
+- DADA2
+- QIIME 2
+- mothur
+- Deblur
+- USEARCH or VSEARCH workflows
+
+For shotgun metagenomics, common workflows may include:
+
+- read-level taxonomic profiling
+- gene family profiling
+- pathway profiling
+- assembly-based workflows
+- binning and MAG reconstruction
+- host-read removal before profiling
+
+The correct workflow depends on the sequencing strategy, biological question, and reporting needs.
+
+## Interpretation Cautions
+
+Feature generation choices affect downstream results.
+
+Important considerations include:
+
+- ASVs and OTUs are not equivalent
+- different reference databases may produce different taxonomic labels
+- filtering thresholds can remove rare but potentially relevant features
+- normalization choices affect downstream comparisons
+- compositionality affects abundance interpretation
+- functional potential is not the same as functional activity
+- batch effects can persist after feature generation
+
+These decisions should be documented in reproducible reports.
+
+## MAS Feature Generation Outputs
+
+At the end of this stage, MAS should have:
+
+- feature table
+- feature metadata
+- sample metadata
+- feature table check report
+- notes on feature generation method
+- decision about readiness for taxonomic and statistical analysis
+
+```{mermaid}
+flowchart LR
+  A[Quality-Checked Reads] --> B[Feature Table]
+  B --> C[Feature Metadata]
+  B --> D[Sample Metadata Linkage]
+  C --> E[Taxonomic Profiling]
+  D --> E
+```
+
+## Key Takeaways
+
+Feature generation transforms sequencing reads into microbiome analysis units.
+
+A strong feature generation stage ensures that:
+
+- features are defined clearly
+- abundance tables are structured correctly
+- sample identifiers match metadata
+- feature identifiers are traceable
+- downstream analysis uses documented inputs
+- limitations of the feature generation method are understood
+
+The feature table becomes one of the central data objects in the rest of the Microbiome Analysis System.
+
+## What Comes Next
+
+The next chapter examines **Taxonomic Profiling**, where microbiome features are connected to microbial taxonomic identities and summarized across samples.

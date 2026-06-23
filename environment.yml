@@ -1,0 +1,32 @@
+name: cdi-microbiome
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  # Core
+  - quarto
+  - r-base
+
+  # R workflow packages
+  - r-readr
+  - r-dplyr
+  - r-tidyr
+  - r-tibble
+  - r-ggplot2
+  - r-stringr
+  - r-glue
+
+  # Useful reporting / notebook support
+  - r-rmarkdown
+  - r-knitr
+
+  # Shell/data utilities
+  - wget
+  - curl
+  - gzip
+  - coreutils
+
+  # Optional but useful for bioinformatics workflows
+  - seqkit

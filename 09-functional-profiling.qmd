@@ -1,0 +1,427 @@
+# Functional Profiling
+
+:::cdi-message
+- **ID:** MICROB-009
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Exploring microbial functional potential
+:::
+
+## Introduction
+
+Functional profiling is the stage where microbiome analysis moves from microbial identity toward microbial potential.
+
+Taxonomic profiling asks:
+
+```text
+Who is there?
+```
+
+Functional profiling asks:
+
+```text
+What might the microbial community be able to do?
+```
+
+In shotgun metagenomics, functional profiling may summarize genes, gene families, enzymes, pathways, modules, or other functional units. In marker-gene studies, functional potential may sometimes be inferred, but such inference should be interpreted cautiously.
+
+In the Microbiome Analysis System, functional profiling is treated as a complementary layer of evidence. It can strengthen biological interpretation, but it should not be overinterpreted as direct evidence of gene expression, protein activity, or metabolic flux.
+
+## Why Functional Profiling Matters
+
+Functional profiling helps connect microbial communities to biological processes.
+
+It can support questions such as:
+
+- Which microbial pathways are present?
+- Are functional profiles different across samples or groups?
+- Do taxonomic patterns correspond to functional patterns?
+- Are specific gene families or pathways enriched in one condition?
+- Do observed functions support a biological hypothesis?
+
+Functional profiling is especially useful when the biological question concerns metabolism, host-microbe interactions, nutrient cycling, resistance genes, virulence potential, or environmental function.
+
+## Position in the Microbiome Analysis System
+
+Functional profiling occurs after feature generation and can support downstream statistical analysis and biological interpretation.
+
+```{mermaid}
+flowchart LR
+  A[Feature Generation] --> B[Functional Profiling]
+  B --> C[Differential Analysis]
+  B --> D[Biological Interpretation]
+  B --> E[Reproducible Reporting]
+```
+
+Functional profiling should be interpreted with the sequencing strategy in mind.
+
+## Functional Potential vs Functional Activity
+
+Functional profiling usually measures or infers functional potential.
+
+Functional potential means that genes or pathways are detected or predicted in the community.
+
+Functional activity requires additional evidence, such as:
+
+- metatranscriptomics
+- metaproteomics
+- metabolomics
+- enzyme activity assays
+- experimental validation
+
+A pathway detected in a metagenomic profile does not necessarily mean that the pathway is active under the sampled condition.
+
+## Functional Units
+
+Functional profiling may summarize several types of features.
+
+Common functional units include:
+
+- gene families
+- enzyme commission numbers
+- KEGG orthologs
+- MetaCyc pathways
+- Gene Ontology terms
+- antimicrobial resistance genes
+- virulence factors
+- carbohydrate-active enzymes
+- metabolic modules
+
+The correct unit depends on the biological question and the profiling method.
+
+## Functional Profiling From Marker-Gene Data
+
+Marker-gene data, such as 16S rRNA sequencing, primarily measure taxonomic composition.
+
+Some methods infer functional potential from taxonomy, but these predictions depend heavily on reference genomes and assumptions about functional similarity among related organisms.
+
+For marker-gene data, inferred functional profiles should be reported as predictions, not direct measurements.
+
+## Functional Profiling From Shotgun Metagenomics
+
+Shotgun metagenomics can directly profile functional potential because sequencing reads are sampled across genomes rather than only a marker gene.
+
+Shotgun functional profiling may involve:
+
+- quality control
+- host-read removal
+- read classification
+- gene family profiling
+- pathway reconstruction
+- normalization
+- statistical comparison
+- biological interpretation
+
+Shotgun workflows can provide richer functional information, but they also require careful handling of databases, parameters, and computational resources.
+
+## Example Functional Profiling Scripts
+
+The following scripts provide a lightweight MAS-side functional profiling example.
+
+These scripts do not perform real shotgun metagenomic functional profiling. They create and summarize a small toy pathway abundance table so the MAS workflow can continue into differential analysis and interpretation.
+
+The workflow uses two scripts:
+
+```text
+scripts/bash/09a-create-example-functional-profile.sh
+scripts/R/09b-plot-functional-profile.R
+```
+
+## 09a: Create the Example Functional Profile
+
+Save this script as:
+
+```bash
+scripts/bash/09a-create-example-functional-profile.sh
+```
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# Microbiome Analysis System
+# 09a-create-example-functional-profile.sh
+#
+# Purpose:
+#   Create a small example functional profile for workflow testing.
+#
+# Important:
+#   This script creates toy pathway abundances and mock annotations.
+#   These are not real functional profiling results and should not be used for
+#   biological interpretation.
+#
+# Usage:
+#   bash scripts/bash/09a-create-example-functional-profile.sh
+###############################################################################
+
+set -e
+
+FUNCTION_DIR="data/function"
+REPORT_DIR="data/reports"
+
+mkdir -p "${FUNCTION_DIR}"
+mkdir -p "${REPORT_DIR}"
+
+FUNCTION_TABLE="${FUNCTION_DIR}/pathway-abundance.tsv"
+FUNCTION_METADATA="${FUNCTION_DIR}/pathway-metadata.tsv"
+REPORT_FILE="${REPORT_DIR}/functional-profile-report.tsv"
+
+echo "Creating MAS example functional profile..."
+
+cat > "${FUNCTION_TABLE}" <<'EOF'
+pathway_id	SRR17868090	SRR17868091	SRR17868092
+PWY_001	45	38	22
+PWY_002	12	18	35
+PWY_003	5	7	20
+PWY_004	25	21	19
+PWY_005	3	5	12
+EOF
+
+cat > "${FUNCTION_METADATA}" <<'EOF'
+pathway_id	pathway_name	category	notes
+PWY_001	Carbohydrate fermentation	Metabolism	toy pathway
+PWY_002	Short-chain fatty acid production	Metabolism	toy pathway
+PWY_003	Bile acid transformation	Host-microbe interaction	toy pathway
+PWY_004	Amino acid biosynthesis	Metabolism	toy pathway
+PWY_005	Oxidative stress response	Stress response	toy pathway
+EOF
+
+pathway_count=$(tail -n +2 "${FUNCTION_TABLE}" | wc -l | tr -d ' ')
+sample_count=$(head -n 1 "${FUNCTION_TABLE}" | awk -F '\t' '{print NF-1}')
+
+printf "metric\tvalue\n" > "${REPORT_FILE}"
+printf "pathway_count\t%s\n" "${pathway_count}" >> "${REPORT_FILE}"
+printf "sample_count\t%s\n" "${sample_count}" >> "${REPORT_FILE}"
+printf "profile_type\ttoy pathway abundance profile\n" >> "${REPORT_FILE}"
+printf "functional_profile_status\tREADY_FOR_PLOTTING\n" >> "${REPORT_FILE}"
+
+echo "Example functional profile created."
+echo
+echo "Created:"
+echo "  ${FUNCTION_TABLE}"
+echo "  ${FUNCTION_METADATA}"
+echo "  ${REPORT_FILE}"
+echo
+echo "Next:"
+echo "  Rscript scripts/R/09b-plot-functional-profile.R"
+```
+
+Run it from the MAS project root:
+
+```bash
+bash scripts/bash/09a-create-example-functional-profile.sh
+```
+
+This creates:
+
+```text
+data/function/pathway-abundance.tsv
+data/function/pathway-metadata.tsv
+data/reports/functional-profile-report.tsv
+```
+
+## 09b: Plot the Functional Profile
+
+Save this script as:
+
+```text
+scripts/R/09b-plot-functional-profile.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 09b-plot-functional-profile.R
+#
+# Purpose:
+#   Plot a simple pathway-level functional profile.
+#
+# Usage:
+#   Rscript scripts/R/09b-plot-functional-profile.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+function_dir <- "data/function"
+figure_dir <- "figures"
+table_dir <- "tables"
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+
+pathway_file <- file.path(function_dir, "pathway-abundance.tsv")
+metadata_file <- file.path(function_dir, "pathway-metadata.tsv")
+
+if (!file.exists(pathway_file)) {
+  stop("Missing pathway abundance file: ", pathway_file,
+       "\nRun: bash scripts/bash/09a-create-example-functional-profile.sh")
+}
+
+if (!file.exists(metadata_file)) {
+  stop("Missing pathway metadata file: ", metadata_file,
+       "\nRun: bash scripts/bash/09a-create-example-functional-profile.sh")
+}
+
+pathways <- read_tsv(pathway_file, show_col_types = FALSE)
+pathway_metadata <- read_tsv(metadata_file, show_col_types = FALSE)
+
+pathway_long <- pathways %>%
+  pivot_longer(
+    cols = -pathway_id,
+    names_to = "sample_id",
+    values_to = "abundance"
+  ) %>%
+  left_join(pathway_metadata, by = "pathway_id") %>%
+  group_by(sample_id) %>%
+  mutate(
+    relative_abundance = abundance / sum(abundance),
+    relative_abundance_percent = relative_abundance * 100
+  ) %>%
+  ungroup()
+
+write_tsv(
+  pathway_long,
+  file.path(table_dir, "pathway-relative-abundance-for-plot.tsv")
+)
+
+p <- ggplot(
+  pathway_long,
+  aes(
+    x = sample_id,
+    y = relative_abundance_percent,
+    fill = pathway_name
+  )
+) +
+  geom_col() +
+  labs(
+    title = "Example Functional Profile",
+    subtitle = "Toy MAS pathway abundance data for workflow testing",
+    x = "Sample",
+    y = "Relative abundance (%)",
+    fill = "Pathway"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave(
+  filename = file.path(figure_dir, "pathway-relative-abundance-profile.png"),
+  plot = p,
+  width = 8,
+  height = 5,
+  dpi = 300
+)
+
+message("Created:")
+message("  ", file.path(table_dir, "pathway-relative-abundance-for-plot.tsv"))
+message("  ", file.path(figure_dir, "pathway-relative-abundance-profile.png"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/09b-plot-functional-profile.R
+```
+
+This creates:
+
+```text
+tables/pathway-relative-abundance-for-plot.tsv
+figures/pathway-relative-abundance-profile.png
+```
+
+## Running the Complete Functional Profiling Example
+
+To create and plot the example functional profile, run:
+
+```bash
+bash scripts/bash/09a-create-example-functional-profile.sh
+Rscript scripts/R/09b-plot-functional-profile.R
+cat data/reports/functional-profile-report.tsv
+```
+
+The example functional table is intentionally small and artificial. It is designed to demonstrate workflow structure, not biological function.
+
+## Example Pathway Abundance Table
+
+The generated pathway table looks like this:
+
+```text
+pathway_id	SRR17868090	SRR17868091	SRR17868092
+PWY_001	45	38	22
+PWY_002	12	18	35
+PWY_003	5	7	20
+PWY_004	25	21	19
+PWY_005	3	5	12
+```
+
+This table can support downstream demonstration of functional summaries and differential analysis structure.
+
+## Interpreting Functional Profiles
+
+Functional profiles should be interpreted in relation to:
+
+- sequencing strategy
+- functional profiling method
+- reference database
+- normalization method
+- sample metadata
+- taxonomic context
+- statistical testing
+- biological plausibility
+
+Functional profiling can support biological interpretation, but it should not be treated as direct evidence of activity unless supported by additional data.
+
+## Common Functional Profiling Issues
+
+Common issues include:
+
+- treating inferred functions as measured functions
+- ignoring database limitations
+- comparing profiles generated by different tools
+- overinterpreting pathway names
+- ignoring normalization and compositionality
+- failing to distinguish gene presence from gene expression
+- reporting broad functions without biological context
+- ignoring uncertainty in annotation
+
+These issues should be documented in the final report.
+
+## MAS Functional Profiling Outputs
+
+At the end of this stage, MAS should have:
+
+- functional abundance table
+- functional metadata table
+- functional profile report
+- plot-ready functional abundance table
+- functional profile figure
+- notes on functional profiling method and limitations
+
+```{mermaid}
+flowchart LR
+  A[Feature or Metagenomic Data] --> B[Functional Profile]
+  B --> C[Pathway Abundance Table]
+  C --> D[Functional Plot]
+  D --> E[Biological Interpretation]
+```
+
+## Key Takeaways
+
+Functional profiling adds a biological process layer to microbiome analysis.
+
+A strong functional profiling stage ensures that:
+
+- functional units are clearly defined
+- pathway or gene family abundance tables are documented
+- database and method limitations are reported
+- functional potential is not confused with activity
+- results are interpreted alongside taxonomy and metadata
+
+Functional profiling can strengthen biological interpretation, but only when its assumptions and limitations are clearly documented.
+
+## What Comes Next
+
+The next chapter examines **Differential Analysis**, where microbiome features, taxa, or functional profiles are compared across groups or conditions.

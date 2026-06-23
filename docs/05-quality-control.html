@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Quality Control – Microbiome Analysis System</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06-feature-generation.html" rel="next">
+<link href="./04-data-acquisition.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-d3f7f8e73c8d287b30bcf59c2b563615.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="forest">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="assets/css/cdi.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-data-acquisition.html">Part II: Data Acquisition and Quality Control</a></li><li class="breadcrumb-item"><a href="./05-quality-control.html"><span class="chapter-title">Quality Control</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Microbiome Analysis System</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">index.html</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I: Microbiome Analysis System Foundation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-system-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">System Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-study-design-and-metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Study Design and Metadata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-sample-collection-and-sequencing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Sample Collection and Sequencing</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II: Data Acquisition and Quality Control</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-data-acquisition.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Data Acquisition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-quality-control.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Quality Control</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III: Microbiome Feature Generation and Profiling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-feature-generation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Feature Generation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-taxonomic-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Taxonomic Profiling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-functional-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Functional Profiling</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV: Microbiome Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-diversity-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Diversity Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-differential-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Differential Analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part V: Biological Interpretation and Reporting</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-biological-interpretation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Biological Interpretation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-reproducible-reporting.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Reproducible Reporting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part VI: Workforce Readiness</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-workforce-readiness.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Workforce Readiness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./999-appendix.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Technical Appendix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./999-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#why-quality-control-matters" id="toc-why-quality-control-matters" class="nav-link" data-scroll-target="#why-quality-control-matters">Why Quality Control Matters</a></li>
+  <li><a href="#position-in-the-microbiome-analysis-system" id="toc-position-in-the-microbiome-analysis-system" class="nav-link" data-scroll-target="#position-in-the-microbiome-analysis-system">Position in the Microbiome Analysis System</a></li>
+  <li><a href="#quality-control-is-a-decision-stage" id="toc-quality-control-is-a-decision-stage" class="nav-link" data-scroll-target="#quality-control-is-a-decision-stage">Quality Control Is a Decision Stage</a></li>
+  <li><a href="#qc-layers" id="toc-qc-layers" class="nav-link" data-scroll-target="#qc-layers">QC Layers</a></li>
+  <li><a href="#fastq-presence" id="toc-fastq-presence" class="nav-link" data-scroll-target="#fastq-presence">FASTQ Presence</a></li>
+  <li><a href="#compression-integrity" id="toc-compression-integrity" class="nav-link" data-scroll-target="#compression-integrity">Compression Integrity</a></li>
+  <li><a href="#fastq-structure" id="toc-fastq-structure" class="nav-link" data-scroll-target="#fastq-structure">FASTQ Structure</a></li>
+  <li><a href="#read-count-summary" id="toc-read-count-summary" class="nav-link" data-scroll-target="#read-count-summary">Read Count Summary</a></li>
+  <li><a href="#read-length-summary" id="toc-read-length-summary" class="nav-link" data-scroll-target="#read-length-summary">Read Length Summary</a></li>
+  <li><a href="#paired-end-consistency" id="toc-paired-end-consistency" class="nav-link" data-scroll-target="#paired-end-consistency">Paired-End Consistency</a></li>
+  <li><a href="#example-qc-scripts" id="toc-example-qc-scripts" class="nav-link" data-scroll-target="#example-qc-scripts">Example QC Scripts</a></li>
+  <li><a href="#a-check-fastq-files" id="toc-a-check-fastq-files" class="nav-link" data-scroll-target="#a-check-fastq-files">05a: Check FASTQ Files</a></li>
+  <li><a href="#b-build-the-qc-readiness-report" id="toc-b-build-the-qc-readiness-report" class="nav-link" data-scroll-target="#b-build-the-qc-readiness-report">05b: Build the QC Readiness Report</a></li>
+  <li><a href="#running-the-complete-qc-example" id="toc-running-the-complete-qc-example" class="nav-link" data-scroll-target="#running-the-complete-qc-example">Running the Complete QC Example</a></li>
+  <li><a href="#example-qc-summary" id="toc-example-qc-summary" class="nav-link" data-scroll-target="#example-qc-summary">Example QC Summary</a></li>
+  <li><a href="#interpreting-qc-results" id="toc-interpreting-qc-results" class="nav-link" data-scroll-target="#interpreting-qc-results">Interpreting QC Results</a></li>
+  <li><a href="#when-to-stop" id="toc-when-to-stop" class="nav-link" data-scroll-target="#when-to-stop">When to Stop</a></li>
+  <li><a href="#mas-qc-outputs" id="toc-mas-qc-outputs" class="nav-link" data-scroll-target="#mas-qc-outputs">MAS QC Outputs</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What Comes Next</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-data-acquisition.html">Part II: Data Acquisition and Quality Control</a></li><li class="breadcrumb-item"><a href="./05-quality-control.html"><span class="chapter-title">Quality Control</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Quality Control</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Jun 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cdi-message">
+<ul>
+<li><strong>ID:</strong> MICROB-005</li>
+<li><strong>Type:</strong> System Component</li>
+<li><strong>Audience:</strong> Students, researchers, analysts, and practitioners</li>
+<li><strong>Theme:</strong> Assessing sequencing data before feature generation</li>
+</ul>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Quality control is the stage where acquired sequencing files are evaluated before they are used to generate microbiome features.</p>
+<p>In the Microbiome Analysis System, quality control is not only a technical filtering step. It is a decision point. The analyst must decide whether the sequencing data are complete, readable, structurally valid, and suitable for downstream processing.</p>
+<p>A workflow can only produce defensible microbiome results if the input data are reliable enough to support analysis.</p>
+</section>
+<section id="why-quality-control-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-quality-control-matters">Why Quality Control Matters</h2>
+<p>Raw sequencing data can contain technical problems that affect downstream results.</p>
+<p>Common issues include:</p>
+<ul>
+<li>incomplete downloads</li>
+<li>corrupted compressed files</li>
+<li>empty FASTQ files</li>
+<li>inconsistent file naming</li>
+<li>missing paired-end mates</li>
+<li>low read counts</li>
+<li>short reads</li>
+<li>variable read lengths</li>
+<li>poor sequencing quality</li>
+<li>adapter contamination</li>
+<li>primer contamination</li>
+<li>sample-level outliers</li>
+<li>sequencing batch effects</li>
+</ul>
+<p>If these issues are not detected early, they can affect feature generation, taxonomic assignment, diversity analysis, differential analysis, and biological interpretation.</p>
+<p>Quality control helps determine whether the data are ready to move forward.</p>
+</section>
+<section id="position-in-the-microbiome-analysis-system" class="level2">
+<h2 class="anchored" data-anchor-id="position-in-the-microbiome-analysis-system">Position in the Microbiome Analysis System</h2>
+<p>Quality control occurs after data acquisition and before feature generation.</p>
+<div class="cell" data-layout-align="default">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  A[Data Acquisition] --&gt; B[Quality Control]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Feature Generation]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Taxonomic Profiling]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  C --&gt; E[Functional Profiling]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Data Acquisition] --&gt; B[Quality Control]
+  B --&gt; C[Feature Generation]
+  C --&gt; D[Taxonomic Profiling]
+  C --&gt; E[Functional Profiling]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>At this stage, the analyst should confirm that the acquired sequencing files are present, readable, organized, and consistent with the expected study design.</p>
+</section>
+<section id="quality-control-is-a-decision-stage" class="level2">
+<h2 class="anchored" data-anchor-id="quality-control-is-a-decision-stage">Quality Control Is a Decision Stage</h2>
+<p>Quality control should produce a decision, not only a collection of plots.</p>
+<p>The key question is:</p>
+<blockquote class="blockquote">
+<p>Are these sequencing files suitable for downstream microbiome feature generation?</p>
+</blockquote>
+<p>Possible decisions include:</p>
+<ul>
+<li>proceed to feature generation</li>
+<li>proceed with documented limitations</li>
+<li>exclude specific files or samples</li>
+<li>re-download missing or corrupted files</li>
+<li>return to metadata or acquisition checks</li>
+<li>request clarification from the sequencing provider</li>
+<li>use a different workflow for single-end or paired-end data</li>
+</ul>
+<p>The decision should be documented because it affects all downstream conclusions.</p>
+</section>
+<section id="qc-layers" class="level2">
+<h2 class="anchored" data-anchor-id="qc-layers">QC Layers</h2>
+<p>MAS separates quality control into several layers.</p>
+<div class="cell" data-layout-align="default">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>flowchart TB</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  A[FASTQ Presence] --&gt; B[Compression Integrity]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[FASTQ Structure]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Read Count Summary]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  D --&gt; E[Read Length Summary]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  E --&gt; F[Pairing Check]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  F --&gt; G[QC Readiness Decision]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+  A[FASTQ Presence] --&gt; B[Compression Integrity]
+  B --&gt; C[FASTQ Structure]
+  C --&gt; D[Read Count Summary]
+  D --&gt; E[Read Length Summary]
+  E --&gt; F[Pairing Check]
+  F --&gt; G[QC Readiness Decision]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Each layer answers a different question.</p>
+</section>
+<section id="fastq-presence" class="level2">
+<h2 class="anchored" data-anchor-id="fastq-presence">FASTQ Presence</h2>
+<p>The first check is whether FASTQ files are present in the expected directories.</p>
+<p>For the MAS example package, FASTQ files are expected under:</p>
+<pre class="text"><code>data/raw/ena/</code></pre>
+<p>or:</p>
+<pre class="text"><code>data/raw/ncbi/</code></pre>
+<p>A project may use one repository or both. Finding zero files in one directory is not automatically a problem if the dataset was intentionally acquired from the other source.</p>
+</section>
+<section id="compression-integrity" class="level2">
+<h2 class="anchored" data-anchor-id="compression-integrity">Compression Integrity</h2>
+<p>Most sequencing files are stored as compressed FASTQ files ending in:</p>
+<pre class="text"><code>.fastq.gz</code></pre>
+<p>or:</p>
+<pre class="text"><code>.fq.gz</code></pre>
+<p>Before analysis, compressed files should be tested to confirm that they can be decompressed successfully.</p>
+<p>A corrupted gzip file may indicate an interrupted download or storage problem.</p>
+</section>
+<section id="fastq-structure" class="level2">
+<h2 class="anchored" data-anchor-id="fastq-structure">FASTQ Structure</h2>
+<p>A valid FASTQ record contains four lines:</p>
+<pre class="text"><code>@read_identifier
+sequence
++
+quality_scores</code></pre>
+<p>Therefore, a FASTQ file should have a total line count divisible by four.</p>
+<p>This structural check does not confirm biological quality, but it helps detect incomplete or malformed files.</p>
+</section>
+<section id="read-count-summary" class="level2">
+<h2 class="anchored" data-anchor-id="read-count-summary">Read Count Summary</h2>
+<p>Read counts provide a basic summary of sequencing depth.</p>
+<p>For each FASTQ file, MAS records:</p>
+<ul>
+<li>file name</li>
+<li>repository directory</li>
+<li>number of lines</li>
+<li>number of reads</li>
+<li>minimum read length</li>
+<li>maximum read length</li>
+<li>average read length</li>
+<li>gzip status</li>
+<li>FASTQ structure status</li>
+</ul>
+<p>Very low read counts may indicate incomplete data, failed sequencing, aggressive filtering, or toy example data.</p>
+</section>
+<section id="read-length-summary" class="level2">
+<h2 class="anchored" data-anchor-id="read-length-summary">Read Length Summary</h2>
+<p>Read length affects downstream processing.</p>
+<p>For example, 16S amplicon workflows often depend on expected read length, target region, primer design, overlap, and quality profile.</p>
+<p>Shotgun metagenomic workflows may use different filtering, host-removal, assembly, or profiling approaches.</p>
+<p>Read length summaries help the analyst confirm whether the data are consistent with the expected sequencing strategy.</p>
+</section>
+<section id="paired-end-consistency" class="level2">
+<h2 class="anchored" data-anchor-id="paired-end-consistency">Paired-End Consistency</h2>
+<p>For paired-end data, each run should usually have two files:</p>
+<pre class="text"><code>SRR17868090_1.fastq.gz
+SRR17868090_2.fastq.gz</code></pre>
+<p>A missing mate file can prevent paired-end processing.</p>
+<p>The MAS example package uses paired-end toy FASTQ files, so each run accession has both <code>_1</code> and <code>_2</code> files.</p>
+</section>
+<section id="example-qc-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="example-qc-scripts">Example QC Scripts</h2>
+<p>The following scripts provide a lightweight MAS-side quality control check for the example acquisition package created in Chapter 04.</p>
+<p>These scripts are not replacements for tools such as FastQC, MultiQC, Cutadapt, Trimmomatic, fastp, DADA2, QIIME 2, mothur, KneadData, or other full microbiome processing workflows. They provide early file-level checks before feature generation.</p>
+<p>The workflow uses two scripts:</p>
+<pre class="text"><code>scripts/bash/05a-check-fastq-files.sh
+scripts/bash/05b-build-qc-readiness-report.sh</code></pre>
+<p>The first script checks FASTQ file integrity and summarizes read counts and read lengths.</p>
+<p>The second script builds a simple QC readiness report.</p>
+</section>
+<section id="a-check-fastq-files" class="level2">
+<h2 class="anchored" data-anchor-id="a-check-fastq-files">05a: Check FASTQ Files</h2>
+<p>Save this script as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/bash/05a-check-fastq-files.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Microbiome Analysis System</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 05a-check-fastq-files.sh</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Purpose:</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   Perform lightweight FASTQ quality-control checks before feature generation.</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Checks:</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   - FASTQ files exist</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   - gzip integrity for compressed files</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   - FASTQ line count is divisible by 4</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   - read count</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   - minimum, maximum, and average read length</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage:</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   bash scripts/bash/05a-check-fastq-files.sh</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="va">RAW_DIRS</span><span class="op">=</span><span class="st">"data/raw/ena data/raw/ncbi"</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="va">QC_DIR</span><span class="op">=</span><span class="st">"data/qc"</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="va">REPORT_DIR</span><span class="op">=</span><span class="st">"data/reports"</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">"</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">"</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="va">SUMMARY_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-summary.tsv"</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="va">STATUS_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-status.tsv"</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"file\tdirectory\tlines\treads\tmin_read_length\tmax_read_length\tmean_read_length\tgzip_status\tfastq_structure_status\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"check\tstatus\tnotes\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Microbiome Analysis System: FASTQ QC Check"</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="va">fastq_count</span><span class="op">=</span>0</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="va">failed_count</span><span class="op">=</span>0</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dir <span class="kw">in</span> <span class="va">${RAW_DIRS}</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-d</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"Directory not found: </span><span class="va">${dir}</span><span class="st">"</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">continue</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> file <span class="kw">in</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fastq.gz <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fq.gz <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fastq <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fq<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="bu">[</span> <span class="ot">-e</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">||</span> <span class="cf">continue</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="va">fastq_count</span><span class="op">=</span><span class="va">$((fastq_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>    <span class="va">filename</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    <span class="va">gzip_status</span><span class="op">=</span><span class="st">"NOT_COMPRESSED"</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"UNKNOWN"</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">echo</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Eq</span> <span class="st">"</span><span class="dt">\\</span><span class="st">.(fastq|fq)</span><span class="dt">\\</span><span class="st">.gz$"</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="fu">gzip</span> <span class="at">-t</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>        <span class="va">gzip_status</span><span class="op">=</span><span class="st">"OK"</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>        <span class="va">gzip_status</span><span class="op">=</span><span class="st">"FAIL"</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>        <span class="va">failed_count</span><span class="op">=</span><span class="va">$((failed_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>      <span class="cf">fi</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>      <span class="va">line_count</span><span class="op">=</span><span class="va">$(</span><span class="fu">gzip</span> <span class="at">-cd</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>      <span class="va">read_stats</span><span class="op">=</span><span class="va">$(</span><span class="fu">gzip</span> <span class="at">-cd</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'NR % 4 == 2 {</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a><span class="st">        len=length($0);</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="st">        count++;</span></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a><span class="st">        total+=len;</span></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="st">        if (min=="" || len &lt; min) min=len;</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="st">        if (len &gt; max) max=len;</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="st">      END {</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a><span class="st">        if (count &gt; 0) {</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "%d\t%d\t%.2f", min, max, total/count;</span></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a><span class="st">        } else {</span></span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "0\t0\t0";</span></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="st">      }'</span><span class="va">)</span></span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>      <span class="va">line_count</span><span class="op">=</span><span class="va">$(</span><span class="fu">wc</span> <span class="at">-l</span> <span class="op">&lt;</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>      <span class="va">read_stats</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="st">'NR % 4 == 2 {</span></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="st">        len=length($0);</span></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a><span class="st">        count++;</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="st">        total+=len;</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="st">        if (min=="" || len &lt; min) min=len;</span></span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="st">        if (len &gt; max) max=len;</span></span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a><span class="st">      END {</span></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="st">        if (count &gt; 0) {</span></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "%d\t%d\t%.2f", min, max, total/count;</span></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="st">        } else {</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "0\t0\t0";</span></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="st">      }'</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>    <span class="va">reads</span><span class="op">=</span><span class="va">$((line_count</span> <span class="op">/</span> <span class="dv">4</span><span class="va">))</span></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="va">$((line_count</span> <span class="op">%</span> <span class="dv">4</span><span class="va">))</span> <span class="ot">-eq</span> 0 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${line_count}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>      <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"OK"</span></span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>      <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"FAIL"</span></span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>      <span class="va">failed_count</span><span class="op">=</span><span class="va">$((failed_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>    <span class="va">min_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $1}'</span><span class="va">)</span></span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>    <span class="va">max_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $2}'</span><span class="va">)</span></span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>    <span class="va">mean_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $3}'</span><span class="va">)</span></span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>    <span class="bu">printf</span> <span class="st">"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"</span> <span class="dt">\</span></span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${filename}</span><span class="st">"</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span> <span class="st">"</span><span class="va">${line_count}</span><span class="st">"</span> <span class="st">"</span><span class="va">${reads}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${min_len}</span><span class="st">"</span> <span class="st">"</span><span class="va">${max_len}</span><span class="st">"</span> <span class="st">"</span><span class="va">${mean_len}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${gzip_status}</span><span class="st">"</span> <span class="st">"</span><span class="va">${fastq_structure_status}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"Checked: </span><span class="va">${file}</span><span class="st">"</span></span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>  <span class="cf">done</span></span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${fastq_count}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ presence\tFAIL\tNo FASTQ files found in expected raw data directories\n"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span></span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"No FASTQ files found."</span></span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ presence\tOK\t%s FASTQ files found\n"</span> <span class="st">"</span><span class="va">${fastq_count}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_count}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ file checks\tOK\tNo failed gzip or structure checks\n"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ file checks\tWARN\t%s failed checks detected\n"</span> <span class="st">"</span><span class="va">${failed_count}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"FASTQ files checked: </span><span class="va">${fastq_count}</span><span class="st">"</span></span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Failed checks: </span><span class="va">${failed_count}</span><span class="st">"</span></span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Summary written to: </span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Status written to:  </span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run it from the MAS project root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05a-check-fastq-files.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates:</p>
+<pre class="text"><code>data/qc/fastq-qc-summary.tsv
+data/qc/fastq-qc-status.tsv</code></pre>
+</section>
+<section id="b-build-the-qc-readiness-report" class="level2">
+<h2 class="anchored" data-anchor-id="b-build-the-qc-readiness-report">05b: Build the QC Readiness Report</h2>
+<p>Save this script as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/bash/05b-build-qc-readiness-report.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Microbiome Analysis System</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 05b-build-qc-readiness-report.sh</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Purpose:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   Build a simple QC readiness report from FASTQ QC outputs.</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage:</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   bash scripts/bash/05b-build-qc-readiness-report.sh</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="va">QC_DIR</span><span class="op">=</span><span class="st">"data/qc"</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="va">REPORT_DIR</span><span class="op">=</span><span class="st">"data/reports"</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="va">SUMMARY_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-summary.tsv"</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="va">STATUS_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-status.tsv"</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="va">READINESS_REPORT</span><span class="op">=</span><span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">/qc-readiness-report.tsv"</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">"</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-s</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Missing FASTQ QC summary: </span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Run: bash scripts/bash/05a-check-fastq-files.sh"</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-s</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Missing FASTQ QC status: </span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Run: bash scripts/bash/05a-check-fastq-files.sh"</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="va">total_files</span><span class="op">=</span><span class="va">$(</span><span class="fu">tail</span> <span class="at">-n</span> +2 <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="va">failed_structure</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 &amp;&amp; $9 != "OK" {count++} END {print count+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="va">failed_gzip</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 &amp;&amp; $8 == "FAIL" {count++} END {print count+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="va">total_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 {sum += $4} END {print sum+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="va">min_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR == 2 {min=$4} NR &gt; 2 &amp;&amp; $4 &lt; min {min=$4} END {if (min=="") print 0; else print min}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="va">max_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR == 2 {max=$4} NR &gt; 2 &amp;&amp; $4 &gt; max {max=$4} END {if (max=="") print 0; else print max}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="va">decision</span><span class="op">=</span><span class="st">"READY_FOR_NEXT_STEP"</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="va">notes</span><span class="op">=</span><span class="st">"FASTQ files passed lightweight file-level checks"</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${total_files}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  <span class="va">decision</span><span class="op">=</span><span class="st">"NOT_READY"</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="va">notes</span><span class="op">=</span><span class="st">"No FASTQ files were found"</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_structure}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_gzip}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="va">decision</span><span class="op">=</span><span class="st">"REVIEW_REQUIRED"</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="va">notes</span><span class="op">=</span><span class="st">"One or more FASTQ files failed gzip or structure checks"</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"metric\tvalue\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"total_fastq_files\t%s\n"</span> <span class="st">"</span><span class="va">${total_files}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"total_reads\t%s\n"</span> <span class="st">"</span><span class="va">${total_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"minimum_reads_per_file\t%s\n"</span> <span class="st">"</span><span class="va">${min_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"maximum_reads_per_file\t%s\n"</span> <span class="st">"</span><span class="va">${max_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"failed_gzip_checks\t%s\n"</span> <span class="st">"</span><span class="va">${failed_gzip}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"failed_fastq_structure_checks\t%s\n"</span> <span class="st">"</span><span class="va">${failed_structure}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"qc_decision\t%s\n"</span> <span class="st">"</span><span class="va">${decision}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"notes\t%s\n"</span> <span class="st">"</span><span class="va">${notes}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"QC readiness report written to: </span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run it from the MAS project root:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05b-build-qc-readiness-report.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates:</p>
+<pre class="text"><code>data/reports/qc-readiness-report.tsv</code></pre>
+</section>
+<section id="running-the-complete-qc-example" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-complete-qc-example">Running the Complete QC Example</h2>
+<p>If you are continuing from Chapter 04, first make sure the example acquisition package exists:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/04a-create-example-acquisition-data.sh</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/04b-check-data-acquisition.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then run the QC scripts:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05a-check-fastq-files.sh</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05b-build-qc-readiness-report.sh</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/qc/fastq-qc-summary.tsv</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/reports/qc-readiness-report.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The expected example dataset contains six tiny paired-end FASTQ files. Because the reads are toy sequences, the read counts are intentionally very small. This is acceptable for workflow testing, but not for biological interpretation.</p>
+</section>
+<section id="example-qc-summary" class="level2">
+<h2 class="anchored" data-anchor-id="example-qc-summary">Example QC Summary</h2>
+<p>A small example <code>fastq-qc-summary.tsv</code> may look like this:</p>
+<pre class="text"><code>file    directory   lines   reads   min_read_length max_read_length mean_read_length    gzip_status fastq_structure_status
+SRR17868090_1.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK
+SRR17868090_2.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK
+SRR17868091_1.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK
+SRR17868091_2.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK
+SRR17868092_1.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK
+SRR17868092_2.fastq.gz  data/raw/ena    4   1   12  12  12.00   OK  OK</code></pre>
+<p>A real dataset should usually contain many more reads per file.</p>
+</section>
+<section id="interpreting-qc-results" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-qc-results">Interpreting QC Results</h2>
+<p>The lightweight MAS QC checks answer basic file-level questions:</p>
+<ul>
+<li>Are FASTQ files present?</li>
+<li>Can compressed files be decompressed?</li>
+<li>Does each file have valid FASTQ structure?</li>
+<li>How many reads are present?</li>
+<li>What are the basic read length summaries?</li>
+</ul>
+<p>These checks do not replace full sequencing quality assessment. They should be followed by appropriate microbiome-specific processing and quality evaluation.</p>
+<p>For real analysis, additional checks may include:</p>
+<ul>
+<li>per-base sequence quality</li>
+<li>adapter content</li>
+<li>primer content</li>
+<li>sequence duplication</li>
+<li>ambiguous bases</li>
+<li>expected amplicon length</li>
+<li>host contamination</li>
+<li>negative control evaluation</li>
+<li>sample-level outlier detection</li>
+<li>batch effect assessment</li>
+</ul>
+</section>
+<section id="when-to-stop" class="level2">
+<h2 class="anchored" data-anchor-id="when-to-stop">When to Stop</h2>
+<p>The analyst should stop and review the data before feature generation if:</p>
+<ul>
+<li>FASTQ files are missing</li>
+<li>gzip integrity checks fail</li>
+<li>FASTQ structure checks fail</li>
+<li>paired-end mates are missing</li>
+<li>metadata cannot be linked to FASTQ files</li>
+<li>read counts are unexpectedly low</li>
+<li>sequencing strategy is unclear</li>
+<li>batch or sample identity problems are detected</li>
+</ul>
+<p>Stopping early is better than generating downstream outputs from unreliable inputs.</p>
+</section>
+<section id="mas-qc-outputs" class="level2">
+<h2 class="anchored" data-anchor-id="mas-qc-outputs">MAS QC Outputs</h2>
+<p>At the end of this stage, MAS should have:</p>
+<ul>
+<li>FASTQ QC summary</li>
+<li>FASTQ QC status table</li>
+<li>QC readiness report</li>
+<li>notes on limitations or issues</li>
+<li>decision about whether to proceed</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  A[FASTQ Files] --&gt; B[QC Summary]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[QC Readiness Report]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Feature Generation]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[FASTQ Files] --&gt; B[QC Summary]
+  B --&gt; C[QC Readiness Report]
+  C --&gt; D[Feature Generation]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<p>Quality control is the bridge between acquired data and microbiome feature generation.</p>
+<p>A strong QC stage helps ensure that:</p>
+<ul>
+<li>sequencing files are present</li>
+<li>compressed files are readable</li>
+<li>FASTQ structure is valid</li>
+<li>read counts are summarized</li>
+<li>read lengths are summarized</li>
+<li>problems are detected before feature generation</li>
+<li>the decision to proceed is documented</li>
+</ul>
+<p>Quality control does not make a weak dataset strong, but it helps prevent weak or corrupted inputs from silently entering the analysis workflow.</p>
+</section>
+<section id="what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-comes-next">What Comes Next</h2>
+<p>The next chapter examines <strong>Feature Generation</strong>, where quality-checked sequencing reads are transformed into microbiome features such as ASVs, OTUs, taxonomic profiles, or functional profiles.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04-data-acquisition.html" class="pagination-link" aria-label="Data Acquisition">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Data Acquisition</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./06-feature-generation.html" class="pagination-link" aria-label="Feature Generation">
+        <span class="nav-page-text"><span class="chapter-title">Feature Generation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Quality Control</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>:::cdi-message</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ID:** MICROB-005</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Type:** System Component</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Audience:** Students, researchers, analysts, and practitioners</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Theme:** Assessing sequencing data before feature generation</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>Quality control is the stage where acquired sequencing files are evaluated before they are used to generate microbiome features.</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>In the Microbiome Analysis System, quality control is not only a technical filtering step. It is a decision point. The analyst must decide whether the sequencing data are complete, readable, structurally valid, and suitable for downstream processing.</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>A workflow can only produce defensible microbiome results if the input data are reliable enough to support analysis.</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why Quality Control Matters</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>Raw sequencing data can contain technical problems that affect downstream results.</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>Common issues include:</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>incomplete downloads</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>corrupted compressed files</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>empty FASTQ files</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>inconsistent file naming</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>missing paired-end mates</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>low read counts</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>short reads</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>variable read lengths</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>poor sequencing quality</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>adapter contamination</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>primer contamination</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sample-level outliers</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sequencing batch effects</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>If these issues are not detected early, they can affect feature generation, taxonomic assignment, diversity analysis, differential analysis, and biological interpretation.</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>Quality control helps determine whether the data are ready to move forward.</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Position in the Microbiome Analysis System</span></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>Quality control occurs after data acquisition and before feature generation.</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>  A[Data Acquisition] --&gt; B[Quality Control]</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Feature Generation]</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Taxonomic Profiling]</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>  C --&gt; E[Functional Profiling]</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>At this stage, the analyst should confirm that the acquired sequencing files are present, readable, organized, and consistent with the expected study design.</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Quality Control Is a Decision Stage</span></span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>Quality control should produce a decision, not only a collection of plots.</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>The key question is:</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Are these sequencing files suitable for downstream microbiome feature generation?</span></span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>Possible decisions include:</span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>proceed to feature generation</span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>proceed with documented limitations</span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>exclude specific files or samples</span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>re-download missing or corrupted files</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>return to metadata or acquisition checks</span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>request clarification from the sequencing provider</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>use a different workflow for single-end or paired-end data</span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>The decision should be documented because it affects all downstream conclusions.</span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## QC Layers</span></span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a>MAS separates quality control into several layers.</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a>flowchart TB</span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>  A[FASTQ Presence] --&gt; B[Compression Integrity]</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[FASTQ Structure]</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Read Count Summary]</span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>  D --&gt; E[Read Length Summary]</span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a>  E --&gt; F[Pairing Check]</span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>  F --&gt; G[QC Readiness Decision]</span>
+<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a>Each layer answers a different question.</span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## FASTQ Presence</span></span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a>The first check is whether FASTQ files are present in the expected directories.</span>
+<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a>For the MAS example package, FASTQ files are expected under:</span>
+<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a><span class="in">data/raw/ena/</span></span>
+<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a>or:</span>
+<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-109"><a href="#cb22-109" aria-hidden="true" tabindex="-1"></a><span class="in">data/raw/ncbi/</span></span>
+<span id="cb22-110"><a href="#cb22-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a>A project may use one repository or both. Finding zero files in one directory is not automatically a problem if the dataset was intentionally acquired from the other source.</span>
+<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a><span class="fu">## Compression Integrity</span></span>
+<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a>Most sequencing files are stored as compressed FASTQ files ending in:</span>
+<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a><span class="in">.fastq.gz</span></span>
+<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a>or:</span>
+<span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-125"><a href="#cb22-125" aria-hidden="true" tabindex="-1"></a><span class="in">.fq.gz</span></span>
+<span id="cb22-126"><a href="#cb22-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-127"><a href="#cb22-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-128"><a href="#cb22-128" aria-hidden="true" tabindex="-1"></a>Before analysis, compressed files should be tested to confirm that they can be decompressed successfully.</span>
+<span id="cb22-129"><a href="#cb22-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-130"><a href="#cb22-130" aria-hidden="true" tabindex="-1"></a>A corrupted gzip file may indicate an interrupted download or storage problem.</span>
+<span id="cb22-131"><a href="#cb22-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-132"><a href="#cb22-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## FASTQ Structure</span></span>
+<span id="cb22-133"><a href="#cb22-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-134"><a href="#cb22-134" aria-hidden="true" tabindex="-1"></a>A valid FASTQ record contains four lines:</span>
+<span id="cb22-135"><a href="#cb22-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-136"><a href="#cb22-136" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-137"><a href="#cb22-137" aria-hidden="true" tabindex="-1"></a><span class="in">@read_identifier</span></span>
+<span id="cb22-138"><a href="#cb22-138" aria-hidden="true" tabindex="-1"></a><span class="in">sequence</span></span>
+<span id="cb22-139"><a href="#cb22-139" aria-hidden="true" tabindex="-1"></a><span class="in">+</span></span>
+<span id="cb22-140"><a href="#cb22-140" aria-hidden="true" tabindex="-1"></a><span class="in">quality_scores</span></span>
+<span id="cb22-141"><a href="#cb22-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-142"><a href="#cb22-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-143"><a href="#cb22-143" aria-hidden="true" tabindex="-1"></a>Therefore, a FASTQ file should have a total line count divisible by four.</span>
+<span id="cb22-144"><a href="#cb22-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-145"><a href="#cb22-145" aria-hidden="true" tabindex="-1"></a>This structural check does not confirm biological quality, but it helps detect incomplete or malformed files.</span>
+<span id="cb22-146"><a href="#cb22-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-147"><a href="#cb22-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## Read Count Summary</span></span>
+<span id="cb22-148"><a href="#cb22-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-149"><a href="#cb22-149" aria-hidden="true" tabindex="-1"></a>Read counts provide a basic summary of sequencing depth.</span>
+<span id="cb22-150"><a href="#cb22-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-151"><a href="#cb22-151" aria-hidden="true" tabindex="-1"></a>For each FASTQ file, MAS records:</span>
+<span id="cb22-152"><a href="#cb22-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-153"><a href="#cb22-153" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>file name</span>
+<span id="cb22-154"><a href="#cb22-154" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>repository directory</span>
+<span id="cb22-155"><a href="#cb22-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>number of lines</span>
+<span id="cb22-156"><a href="#cb22-156" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>number of reads</span>
+<span id="cb22-157"><a href="#cb22-157" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>minimum read length</span>
+<span id="cb22-158"><a href="#cb22-158" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>maximum read length</span>
+<span id="cb22-159"><a href="#cb22-159" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>average read length</span>
+<span id="cb22-160"><a href="#cb22-160" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>gzip status</span>
+<span id="cb22-161"><a href="#cb22-161" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>FASTQ structure status</span>
+<span id="cb22-162"><a href="#cb22-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-163"><a href="#cb22-163" aria-hidden="true" tabindex="-1"></a>Very low read counts may indicate incomplete data, failed sequencing, aggressive filtering, or toy example data.</span>
+<span id="cb22-164"><a href="#cb22-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-165"><a href="#cb22-165" aria-hidden="true" tabindex="-1"></a><span class="fu">## Read Length Summary</span></span>
+<span id="cb22-166"><a href="#cb22-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-167"><a href="#cb22-167" aria-hidden="true" tabindex="-1"></a>Read length affects downstream processing.</span>
+<span id="cb22-168"><a href="#cb22-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-169"><a href="#cb22-169" aria-hidden="true" tabindex="-1"></a>For example, 16S amplicon workflows often depend on expected read length, target region, primer design, overlap, and quality profile.</span>
+<span id="cb22-170"><a href="#cb22-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-171"><a href="#cb22-171" aria-hidden="true" tabindex="-1"></a>Shotgun metagenomic workflows may use different filtering, host-removal, assembly, or profiling approaches.</span>
+<span id="cb22-172"><a href="#cb22-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-173"><a href="#cb22-173" aria-hidden="true" tabindex="-1"></a>Read length summaries help the analyst confirm whether the data are consistent with the expected sequencing strategy.</span>
+<span id="cb22-174"><a href="#cb22-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-175"><a href="#cb22-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paired-End Consistency</span></span>
+<span id="cb22-176"><a href="#cb22-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-177"><a href="#cb22-177" aria-hidden="true" tabindex="-1"></a>For paired-end data, each run should usually have two files:</span>
+<span id="cb22-178"><a href="#cb22-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-179"><a href="#cb22-179" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-180"><a href="#cb22-180" aria-hidden="true" tabindex="-1"></a><span class="in">SRR17868090_1.fastq.gz</span></span>
+<span id="cb22-181"><a href="#cb22-181" aria-hidden="true" tabindex="-1"></a><span class="in">SRR17868090_2.fastq.gz</span></span>
+<span id="cb22-182"><a href="#cb22-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-183"><a href="#cb22-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-184"><a href="#cb22-184" aria-hidden="true" tabindex="-1"></a>A missing mate file can prevent paired-end processing.</span>
+<span id="cb22-185"><a href="#cb22-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-186"><a href="#cb22-186" aria-hidden="true" tabindex="-1"></a>The MAS example package uses paired-end toy FASTQ files, so each run accession has both <span class="in">`_1`</span> and <span class="in">`_2`</span> files.</span>
+<span id="cb22-187"><a href="#cb22-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-188"><a href="#cb22-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Example QC Scripts</span></span>
+<span id="cb22-189"><a href="#cb22-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-190"><a href="#cb22-190" aria-hidden="true" tabindex="-1"></a>The following scripts provide a lightweight MAS-side quality control check for the example acquisition package created in Chapter 04.</span>
+<span id="cb22-191"><a href="#cb22-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-192"><a href="#cb22-192" aria-hidden="true" tabindex="-1"></a>These scripts are not replacements for tools such as FastQC, MultiQC, Cutadapt, Trimmomatic, fastp, DADA2, QIIME 2, mothur, KneadData, or other full microbiome processing workflows. They provide early file-level checks before feature generation.</span>
+<span id="cb22-193"><a href="#cb22-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-194"><a href="#cb22-194" aria-hidden="true" tabindex="-1"></a>The workflow uses two scripts:</span>
+<span id="cb22-195"><a href="#cb22-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-196"><a href="#cb22-196" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb22-197"><a href="#cb22-197" aria-hidden="true" tabindex="-1"></a><span class="in">scripts/bash/05a-check-fastq-files.sh</span></span>
+<span id="cb22-198"><a href="#cb22-198" aria-hidden="true" tabindex="-1"></a><span class="in">scripts/bash/05b-build-qc-readiness-report.sh</span></span>
+<span id="cb22-199"><a href="#cb22-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-200"><a href="#cb22-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-201"><a href="#cb22-201" aria-hidden="true" tabindex="-1"></a>The first script checks FASTQ file integrity and summarizes read counts and read lengths.</span>
+<span id="cb22-202"><a href="#cb22-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-203"><a href="#cb22-203" aria-hidden="true" tabindex="-1"></a>The second script builds a simple QC readiness report.</span>
+<span id="cb22-204"><a href="#cb22-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-205"><a href="#cb22-205" aria-hidden="true" tabindex="-1"></a><span class="fu">## 05a: Check FASTQ Files</span></span>
+<span id="cb22-206"><a href="#cb22-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-207"><a href="#cb22-207" aria-hidden="true" tabindex="-1"></a>Save this script as:</span>
+<span id="cb22-208"><a href="#cb22-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-209"><a href="#cb22-209" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb22-210"><a href="#cb22-210" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/bash/05a-check-fastq-files.sh</span></span>
+<span id="cb22-211"><a href="#cb22-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-212"><a href="#cb22-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-213"><a href="#cb22-213" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb22-214"><a href="#cb22-214" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb22-215"><a href="#cb22-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-216"><a href="#cb22-216" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb22-217"><a href="#cb22-217" aria-hidden="true" tabindex="-1"></a><span class="co"># Microbiome Analysis System</span></span>
+<span id="cb22-218"><a href="#cb22-218" aria-hidden="true" tabindex="-1"></a><span class="co"># 05a-check-fastq-files.sh</span></span>
+<span id="cb22-219"><a href="#cb22-219" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb22-220"><a href="#cb22-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Purpose:</span></span>
+<span id="cb22-221"><a href="#cb22-221" aria-hidden="true" tabindex="-1"></a><span class="co">#   Perform lightweight FASTQ quality-control checks before feature generation.</span></span>
+<span id="cb22-222"><a href="#cb22-222" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb22-223"><a href="#cb22-223" aria-hidden="true" tabindex="-1"></a><span class="co"># Checks:</span></span>
+<span id="cb22-224"><a href="#cb22-224" aria-hidden="true" tabindex="-1"></a><span class="co">#   - FASTQ files exist</span></span>
+<span id="cb22-225"><a href="#cb22-225" aria-hidden="true" tabindex="-1"></a><span class="co">#   - gzip integrity for compressed files</span></span>
+<span id="cb22-226"><a href="#cb22-226" aria-hidden="true" tabindex="-1"></a><span class="co">#   - FASTQ line count is divisible by 4</span></span>
+<span id="cb22-227"><a href="#cb22-227" aria-hidden="true" tabindex="-1"></a><span class="co">#   - read count</span></span>
+<span id="cb22-228"><a href="#cb22-228" aria-hidden="true" tabindex="-1"></a><span class="co">#   - minimum, maximum, and average read length</span></span>
+<span id="cb22-229"><a href="#cb22-229" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb22-230"><a href="#cb22-230" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage:</span></span>
+<span id="cb22-231"><a href="#cb22-231" aria-hidden="true" tabindex="-1"></a><span class="co">#   bash scripts/bash/05a-check-fastq-files.sh</span></span>
+<span id="cb22-232"><a href="#cb22-232" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb22-233"><a href="#cb22-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-234"><a href="#cb22-234" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb22-235"><a href="#cb22-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-236"><a href="#cb22-236" aria-hidden="true" tabindex="-1"></a><span class="va">RAW_DIRS</span><span class="op">=</span><span class="st">"data/raw/ena data/raw/ncbi"</span></span>
+<span id="cb22-237"><a href="#cb22-237" aria-hidden="true" tabindex="-1"></a><span class="va">QC_DIR</span><span class="op">=</span><span class="st">"data/qc"</span></span>
+<span id="cb22-238"><a href="#cb22-238" aria-hidden="true" tabindex="-1"></a><span class="va">REPORT_DIR</span><span class="op">=</span><span class="st">"data/reports"</span></span>
+<span id="cb22-239"><a href="#cb22-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-240"><a href="#cb22-240" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">"</span></span>
+<span id="cb22-241"><a href="#cb22-241" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">"</span></span>
+<span id="cb22-242"><a href="#cb22-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-243"><a href="#cb22-243" aria-hidden="true" tabindex="-1"></a><span class="va">SUMMARY_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-summary.tsv"</span></span>
+<span id="cb22-244"><a href="#cb22-244" aria-hidden="true" tabindex="-1"></a><span class="va">STATUS_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-status.tsv"</span></span>
+<span id="cb22-245"><a href="#cb22-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-246"><a href="#cb22-246" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"file\tdirectory\tlines\treads\tmin_read_length\tmax_read_length\tmean_read_length\tgzip_status\tfastq_structure_status\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb22-247"><a href="#cb22-247" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"check\tstatus\tnotes\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-248"><a href="#cb22-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-249"><a href="#cb22-249" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Microbiome Analysis System: FASTQ QC Check"</span></span>
+<span id="cb22-250"><a href="#cb22-250" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb22-251"><a href="#cb22-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-252"><a href="#cb22-252" aria-hidden="true" tabindex="-1"></a><span class="va">fastq_count</span><span class="op">=</span>0</span>
+<span id="cb22-253"><a href="#cb22-253" aria-hidden="true" tabindex="-1"></a><span class="va">failed_count</span><span class="op">=</span>0</span>
+<span id="cb22-254"><a href="#cb22-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-255"><a href="#cb22-255" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dir <span class="kw">in</span> <span class="va">${RAW_DIRS}</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb22-256"><a href="#cb22-256" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-d</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-257"><a href="#cb22-257" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"Directory not found: </span><span class="va">${dir}</span><span class="st">"</span></span>
+<span id="cb22-258"><a href="#cb22-258" aria-hidden="true" tabindex="-1"></a>    <span class="cf">continue</span></span>
+<span id="cb22-259"><a href="#cb22-259" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb22-260"><a href="#cb22-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-261"><a href="#cb22-261" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> file <span class="kw">in</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fastq.gz <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fq.gz <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fastq <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span>/<span class="pp">*</span>.fq<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb22-262"><a href="#cb22-262" aria-hidden="true" tabindex="-1"></a>    <span class="bu">[</span> <span class="ot">-e</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">||</span> <span class="cf">continue</span></span>
+<span id="cb22-263"><a href="#cb22-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-264"><a href="#cb22-264" aria-hidden="true" tabindex="-1"></a>    <span class="va">fastq_count</span><span class="op">=</span><span class="va">$((fastq_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb22-265"><a href="#cb22-265" aria-hidden="true" tabindex="-1"></a>    <span class="va">filename</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-266"><a href="#cb22-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-267"><a href="#cb22-267" aria-hidden="true" tabindex="-1"></a>    <span class="va">gzip_status</span><span class="op">=</span><span class="st">"NOT_COMPRESSED"</span></span>
+<span id="cb22-268"><a href="#cb22-268" aria-hidden="true" tabindex="-1"></a>    <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"UNKNOWN"</span></span>
+<span id="cb22-269"><a href="#cb22-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-270"><a href="#cb22-270" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">echo</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Eq</span> <span class="st">"</span><span class="dt">\\</span><span class="st">.(fastq|fq)</span><span class="dt">\\</span><span class="st">.gz$"</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-271"><a href="#cb22-271" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="fu">gzip</span> <span class="at">-t</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-272"><a href="#cb22-272" aria-hidden="true" tabindex="-1"></a>        <span class="va">gzip_status</span><span class="op">=</span><span class="st">"OK"</span></span>
+<span id="cb22-273"><a href="#cb22-273" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span></span>
+<span id="cb22-274"><a href="#cb22-274" aria-hidden="true" tabindex="-1"></a>        <span class="va">gzip_status</span><span class="op">=</span><span class="st">"FAIL"</span></span>
+<span id="cb22-275"><a href="#cb22-275" aria-hidden="true" tabindex="-1"></a>        <span class="va">failed_count</span><span class="op">=</span><span class="va">$((failed_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb22-276"><a href="#cb22-276" aria-hidden="true" tabindex="-1"></a>      <span class="cf">fi</span></span>
+<span id="cb22-277"><a href="#cb22-277" aria-hidden="true" tabindex="-1"></a>      <span class="va">line_count</span><span class="op">=</span><span class="va">$(</span><span class="fu">gzip</span> <span class="at">-cd</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb22-278"><a href="#cb22-278" aria-hidden="true" tabindex="-1"></a>      <span class="va">read_stats</span><span class="op">=</span><span class="va">$(</span><span class="fu">gzip</span> <span class="at">-cd</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'NR % 4 == 2 {</span></span>
+<span id="cb22-279"><a href="#cb22-279" aria-hidden="true" tabindex="-1"></a><span class="st">        len=length($0);</span></span>
+<span id="cb22-280"><a href="#cb22-280" aria-hidden="true" tabindex="-1"></a><span class="st">        count++;</span></span>
+<span id="cb22-281"><a href="#cb22-281" aria-hidden="true" tabindex="-1"></a><span class="st">        total+=len;</span></span>
+<span id="cb22-282"><a href="#cb22-282" aria-hidden="true" tabindex="-1"></a><span class="st">        if (min=="" || len &lt; min) min=len;</span></span>
+<span id="cb22-283"><a href="#cb22-283" aria-hidden="true" tabindex="-1"></a><span class="st">        if (len &gt; max) max=len;</span></span>
+<span id="cb22-284"><a href="#cb22-284" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb22-285"><a href="#cb22-285" aria-hidden="true" tabindex="-1"></a><span class="st">      END {</span></span>
+<span id="cb22-286"><a href="#cb22-286" aria-hidden="true" tabindex="-1"></a><span class="st">        if (count &gt; 0) {</span></span>
+<span id="cb22-287"><a href="#cb22-287" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "%d\t%d\t%.2f", min, max, total/count;</span></span>
+<span id="cb22-288"><a href="#cb22-288" aria-hidden="true" tabindex="-1"></a><span class="st">        } else {</span></span>
+<span id="cb22-289"><a href="#cb22-289" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "0\t0\t0";</span></span>
+<span id="cb22-290"><a href="#cb22-290" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
+<span id="cb22-291"><a href="#cb22-291" aria-hidden="true" tabindex="-1"></a><span class="st">      }'</span><span class="va">)</span></span>
+<span id="cb22-292"><a href="#cb22-292" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb22-293"><a href="#cb22-293" aria-hidden="true" tabindex="-1"></a>      <span class="va">line_count</span><span class="op">=</span><span class="va">$(</span><span class="fu">wc</span> <span class="at">-l</span> <span class="op">&lt;</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb22-294"><a href="#cb22-294" aria-hidden="true" tabindex="-1"></a>      <span class="va">read_stats</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="st">'NR % 4 == 2 {</span></span>
+<span id="cb22-295"><a href="#cb22-295" aria-hidden="true" tabindex="-1"></a><span class="st">        len=length($0);</span></span>
+<span id="cb22-296"><a href="#cb22-296" aria-hidden="true" tabindex="-1"></a><span class="st">        count++;</span></span>
+<span id="cb22-297"><a href="#cb22-297" aria-hidden="true" tabindex="-1"></a><span class="st">        total+=len;</span></span>
+<span id="cb22-298"><a href="#cb22-298" aria-hidden="true" tabindex="-1"></a><span class="st">        if (min=="" || len &lt; min) min=len;</span></span>
+<span id="cb22-299"><a href="#cb22-299" aria-hidden="true" tabindex="-1"></a><span class="st">        if (len &gt; max) max=len;</span></span>
+<span id="cb22-300"><a href="#cb22-300" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb22-301"><a href="#cb22-301" aria-hidden="true" tabindex="-1"></a><span class="st">      END {</span></span>
+<span id="cb22-302"><a href="#cb22-302" aria-hidden="true" tabindex="-1"></a><span class="st">        if (count &gt; 0) {</span></span>
+<span id="cb22-303"><a href="#cb22-303" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "%d\t%d\t%.2f", min, max, total/count;</span></span>
+<span id="cb22-304"><a href="#cb22-304" aria-hidden="true" tabindex="-1"></a><span class="st">        } else {</span></span>
+<span id="cb22-305"><a href="#cb22-305" aria-hidden="true" tabindex="-1"></a><span class="st">          printf "0\t0\t0";</span></span>
+<span id="cb22-306"><a href="#cb22-306" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
+<span id="cb22-307"><a href="#cb22-307" aria-hidden="true" tabindex="-1"></a><span class="st">      }'</span> <span class="st">"</span><span class="va">${file}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-308"><a href="#cb22-308" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb22-309"><a href="#cb22-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-310"><a href="#cb22-310" aria-hidden="true" tabindex="-1"></a>    <span class="va">reads</span><span class="op">=</span><span class="va">$((line_count</span> <span class="op">/</span> <span class="dv">4</span><span class="va">))</span></span>
+<span id="cb22-311"><a href="#cb22-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-312"><a href="#cb22-312" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="va">$((line_count</span> <span class="op">%</span> <span class="dv">4</span><span class="va">))</span> <span class="ot">-eq</span> 0 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${line_count}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-313"><a href="#cb22-313" aria-hidden="true" tabindex="-1"></a>      <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"OK"</span></span>
+<span id="cb22-314"><a href="#cb22-314" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb22-315"><a href="#cb22-315" aria-hidden="true" tabindex="-1"></a>      <span class="va">fastq_structure_status</span><span class="op">=</span><span class="st">"FAIL"</span></span>
+<span id="cb22-316"><a href="#cb22-316" aria-hidden="true" tabindex="-1"></a>      <span class="va">failed_count</span><span class="op">=</span><span class="va">$((failed_count</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span></span>
+<span id="cb22-317"><a href="#cb22-317" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb22-318"><a href="#cb22-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-319"><a href="#cb22-319" aria-hidden="true" tabindex="-1"></a>    <span class="va">min_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $1}'</span><span class="va">)</span></span>
+<span id="cb22-320"><a href="#cb22-320" aria-hidden="true" tabindex="-1"></a>    <span class="va">max_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $2}'</span><span class="va">)</span></span>
+<span id="cb22-321"><a href="#cb22-321" aria-hidden="true" tabindex="-1"></a>    <span class="va">mean_len</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">"</span><span class="va">${read_stats}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'{print $3}'</span><span class="va">)</span></span>
+<span id="cb22-322"><a href="#cb22-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-323"><a href="#cb22-323" aria-hidden="true" tabindex="-1"></a>    <span class="bu">printf</span> <span class="st">"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n"</span> <span class="dt">\</span></span>
+<span id="cb22-324"><a href="#cb22-324" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${filename}</span><span class="st">"</span> <span class="st">"</span><span class="va">${dir}</span><span class="st">"</span> <span class="st">"</span><span class="va">${line_count}</span><span class="st">"</span> <span class="st">"</span><span class="va">${reads}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb22-325"><a href="#cb22-325" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${min_len}</span><span class="st">"</span> <span class="st">"</span><span class="va">${max_len}</span><span class="st">"</span> <span class="st">"</span><span class="va">${mean_len}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb22-326"><a href="#cb22-326" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="va">${gzip_status}</span><span class="st">"</span> <span class="st">"</span><span class="va">${fastq_structure_status}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb22-327"><a href="#cb22-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-328"><a href="#cb22-328" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"Checked: </span><span class="va">${file}</span><span class="st">"</span></span>
+<span id="cb22-329"><a href="#cb22-329" aria-hidden="true" tabindex="-1"></a>  <span class="cf">done</span></span>
+<span id="cb22-330"><a href="#cb22-330" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb22-331"><a href="#cb22-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-332"><a href="#cb22-332" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${fastq_count}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-333"><a href="#cb22-333" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ presence\tFAIL\tNo FASTQ files found in expected raw data directories\n"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-334"><a href="#cb22-334" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span></span>
+<span id="cb22-335"><a href="#cb22-335" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"No FASTQ files found."</span></span>
+<span id="cb22-336"><a href="#cb22-336" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb22-337"><a href="#cb22-337" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb22-338"><a href="#cb22-338" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ presence\tOK\t%s FASTQ files found\n"</span> <span class="st">"</span><span class="va">${fastq_count}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-339"><a href="#cb22-339" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb22-340"><a href="#cb22-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-341"><a href="#cb22-341" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_count}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-342"><a href="#cb22-342" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ file checks\tOK\tNo failed gzip or structure checks\n"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-343"><a href="#cb22-343" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb22-344"><a href="#cb22-344" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">"FASTQ file checks\tWARN\t%s failed checks detected\n"</span> <span class="st">"</span><span class="va">${failed_count}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-345"><a href="#cb22-345" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb22-346"><a href="#cb22-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-347"><a href="#cb22-347" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb22-348"><a href="#cb22-348" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"FASTQ files checked: </span><span class="va">${fastq_count}</span><span class="st">"</span></span>
+<span id="cb22-349"><a href="#cb22-349" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Failed checks: </span><span class="va">${failed_count}</span><span class="st">"</span></span>
+<span id="cb22-350"><a href="#cb22-350" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb22-351"><a href="#cb22-351" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Summary written to: </span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb22-352"><a href="#cb22-352" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Status written to:  </span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-353"><a href="#cb22-353" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-354"><a href="#cb22-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-355"><a href="#cb22-355" aria-hidden="true" tabindex="-1"></a><span class="ex">Run</span> it from the MAS project root:</span>
+<span id="cb22-356"><a href="#cb22-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-357"><a href="#cb22-357" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-358"><a href="#cb22-358" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05a-check-fastq-files.sh</span>
+<span id="cb22-359"><a href="#cb22-359" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-360"><a href="#cb22-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-361"><a href="#cb22-361" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> creates:</span>
+<span id="cb22-362"><a href="#cb22-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-363"><a href="#cb22-363" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>text</span>
+<span id="cb22-364"><a href="#cb22-364" aria-hidden="true" tabindex="-1"></a><span class="ex">data/qc/fastq-qc-summary.tsv</span></span>
+<span id="cb22-365"><a href="#cb22-365" aria-hidden="true" tabindex="-1"></a><span class="ex">data/qc/fastq-qc-status.tsv</span></span>
+<span id="cb22-366"><a href="#cb22-366" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-367"><a href="#cb22-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-368"><a href="#cb22-368" aria-hidden="true" tabindex="-1"></a><span class="co">## 05b: Build the QC Readiness Report</span></span>
+<span id="cb22-369"><a href="#cb22-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-370"><a href="#cb22-370" aria-hidden="true" tabindex="-1"></a><span class="ex">Save</span> this script as:</span>
+<span id="cb22-371"><a href="#cb22-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-372"><a href="#cb22-372" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-373"><a href="#cb22-373" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/bash/05b-build-qc-readiness-report.sh</span></span>
+<span id="cb22-374"><a href="#cb22-374" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-375"><a href="#cb22-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-376"><a href="#cb22-376" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-377"><a href="#cb22-377" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb22-378"><a href="#cb22-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-379"><a href="#cb22-379" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb22-380"><a href="#cb22-380" aria-hidden="true" tabindex="-1"></a><span class="co"># Microbiome Analysis System</span></span>
+<span id="cb22-381"><a href="#cb22-381" aria-hidden="true" tabindex="-1"></a><span class="co"># 05b-build-qc-readiness-report.sh</span></span>
+<span id="cb22-382"><a href="#cb22-382" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb22-383"><a href="#cb22-383" aria-hidden="true" tabindex="-1"></a><span class="co"># Purpose:</span></span>
+<span id="cb22-384"><a href="#cb22-384" aria-hidden="true" tabindex="-1"></a><span class="co">#   Build a simple QC readiness report from FASTQ QC outputs.</span></span>
+<span id="cb22-385"><a href="#cb22-385" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb22-386"><a href="#cb22-386" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage:</span></span>
+<span id="cb22-387"><a href="#cb22-387" aria-hidden="true" tabindex="-1"></a><span class="co">#   bash scripts/bash/05b-build-qc-readiness-report.sh</span></span>
+<span id="cb22-388"><a href="#cb22-388" aria-hidden="true" tabindex="-1"></a><span class="co">###############################################################################</span></span>
+<span id="cb22-389"><a href="#cb22-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-390"><a href="#cb22-390" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb22-391"><a href="#cb22-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-392"><a href="#cb22-392" aria-hidden="true" tabindex="-1"></a><span class="va">QC_DIR</span><span class="op">=</span><span class="st">"data/qc"</span></span>
+<span id="cb22-393"><a href="#cb22-393" aria-hidden="true" tabindex="-1"></a><span class="va">REPORT_DIR</span><span class="op">=</span><span class="st">"data/reports"</span></span>
+<span id="cb22-394"><a href="#cb22-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-395"><a href="#cb22-395" aria-hidden="true" tabindex="-1"></a><span class="va">SUMMARY_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-summary.tsv"</span></span>
+<span id="cb22-396"><a href="#cb22-396" aria-hidden="true" tabindex="-1"></a><span class="va">STATUS_FILE</span><span class="op">=</span><span class="st">"</span><span class="va">${QC_DIR}</span><span class="st">/fastq-qc-status.tsv"</span></span>
+<span id="cb22-397"><a href="#cb22-397" aria-hidden="true" tabindex="-1"></a><span class="va">READINESS_REPORT</span><span class="op">=</span><span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">/qc-readiness-report.tsv"</span></span>
+<span id="cb22-398"><a href="#cb22-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-399"><a href="#cb22-399" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${REPORT_DIR}</span><span class="st">"</span></span>
+<span id="cb22-400"><a href="#cb22-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-401"><a href="#cb22-401" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-s</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-402"><a href="#cb22-402" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Missing FASTQ QC summary: </span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span></span>
+<span id="cb22-403"><a href="#cb22-403" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Run: bash scripts/bash/05a-check-fastq-files.sh"</span></span>
+<span id="cb22-404"><a href="#cb22-404" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb22-405"><a href="#cb22-405" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb22-406"><a href="#cb22-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-407"><a href="#cb22-407" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-s</span> <span class="st">"</span><span class="va">${STATUS_FILE}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-408"><a href="#cb22-408" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Missing FASTQ QC status: </span><span class="va">${STATUS_FILE}</span><span class="st">"</span></span>
+<span id="cb22-409"><a href="#cb22-409" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"Run: bash scripts/bash/05a-check-fastq-files.sh"</span></span>
+<span id="cb22-410"><a href="#cb22-410" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb22-411"><a href="#cb22-411" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb22-412"><a href="#cb22-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-413"><a href="#cb22-413" aria-hidden="true" tabindex="-1"></a><span class="va">total_files</span><span class="op">=</span><span class="va">$(</span><span class="fu">tail</span> <span class="at">-n</span> +2 <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">' '</span><span class="va">)</span></span>
+<span id="cb22-414"><a href="#cb22-414" aria-hidden="true" tabindex="-1"></a><span class="va">failed_structure</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 &amp;&amp; $9 != "OK" {count++} END {print count+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-415"><a href="#cb22-415" aria-hidden="true" tabindex="-1"></a><span class="va">failed_gzip</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 &amp;&amp; $8 == "FAIL" {count++} END {print count+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-416"><a href="#cb22-416" aria-hidden="true" tabindex="-1"></a><span class="va">total_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR &gt; 1 {sum += $4} END {print sum+0}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-417"><a href="#cb22-417" aria-hidden="true" tabindex="-1"></a><span class="va">min_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR == 2 {min=$4} NR &gt; 2 &amp;&amp; $4 &lt; min {min=$4} END {if (min=="") print 0; else print min}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-418"><a href="#cb22-418" aria-hidden="true" tabindex="-1"></a><span class="va">max_reads</span><span class="op">=</span><span class="va">$(</span><span class="fu">awk</span> <span class="at">-F</span> <span class="st">'\t'</span> <span class="st">'NR == 2 {max=$4} NR &gt; 2 &amp;&amp; $4 &gt; max {max=$4} END {if (max=="") print 0; else print max}'</span> <span class="st">"</span><span class="va">${SUMMARY_FILE}</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb22-419"><a href="#cb22-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-420"><a href="#cb22-420" aria-hidden="true" tabindex="-1"></a><span class="va">decision</span><span class="op">=</span><span class="st">"READY_FOR_NEXT_STEP"</span></span>
+<span id="cb22-421"><a href="#cb22-421" aria-hidden="true" tabindex="-1"></a><span class="va">notes</span><span class="op">=</span><span class="st">"FASTQ files passed lightweight file-level checks"</span></span>
+<span id="cb22-422"><a href="#cb22-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-423"><a href="#cb22-423" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${total_files}</span><span class="st">"</span> <span class="ot">-eq</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-424"><a href="#cb22-424" aria-hidden="true" tabindex="-1"></a>  <span class="va">decision</span><span class="op">=</span><span class="st">"NOT_READY"</span></span>
+<span id="cb22-425"><a href="#cb22-425" aria-hidden="true" tabindex="-1"></a>  <span class="va">notes</span><span class="op">=</span><span class="st">"No FASTQ files were found"</span></span>
+<span id="cb22-426"><a href="#cb22-426" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_structure}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span> <span class="kw">||</span> <span class="bu">[</span> <span class="st">"</span><span class="va">${failed_gzip}</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb22-427"><a href="#cb22-427" aria-hidden="true" tabindex="-1"></a>  <span class="va">decision</span><span class="op">=</span><span class="st">"REVIEW_REQUIRED"</span></span>
+<span id="cb22-428"><a href="#cb22-428" aria-hidden="true" tabindex="-1"></a>  <span class="va">notes</span><span class="op">=</span><span class="st">"One or more FASTQ files failed gzip or structure checks"</span></span>
+<span id="cb22-429"><a href="#cb22-429" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb22-430"><a href="#cb22-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-431"><a href="#cb22-431" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"metric\tvalue\n"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-432"><a href="#cb22-432" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"total_fastq_files\t%s\n"</span> <span class="st">"</span><span class="va">${total_files}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-433"><a href="#cb22-433" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"total_reads\t%s\n"</span> <span class="st">"</span><span class="va">${total_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-434"><a href="#cb22-434" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"minimum_reads_per_file\t%s\n"</span> <span class="st">"</span><span class="va">${min_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-435"><a href="#cb22-435" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"maximum_reads_per_file\t%s\n"</span> <span class="st">"</span><span class="va">${max_reads}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-436"><a href="#cb22-436" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"failed_gzip_checks\t%s\n"</span> <span class="st">"</span><span class="va">${failed_gzip}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-437"><a href="#cb22-437" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"failed_fastq_structure_checks\t%s\n"</span> <span class="st">"</span><span class="va">${failed_structure}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-438"><a href="#cb22-438" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"qc_decision\t%s\n"</span> <span class="st">"</span><span class="va">${decision}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-439"><a href="#cb22-439" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"notes\t%s\n"</span> <span class="st">"</span><span class="va">${notes}</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-440"><a href="#cb22-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-441"><a href="#cb22-441" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"QC readiness report written to: </span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-442"><a href="#cb22-442" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span></span>
+<span id="cb22-443"><a href="#cb22-443" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="st">"</span><span class="va">${READINESS_REPORT}</span><span class="st">"</span></span>
+<span id="cb22-444"><a href="#cb22-444" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-445"><a href="#cb22-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-446"><a href="#cb22-446" aria-hidden="true" tabindex="-1"></a><span class="ex">Run</span> it from the MAS project root:</span>
+<span id="cb22-447"><a href="#cb22-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-448"><a href="#cb22-448" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-449"><a href="#cb22-449" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05b-build-qc-readiness-report.sh</span>
+<span id="cb22-450"><a href="#cb22-450" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-451"><a href="#cb22-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-452"><a href="#cb22-452" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> creates:</span>
+<span id="cb22-453"><a href="#cb22-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-454"><a href="#cb22-454" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>text</span>
+<span id="cb22-455"><a href="#cb22-455" aria-hidden="true" tabindex="-1"></a><span class="ex">data/reports/qc-readiness-report.tsv</span></span>
+<span id="cb22-456"><a href="#cb22-456" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-457"><a href="#cb22-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-458"><a href="#cb22-458" aria-hidden="true" tabindex="-1"></a><span class="co">## Running the Complete QC Example</span></span>
+<span id="cb22-459"><a href="#cb22-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-460"><a href="#cb22-460" aria-hidden="true" tabindex="-1"></a><span class="ex">If</span> you are continuing from Chapter 04, first make sure the example acquisition package exists:</span>
+<span id="cb22-461"><a href="#cb22-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-462"><a href="#cb22-462" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-463"><a href="#cb22-463" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/04a-create-example-acquisition-data.sh</span>
+<span id="cb22-464"><a href="#cb22-464" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/04b-check-data-acquisition.sh</span>
+<span id="cb22-465"><a href="#cb22-465" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-466"><a href="#cb22-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-467"><a href="#cb22-467" aria-hidden="true" tabindex="-1"></a><span class="ex">Then</span> run the QC scripts:</span>
+<span id="cb22-468"><a href="#cb22-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-469"><a href="#cb22-469" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>bash</span>
+<span id="cb22-470"><a href="#cb22-470" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05a-check-fastq-files.sh</span>
+<span id="cb22-471"><a href="#cb22-471" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/bash/05b-build-qc-readiness-report.sh</span>
+<span id="cb22-472"><a href="#cb22-472" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/qc/fastq-qc-summary.tsv</span>
+<span id="cb22-473"><a href="#cb22-473" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/reports/qc-readiness-report.tsv</span>
+<span id="cb22-474"><a href="#cb22-474" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-475"><a href="#cb22-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-476"><a href="#cb22-476" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> expected example dataset contains six tiny paired-end FASTQ files. Because the reads are toy sequences, the read counts are intentionally very small. This is acceptable for workflow testing, but not for biological interpretation.</span>
+<span id="cb22-477"><a href="#cb22-477" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-478"><a href="#cb22-478" aria-hidden="true" tabindex="-1"></a><span class="co">## Example QC Summary</span></span>
+<span id="cb22-479"><a href="#cb22-479" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-480"><a href="#cb22-480" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span> small example <span class="kw">`</span>fastq-qc-summary.tsv<span class="kw">`</span> <span class="ex">may</span> look like this:</span>
+<span id="cb22-481"><a href="#cb22-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-482"><a href="#cb22-482" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>text</span>
+<span id="cb22-483"><a href="#cb22-483" aria-hidden="true" tabindex="-1"></a><span class="fu">file</span>    directory   lines   reads   min_read_length max_read_length mean_read_length    gzip_status fastq_structure_status</span>
+<span id="cb22-484"><a href="#cb22-484" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868090_1.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-485"><a href="#cb22-485" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868090_2.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-486"><a href="#cb22-486" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868091_1.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-487"><a href="#cb22-487" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868091_2.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-488"><a href="#cb22-488" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868092_1.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-489"><a href="#cb22-489" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR17868092_2.fastq.gz</span>  data/raw/ena    4   1   12  12  12.00   OK  OK</span>
+<span id="cb22-490"><a href="#cb22-490" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-491"><a href="#cb22-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-492"><a href="#cb22-492" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span> real dataset should usually contain many more reads per file.</span>
+<span id="cb22-493"><a href="#cb22-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-494"><a href="#cb22-494" aria-hidden="true" tabindex="-1"></a><span class="co">## Interpreting QC Results</span></span>
+<span id="cb22-495"><a href="#cb22-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-496"><a href="#cb22-496" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> lightweight MAS QC checks answer basic file-level questions:</span>
+<span id="cb22-497"><a href="#cb22-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-498"><a href="#cb22-498" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Are FASTQ files present<span class="pp">?</span></span>
+<span id="cb22-499"><a href="#cb22-499" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Can compressed files be decompressed<span class="pp">?</span></span>
+<span id="cb22-500"><a href="#cb22-500" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Does each file have valid FASTQ structure<span class="pp">?</span></span>
+<span id="cb22-501"><a href="#cb22-501" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> How many reads are present<span class="pp">?</span></span>
+<span id="cb22-502"><a href="#cb22-502" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> What are the basic read length summaries<span class="pp">?</span></span>
+<span id="cb22-503"><a href="#cb22-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-504"><a href="#cb22-504" aria-hidden="true" tabindex="-1"></a><span class="ex">These</span> checks do not replace full sequencing quality assessment. They should be followed by appropriate microbiome-specific processing and quality evaluation.</span>
+<span id="cb22-505"><a href="#cb22-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-506"><a href="#cb22-506" aria-hidden="true" tabindex="-1"></a><span class="ex">For</span> real analysis, additional checks may include:</span>
+<span id="cb22-507"><a href="#cb22-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-508"><a href="#cb22-508" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> per-base sequence quality</span>
+<span id="cb22-509"><a href="#cb22-509" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> adapter content</span>
+<span id="cb22-510"><a href="#cb22-510" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> primer content</span>
+<span id="cb22-511"><a href="#cb22-511" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> sequence duplication</span>
+<span id="cb22-512"><a href="#cb22-512" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> ambiguous bases</span>
+<span id="cb22-513"><a href="#cb22-513" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> expected amplicon length</span>
+<span id="cb22-514"><a href="#cb22-514" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> host contamination</span>
+<span id="cb22-515"><a href="#cb22-515" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> negative control evaluation</span>
+<span id="cb22-516"><a href="#cb22-516" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> sample-level outlier detection</span>
+<span id="cb22-517"><a href="#cb22-517" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> batch effect assessment</span>
+<span id="cb22-518"><a href="#cb22-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-519"><a href="#cb22-519" aria-hidden="true" tabindex="-1"></a><span class="co">## When to Stop</span></span>
+<span id="cb22-520"><a href="#cb22-520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-521"><a href="#cb22-521" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> analyst should stop and review the data before feature generation if:</span>
+<span id="cb22-522"><a href="#cb22-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-523"><a href="#cb22-523" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> FASTQ files are missing</span>
+<span id="cb22-524"><a href="#cb22-524" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> gzip integrity checks fail</span>
+<span id="cb22-525"><a href="#cb22-525" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> FASTQ structure checks fail</span>
+<span id="cb22-526"><a href="#cb22-526" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> paired-end mates are missing</span>
+<span id="cb22-527"><a href="#cb22-527" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> metadata cannot be linked to FASTQ files</span>
+<span id="cb22-528"><a href="#cb22-528" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> read counts are unexpectedly low</span>
+<span id="cb22-529"><a href="#cb22-529" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> sequencing strategy is unclear</span>
+<span id="cb22-530"><a href="#cb22-530" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> batch or sample identity problems are detected</span>
+<span id="cb22-531"><a href="#cb22-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-532"><a href="#cb22-532" aria-hidden="true" tabindex="-1"></a><span class="ex">Stopping</span> early is better than generating downstream outputs from unreliable inputs.</span>
+<span id="cb22-533"><a href="#cb22-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-534"><a href="#cb22-534" aria-hidden="true" tabindex="-1"></a><span class="co">## MAS QC Outputs</span></span>
+<span id="cb22-535"><a href="#cb22-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-536"><a href="#cb22-536" aria-hidden="true" tabindex="-1"></a><span class="ex">At</span> the end of this stage, MAS should have:</span>
+<span id="cb22-537"><a href="#cb22-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-538"><a href="#cb22-538" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> FASTQ QC summary</span>
+<span id="cb22-539"><a href="#cb22-539" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> FASTQ QC status table</span>
+<span id="cb22-540"><a href="#cb22-540" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> QC readiness report</span>
+<span id="cb22-541"><a href="#cb22-541" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> notes on limitations or issues</span>
+<span id="cb22-542"><a href="#cb22-542" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> decision about whether to proceed</span>
+<span id="cb22-543"><a href="#cb22-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-546"><a href="#cb22-546" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb22-547"><a href="#cb22-547" aria-hidden="true" tabindex="-1"></a><span class="ex">flowchart</span> LR</span>
+<span id="cb22-548"><a href="#cb22-548" aria-hidden="true" tabindex="-1"></a>  <span class="va">A</span><span class="op">[</span>FASTQ Files<span class="op">]</span> <span class="ex">--</span><span class="op">&gt;</span> B[QC Summary]</span>
+<span id="cb22-549"><a href="#cb22-549" aria-hidden="true" tabindex="-1"></a>  <span class="ex">B</span> <span class="at">--</span><span class="op">&gt;</span> C[QC Readiness Report]</span>
+<span id="cb22-550"><a href="#cb22-550" aria-hidden="true" tabindex="-1"></a>  <span class="ex">C</span> <span class="at">--</span><span class="op">&gt;</span> D[Feature Generation]</span>
+<span id="cb22-551"><a href="#cb22-551" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb22-552"><a href="#cb22-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-553"><a href="#cb22-553" aria-hidden="true" tabindex="-1"></a><span class="co">## Key Takeaways</span></span>
+<span id="cb22-554"><a href="#cb22-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-555"><a href="#cb22-555" aria-hidden="true" tabindex="-1"></a><span class="ex">Quality</span> control is the bridge between acquired data and microbiome feature generation.</span>
+<span id="cb22-556"><a href="#cb22-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-557"><a href="#cb22-557" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span> strong QC stage helps ensure that:</span>
+<span id="cb22-558"><a href="#cb22-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-559"><a href="#cb22-559" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> sequencing files are present</span>
+<span id="cb22-560"><a href="#cb22-560" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> compressed files are readable</span>
+<span id="cb22-561"><a href="#cb22-561" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> FASTQ structure is valid</span>
+<span id="cb22-562"><a href="#cb22-562" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> read counts are summarized</span>
+<span id="cb22-563"><a href="#cb22-563" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> read lengths are summarized</span>
+<span id="cb22-564"><a href="#cb22-564" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> problems are detected before feature generation</span>
+<span id="cb22-565"><a href="#cb22-565" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> the decision to proceed is documented</span>
+<span id="cb22-566"><a href="#cb22-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-567"><a href="#cb22-567" aria-hidden="true" tabindex="-1"></a><span class="ex">Quality</span> control does not make a weak dataset strong, but it helps prevent weak or corrupted inputs from silently entering the analysis workflow.</span>
+<span id="cb22-568"><a href="#cb22-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-569"><a href="#cb22-569" aria-hidden="true" tabindex="-1"></a><span class="co">## What Comes Next</span></span>
+<span id="cb22-570"><a href="#cb22-570" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-571"><a href="#cb22-571" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> next chapter examines <span class="pp">**</span>Feature Generation<span class="pp">**</span>, where quality-checked sequencing reads are transformed into microbiome features such as ASVs, OTUs, taxonomic profiles, or functional profiles.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

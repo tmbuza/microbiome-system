@@ -1,0 +1,529 @@
+# Reproducible Reporting
+
+:::cdi-message
+- **ID:** MICROB-012
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Turning microbiome analysis outputs into transparent, reusable reports
+:::
+
+## Introduction
+
+Reproducible reporting is the stage where microbiome analysis outputs are assembled into a transparent report that can be reviewed, shared, rerun, and updated.
+
+A microbiome analysis is not complete when tables and figures are created. The analysis becomes useful when the workflow, inputs, outputs, decisions, limitations, and interpretation are documented clearly.
+
+In the Microbiome Analysis System, reproducible reporting connects the full workflow into one coherent record.
+
+## Why Reproducible Reporting Matters
+
+Microbiome workflows often involve many steps:
+
+- data acquisition
+- quality control
+- feature generation
+- taxonomic profiling
+- diversity analysis
+- functional profiling
+- differential analysis
+- biological interpretation
+
+If these steps are not documented, it becomes difficult to know how the final conclusions were produced.
+
+A reproducible report helps answer:
+
+- Which data were used?
+- Which scripts were run?
+- Which outputs were created?
+- Which decisions were made?
+- Which results support the interpretation?
+- What limitations should be remembered?
+- Can the analysis be rerun later?
+
+Reproducible reporting protects both the analyst and the reader.
+
+## Position in the Microbiome Analysis System
+
+Reproducible reporting is the final integration stage.
+
+```{mermaid}
+flowchart TB
+  A[Data Acquisition] --> H[Reproducible Reporting]
+  B[Quality Control] --> H
+  C[Feature Generation] --> H
+  D[Taxonomic Profiling] --> H
+  E[Diversity Analysis] --> H
+  F[Functional Profiling] --> H
+  G[Differential Analysis] --> H
+  I[Biological Interpretation] --> H
+```
+
+The report should make the analysis traceable from raw inputs to final interpretation.
+
+## Report Components
+
+A reproducible microbiome report should include:
+
+- project title and objective
+- dataset description
+- sample metadata summary
+- data acquisition summary
+- quality-control summary
+- feature table summary
+- taxonomic profile summary
+- diversity analysis summary
+- functional profile summary, when available
+- differential analysis summary, when available
+- biological interpretation
+- limitations
+- workflow scripts
+- software and package notes
+- output file inventory
+
+The report does not need to include every raw file, but it should point to the files that support the conclusions.
+
+## Reporting Is Not Just Formatting
+
+A polished report is not automatically reproducible.
+
+Reproducible reporting requires:
+
+- clear input paths
+- clear output paths
+- documented code
+- version-aware workflows
+- consistent filenames
+- human-readable summaries
+- links between results and interpretation
+- explicit limitations
+
+The goal is not only to make the report look good, but to make the analysis understandable and reusable.
+
+## Example Reporting Scripts
+
+The following scripts provide a lightweight MAS-side reporting workflow.
+
+The workflow uses two scripts:
+
+```text
+scripts/R/12a-build-report-inventory.R
+scripts/R/12b-create-analysis-summary-report.R
+```
+
+The first script builds an inventory of key MAS outputs.
+
+The second script creates a Markdown report that summarizes the workflow outputs and points to the generated tables and figures.
+
+## 12a: Build the Report Inventory
+
+Save this script as:
+
+```text
+scripts/R/12a-build-report-inventory.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 12a-build-report-inventory.R
+#
+# Purpose:
+#   Build an inventory of key MAS files for reproducible reporting.
+#
+# Usage:
+#   Rscript scripts/R/12a-build-report-inventory.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(tibble)
+
+report_dir <- "data/reports"
+reporting_dir <- "data/reporting"
+
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(reporting_dir, recursive = TRUE, showWarnings = FALSE)
+
+expected_files <- tibble(
+  workflow_stage = c(
+    "data_acquisition",
+    "quality_control",
+    "feature_generation",
+    "taxonomic_profiling",
+    "diversity_analysis",
+    "functional_profiling",
+    "differential_analysis",
+    "biological_interpretation",
+    "biological_interpretation"
+  ),
+  file_path = c(
+    "data/reports/data-acquisition-summary.tsv",
+    "data/reports/qc-readiness-report.tsv",
+    "data/reports/feature-table-check-report.tsv",
+    "data/reports/taxonomic-profile-report.tsv",
+    "data/reports/diversity-analysis-report.tsv",
+    "data/reports/functional-profile-report.tsv",
+    "data/reports/differential-analysis-report.tsv",
+    "data/interpretation/interpretation-evidence-index.tsv",
+    "data/interpretation/biological-interpretation-notes.md"
+  ),
+  file_role = c(
+    "data acquisition summary",
+    "quality-control readiness summary",
+    "feature table structural check",
+    "taxonomic profile summary",
+    "diversity analysis summary",
+    "functional profile summary",
+    "differential analysis summary",
+    "interpretation evidence index",
+    "draft biological interpretation notes"
+  )
+)
+
+inventory <- expected_files %>%
+  rowwise() %>%
+  mutate(
+    status = ifelse(file.exists(file_path), "FOUND", "MISSING"),
+    file_size_bytes = ifelse(file.exists(file_path), file.info(file_path)$size, NA_real_),
+    last_modified = ifelse(
+      file.exists(file_path),
+      as.character(file.info(file_path)$mtime),
+      NA_character_
+    )
+  ) %>%
+  ungroup()
+
+write_tsv(
+  inventory,
+  file.path(reporting_dir, "mas-report-file-inventory.tsv")
+)
+
+summary <- inventory %>%
+  count(status, name = "n_files")
+
+write_tsv(
+  summary,
+  file.path(report_dir, "reproducible-reporting-summary.tsv")
+)
+
+message("Created:")
+message("  ", file.path(reporting_dir, "mas-report-file-inventory.tsv"))
+message("  ", file.path(report_dir, "reproducible-reporting-summary.tsv"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/12a-build-report-inventory.R
+```
+
+This creates:
+
+```text
+data/reporting/mas-report-file-inventory.tsv
+data/reports/reproducible-reporting-summary.tsv
+```
+
+## 12b: Create the Analysis Summary Report
+
+Save this script as:
+
+```text
+scripts/R/12b-create-analysis-summary-report.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 12b-create-analysis-summary-report.R
+#
+# Purpose:
+#   Create a simple Markdown summary report from MAS workflow outputs.
+#
+# Usage:
+#   Rscript scripts/R/12b-create-analysis-summary-report.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(glue)
+
+reporting_dir <- "data/reporting"
+report_dir <- "data/reports"
+
+dir.create(reporting_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+
+inventory_file <- file.path(reporting_dir, "mas-report-file-inventory.tsv")
+summary_report <- file.path(reporting_dir, "mas-analysis-summary-report.md")
+status_report <- file.path(report_dir, "analysis-summary-report-status.tsv")
+
+if (!file.exists(inventory_file)) {
+  stop(
+    "Missing report inventory: ",
+    inventory_file,
+    "\nRun: Rscript scripts/R/12a-build-report-inventory.R"
+  )
+}
+
+inventory <- read_tsv(inventory_file, show_col_types = FALSE)
+
+found <- inventory %>% filter(status == "FOUND")
+missing <- inventory %>% filter(status == "MISSING")
+
+found_text <- if (nrow(found) > 0) {
+  paste0(
+    "- **", found$workflow_stage, "**: ",
+    found$file_role,
+    " (`", found$file_path, "`)",
+    collapse = "\n"
+  )
+} else {
+  "- No expected report files were found"
+}
+
+missing_text <- if (nrow(missing) > 0) {
+  paste0(
+    "- **", missing$workflow_stage, "**: ",
+    missing$file_role,
+    " (`", missing$file_path, "`)",
+    collapse = "\n"
+  )
+} else {
+  "- No expected report files are missing"
+}
+
+report_text <- glue(
+"# MAS Analysis Summary Report
+
+## Purpose
+
+This report summarizes key outputs from the Microbiome Analysis System workflow.
+
+It is intended as a lightweight reproducible reporting scaffold. The analyst should review, edit, and expand it before sharing externally.
+
+## Workflow Outputs Found
+
+{found_text}
+
+## Workflow Outputs Missing
+
+{missing_text}
+
+## Interpretation Guidance
+
+The MAS workflow outputs should be interpreted together, not as isolated files.
+
+A report-ready interpretation should connect:
+
+- study question
+- sample metadata
+- data acquisition status
+- quality-control status
+- feature generation outputs
+- taxonomic profile patterns
+- diversity patterns
+- functional profile patterns, when available
+- differential analysis results, when available
+- biological interpretation notes
+- limitations
+
+## Required Analyst Review
+
+Before final reporting, review:
+
+1. Whether all expected outputs were generated.
+2. Whether toy example data were replaced by real analysis data where appropriate.
+3. Whether all figures and tables match the current analysis.
+4. Whether interpretation statements are supported by evidence.
+5. Whether limitations are clearly stated.
+
+## Important Note
+
+If this report was generated from the MAS toy example, it should not be used for biological interpretation.
+
+The toy data are designed only for workflow testing.
+
+## Next Step
+
+Use this scaffold as input to the final Quarto report or project documentation.
+"
+)
+
+writeLines(report_text, summary_report)
+
+status <- tibble::tibble(
+  metric = c(
+    "inventory_files_found",
+    "inventory_files_missing",
+    "summary_report",
+    "report_status"
+  ),
+  value = c(
+    nrow(found),
+    nrow(missing),
+    summary_report,
+    "SUMMARY_REPORT_CREATED"
+  )
+)
+
+write_tsv(status, status_report)
+
+message("Created:")
+message("  ", summary_report)
+message("  ", status_report)
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/12b-create-analysis-summary-report.R
+```
+
+This creates:
+
+```text
+data/reporting/mas-analysis-summary-report.md
+data/reports/analysis-summary-report-status.tsv
+```
+
+## Running the Complete Reporting Example
+
+If you are continuing from previous chapters, build the reporting inventory and report:
+
+```bash
+Rscript scripts/R/12a-build-report-inventory.R
+Rscript scripts/R/12b-create-analysis-summary-report.R
+cat data/reports/reproducible-reporting-summary.tsv
+cat data/reports/analysis-summary-report-status.tsv
+```
+
+Then open the generated Markdown report:
+
+```bash
+data/reporting/mas-analysis-summary-report.md
+```
+
+The generated report is a scaffold. It should be reviewed and edited before publication.
+
+## Example Report Inventory
+
+The report inventory records whether expected workflow outputs are present.
+
+Example structure:
+
+```text
+workflow_stage	file_path	file_role	status
+data_acquisition	data/reports/data-acquisition-summary.tsv	data acquisition summary	FOUND
+quality_control	data/reports/qc-readiness-report.tsv	quality-control readiness summary	FOUND
+feature_generation	data/reports/feature-table-check-report.tsv	feature table structural check	FOUND
+```
+
+This makes it easier to confirm that the report is supported by actual workflow outputs.
+
+## Report-Ready Interpretation
+
+A report-ready microbiome interpretation should be:
+
+- connected to the biological question
+- supported by specific outputs
+- careful about uncertainty
+- transparent about limitations
+- clear about whether findings are descriptive, exploratory, or confirmatory
+- honest about whether functional results are measured or inferred
+- reproducible from the files and scripts in the project
+
+A strong report tells the reader not only what was found, but also how the result was produced and how confidently it should be interpreted.
+
+## Recommended Report Structure
+
+A complete MAS report may follow this structure:
+
+```text
+1. Project overview
+2. Biological question
+3. Dataset and metadata
+4. Data acquisition summary
+5. Quality-control summary
+6. Feature generation summary
+7. Taxonomic profiling results
+8. Diversity analysis results
+9. Functional profiling results
+10. Differential analysis results
+11. Biological interpretation
+12. Limitations
+13. Reproducibility notes
+14. Output inventory
+```
+
+This structure keeps the report aligned with the MAS workflow.
+
+## Reproducibility Notes
+
+The report should record:
+
+- analysis date
+- analyst
+- project repository
+- input files
+- output files
+- scripts used
+- software environment
+- important parameters
+- known limitations
+
+For real projects, this information may be placed in a project README, appendix, Quarto report, or workflow log.
+
+## Common Reporting Problems
+
+Common reporting problems include:
+
+- reporting figures without methods
+- reporting methods without input file paths
+- reporting p-values without effect sizes
+- reporting taxonomic labels without database context
+- reporting inferred functions as measured activity
+- omitting limitations
+- failing to distinguish toy data from real data
+- changing outputs without updating the report
+- excluding failed or missing workflow steps from the report
+
+Reproducible reporting reduces these risks.
+
+## MAS Reproducible Reporting Outputs
+
+At the end of this stage, MAS should have:
+
+- report file inventory
+- reproducible reporting summary
+- analysis summary report
+- report status table
+- analyst-reviewed interpretation notes
+- final report-ready materials
+
+```{mermaid}
+flowchart LR
+  A[Workflow Outputs] --> B[Report Inventory]
+  B --> C[Summary Report]
+  C --> D[Analyst Review]
+  D --> E[Final Reproducible Report]
+```
+
+## Key Takeaways
+
+Reproducible reporting turns microbiome workflow outputs into a transparent analytical record.
+
+A strong reporting stage ensures that:
+
+- outputs are traceable
+- scripts and files are documented
+- interpretation is evidence-based
+- limitations are visible
+- reports can be updated
+- analyses can be reviewed or rerun
+
+A reproducible report is the final product of the Microbiome Analysis System.
+
+## What Comes Next
+
+The next chapter examines **Workforce Readiness**, where the system is translated into practical skills, roles, and portfolio-ready outputs for learners and practitioners.

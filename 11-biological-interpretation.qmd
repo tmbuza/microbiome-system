@@ -1,0 +1,574 @@
+# Biological Interpretation
+
+:::cdi-message
+- **ID:** MICROB-011
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Translating microbiome outputs into defensible biological insight
+:::
+
+## Introduction
+
+Biological interpretation is the stage where microbiome analysis results are translated into meaningful biological statements.
+
+At this point, the Microbiome Analysis System may contain:
+
+- feature tables
+- taxonomic profiles
+- functional profiles
+- diversity results
+- differential analysis results
+- plots
+- metadata summaries
+- quality-control reports
+
+These outputs are not the final interpretation by themselves.
+
+Biological interpretation connects analytical evidence back to the biological question, study design, sample metadata, and known limitations.
+
+## Why Biological Interpretation Matters
+
+Microbiome analysis can generate many tables and figures.
+
+Without interpretation, these outputs may remain disconnected observations.
+
+Biological interpretation helps answer questions such as:
+
+- What do the observed microbial patterns suggest?
+- Are the results consistent with the study question?
+- Which findings are descriptive?
+- Which findings are exploratory?
+- Which findings are statistically supported?
+- Which findings require caution?
+- What limitations affect interpretation?
+- What should be reported as the main message?
+
+A strong interpretation stage prevents the analysis from becoming a collection of disconnected outputs.
+
+## Position in the Microbiome Analysis System
+
+Biological interpretation receives evidence from multiple analytical stages.
+
+```{mermaid}
+flowchart TB
+  A[Taxonomic Profiling] --> E[Biological Interpretation]
+  B[Diversity Analysis] --> E
+  C[Functional Profiling] --> E
+  D[Differential Analysis] --> E
+  F[Metadata and Study Design] --> E
+  G[Quality Control] --> E
+  E --> H[Reproducible Reporting]
+```
+
+Interpretation should never be separated from metadata, study design, and quality-control context.
+
+## Interpretation Is Evidence Integration
+
+Biological interpretation is not simply describing the largest bars in a plot.
+
+It is an evidence-integration process.
+
+The analyst should consider:
+
+- study objective
+- sample type
+- comparison groups
+- sequencing strategy
+- metadata completeness
+- quality-control outcomes
+- taxonomic patterns
+- functional patterns
+- diversity patterns
+- differential results
+- statistical support
+- biological plausibility
+- limitations
+
+The goal is to produce statements that are supported by the analysis and honest about uncertainty.
+
+## From Results to Claims
+
+A useful way to interpret microbiome results is to separate observations, interpretations, and claims.
+
+```text
+Observation:
+  A taxon has higher relative abundance in one sample group.
+
+Interpretation:
+  This pattern may indicate a community composition difference between groups.
+
+Claim:
+  This taxon is associated with the condition in this dataset, subject to study limitations.
+```
+
+A claim should be weaker or stronger depending on the evidence.
+
+For toy workflow data, no biological claims should be made.
+
+## Interpretation Strength
+
+Not all findings have the same strength.
+
+A simple interpretation framework is:
+
+```text
+Descriptive:
+  The result summarizes what is seen in the data.
+
+Exploratory:
+  The result suggests a possible pattern that needs further testing.
+
+Supported:
+  The result is consistent across analyses and supported by appropriate statistics.
+
+Confirmed:
+  The result is supported by independent validation or experimental evidence.
+```
+
+Most microbiome workflow outputs are descriptive or exploratory unless the study design and validation support stronger conclusions.
+
+## Common Interpretation Questions
+
+During interpretation, ask:
+
+- What was the original biological question?
+- Which outputs directly address that question?
+- Are the sample groups clearly defined?
+- Are the results consistent across taxonomic, diversity, functional, and differential analyses?
+- Could sequencing depth, batch effects, or metadata gaps explain the pattern?
+- Are the taxonomic labels reliable enough for the claim being made?
+- Are functional findings measured or inferred?
+- Are p-values and effect sizes interpreted together?
+- Are limitations clearly stated?
+
+These questions help keep interpretation defensible.
+
+## Example Interpretation Support Scripts
+
+The following scripts provide a lightweight MAS-side interpretation support workflow.
+
+They do not create biological conclusions automatically. Instead, they collect key outputs from previous chapters and generate an interpretation evidence table and draft interpretation notes.
+
+The workflow uses two scripts:
+
+```text
+scripts/R/11a-build-interpretation-evidence.R
+scripts/R/11b-draft-interpretation-notes.R
+```
+
+The first script checks for major MAS outputs and builds an evidence index.
+
+The second script creates a plain Markdown interpretation draft that can be edited by the analyst.
+
+## 11a: Build the Interpretation Evidence Table
+
+Save this script as:
+
+```text
+scripts/R/11a-build-interpretation-evidence.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 11a-build-interpretation-evidence.R
+#
+# Purpose:
+#   Build an evidence index from MAS analysis outputs.
+#
+# Usage:
+#   Rscript scripts/R/11a-build-interpretation-evidence.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(tibble)
+
+interpretation_dir <- "data/interpretation"
+report_dir <- "data/reports"
+
+dir.create(interpretation_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+
+expected_outputs <- tibble(
+  evidence_area = c(
+    "data_acquisition",
+    "quality_control",
+    "feature_generation",
+    "taxonomic_profiling",
+    "diversity_analysis",
+    "functional_profiling",
+    "differential_analysis"
+  ),
+  expected_file = c(
+    "data/reports/data-acquisition-summary.tsv",
+    "data/reports/qc-readiness-report.tsv",
+    "data/reports/feature-table-check-report.tsv",
+    "data/reports/taxonomic-profile-report.tsv",
+    "data/reports/diversity-analysis-report.tsv",
+    "data/reports/functional-profile-report.tsv",
+    "data/reports/differential-analysis-report.tsv"
+  ),
+  interpretation_role = c(
+    "documents whether data were acquired and organized",
+    "documents whether FASTQ inputs passed lightweight QC checks",
+    "documents whether the feature table is structurally usable",
+    "summarizes taxonomic profile readiness",
+    "summarizes alpha and beta diversity outputs",
+    "summarizes functional profile readiness",
+    "summarizes differential comparison outputs"
+  )
+)
+
+evidence_index <- expected_outputs %>%
+  rowwise() %>%
+  mutate(
+    status = ifelse(file.exists(expected_file), "FOUND", "MISSING"),
+    file_size_bytes = ifelse(file.exists(expected_file), file.info(expected_file)$size, NA_real_)
+  ) %>%
+  ungroup()
+
+write_tsv(
+  evidence_index,
+  file.path(interpretation_dir, "interpretation-evidence-index.tsv")
+)
+
+summary_report <- evidence_index %>%
+  count(status, name = "n_outputs")
+
+write_tsv(
+  summary_report,
+  file.path(report_dir, "interpretation-evidence-summary.tsv")
+)
+
+message("Created:")
+message("  ", file.path(interpretation_dir, "interpretation-evidence-index.tsv"))
+message("  ", file.path(report_dir, "interpretation-evidence-summary.tsv"))
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/11a-build-interpretation-evidence.R
+```
+
+This creates:
+
+```text
+data/interpretation/interpretation-evidence-index.tsv
+data/reports/interpretation-evidence-summary.tsv
+```
+
+## 11b: Draft Interpretation Notes
+
+Save this script as:
+
+```text
+scripts/R/11b-draft-interpretation-notes.R
+```
+
+```r
+###############################################################################
+# Microbiome Analysis System
+# 11b-draft-interpretation-notes.R
+#
+# Purpose:
+#   Create a draft biological interpretation notes file from MAS outputs.
+#
+# Usage:
+#   Rscript scripts/R/11b-draft-interpretation-notes.R
+###############################################################################
+
+library(readr)
+library(dplyr)
+library(glue)
+
+interpretation_dir <- "data/interpretation"
+report_dir <- "data/reports"
+
+dir.create(interpretation_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+
+evidence_file <- file.path(interpretation_dir, "interpretation-evidence-index.tsv")
+notes_file <- file.path(interpretation_dir, "biological-interpretation-notes.md")
+report_file <- file.path(report_dir, "biological-interpretation-report.tsv")
+
+if (!file.exists(evidence_file)) {
+  stop(
+    "Missing interpretation evidence index: ",
+    evidence_file,
+    "\nRun: Rscript scripts/R/11a-build-interpretation-evidence.R"
+  )
+}
+
+evidence <- read_tsv(evidence_file, show_col_types = FALSE)
+
+found_outputs <- evidence %>%
+  filter(status == "FOUND") %>%
+  pull(evidence_area)
+
+missing_outputs <- evidence %>%
+  filter(status == "MISSING") %>%
+  pull(evidence_area)
+
+found_text <- if (length(found_outputs) > 0) {
+  paste0("- ", found_outputs, collapse = "\n")
+} else {
+  "- No evidence outputs were found"
+}
+
+missing_text <- if (length(missing_outputs) > 0) {
+  paste0("- ", missing_outputs, collapse = "\n")
+} else {
+  "- No expected evidence outputs are missing"
+}
+
+notes <- glue(
+"# Biological Interpretation Notes
+
+## Interpretation Status
+
+This file is a draft interpretation support document generated from MAS workflow outputs.
+
+It should be edited by the analyst before reporting.
+
+## Evidence Outputs Found
+
+{found_text}
+
+## Evidence Outputs Missing
+
+{missing_text}
+
+## Draft Interpretation Framework
+
+### 1. Biological Question
+
+State the biological question that the microbiome analysis is intended to answer.
+
+### 2. Study Design Context
+
+Summarize the sample type, comparison groups, sequencing strategy, and relevant metadata.
+
+### 3. Quality-Control Context
+
+Summarize whether data acquisition and quality-control checks support downstream interpretation.
+
+### 4. Taxonomic Patterns
+
+Describe major taxonomic patterns, dominant taxa, or community composition observations.
+
+### 5. Diversity Patterns
+
+Describe alpha diversity and beta diversity patterns. Avoid overinterpreting ordination plots.
+
+### 6. Functional Patterns
+
+Describe functional profile patterns if functional outputs are available. Distinguish functional potential from functional activity.
+
+### 7. Differential Results
+
+Summarize differential results as candidate observations. Include effect sizes, adjusted p-values where appropriate, and limitations.
+
+### 8. Integrated Interpretation
+
+Connect taxonomic, diversity, functional, and differential evidence into cautious biological statements.
+
+### 9. Limitations
+
+Document limitations including sample size, metadata completeness, sequencing strategy, toy data, batch effects, or method assumptions.
+
+### 10. Reporting Statement
+
+Write a concise report-ready statement supported by the evidence.
+
+## Important Note
+
+For the MAS toy example data, no biological conclusions should be made. The purpose is workflow testing only.
+"
+)
+
+writeLines(notes, notes_file)
+
+report <- tibble::tibble(
+  metric = c(
+    "evidence_outputs_found",
+    "evidence_outputs_missing",
+    "notes_file",
+    "interpretation_status"
+  ),
+  value = c(
+    length(found_outputs),
+    length(missing_outputs),
+    notes_file,
+    "DRAFT_NOTES_CREATED"
+  )
+)
+
+write_tsv(report, report_file)
+
+message("Created:")
+message("  ", notes_file)
+message("  ", report_file)
+```
+
+Run it from the MAS project root:
+
+```bash
+Rscript scripts/R/11b-draft-interpretation-notes.R
+```
+
+This creates:
+
+```text
+data/interpretation/biological-interpretation-notes.md
+data/reports/biological-interpretation-report.tsv
+```
+
+## Running the Complete Interpretation Support Example
+
+If you are continuing from previous chapters, generate the interpretation support files:
+
+```bash
+Rscript scripts/R/11a-build-interpretation-evidence.R
+Rscript scripts/R/11b-draft-interpretation-notes.R
+cat data/reports/interpretation-evidence-summary.tsv
+cat data/reports/biological-interpretation-report.tsv
+```
+
+Then open and edit:
+
+```bash
+data/interpretation/biological-interpretation-notes.md
+```
+
+The generated Markdown file is a draft. It should be reviewed and rewritten by the analyst.
+
+## Evidence Table
+
+The interpretation evidence index records whether expected workflow outputs are available.
+
+Example structure:
+
+```text
+evidence_area	expected_file	status	interpretation_role
+quality_control	data/reports/qc-readiness-report.tsv	FOUND	documents whether FASTQ inputs passed lightweight QC checks
+taxonomic_profiling	data/reports/taxonomic-profile-report.tsv	FOUND	summarizes taxonomic profile readiness
+diversity_analysis	data/reports/diversity-analysis-report.tsv	FOUND	summarizes alpha and beta diversity outputs
+```
+
+This table helps the analyst avoid interpreting results without checking whether the supporting evidence exists.
+
+## Writing Biological Interpretation
+
+A strong interpretation paragraph usually includes:
+
+- the main observed pattern
+- the evidence supporting the pattern
+- the biological context
+- the level of confidence
+- the limitation or caution
+
+A useful structure is:
+
+```text
+The analysis observed [pattern] in [samples or groups].
+This was supported by [evidence source].
+Biologically, this may suggest [cautious interpretation].
+However, interpretation is limited by [limitation].
+```
+
+This structure helps avoid unsupported claims.
+
+## Examples of Careful Language
+
+Prefer careful language such as:
+
+```text
+The results suggest...
+The pattern is consistent with...
+This observation may indicate...
+This finding should be interpreted cautiously because...
+Additional validation would be required to confirm...
+```
+
+Avoid overstated language such as:
+
+```text
+This proves...
+This microbe causes...
+This pathway is active...
+This taxon is responsible for...
+```
+
+Microbiome results are often associative and context-dependent.
+
+## Integrating Evidence Across Outputs
+
+A stronger interpretation connects multiple outputs.
+
+For example:
+
+```text
+A taxonomic shift may be more convincing if it is supported by relative abundance profiles, diversity patterns, and differential analysis results.
+```
+
+However, consistency across outputs does not automatically prove causality.
+
+It improves coherence, but conclusions still depend on study design and validation.
+
+## Interpretation Limitations
+
+Common limitations include:
+
+- small sample size
+- missing metadata
+- weak group definitions
+- unbalanced groups
+- batch effects
+- sequencing depth differences
+- marker-gene resolution limits
+- incomplete taxonomic assignment
+- inferred rather than measured function
+- lack of experimental validation
+- exploratory rather than confirmatory design
+
+These limitations should be stated clearly in the final report.
+
+## MAS Biological Interpretation Outputs
+
+At the end of this stage, MAS should have:
+
+- interpretation evidence index
+- interpretation evidence summary
+- draft biological interpretation notes
+- biological interpretation report
+- analyst-reviewed interpretation statements
+- documented limitations
+
+```{mermaid}
+flowchart LR
+  A[Analysis Outputs] --> B[Evidence Index]
+  B --> C[Draft Interpretation Notes]
+  C --> D[Analyst Review]
+  D --> E[Report-Ready Interpretation]
+```
+
+## Key Takeaways
+
+Biological interpretation turns analysis outputs into defensible insight.
+
+A strong interpretation stage ensures that:
+
+- claims are supported by evidence
+- results are connected to the biological question
+- metadata and study design are considered
+- limitations are documented
+- descriptive findings are not overstated
+- toy workflow outputs are not biologically interpreted
+
+Interpretation is where microbiome analysis becomes useful, but it is also where unsupported claims can easily enter the report.
+
+## What Comes Next
+
+The next chapter examines **Reproducible Reporting**, where the full microbiome workflow is assembled into a transparent, reusable, and shareable report.
