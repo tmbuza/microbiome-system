@@ -75,3 +75,7 @@ Thumbs.db
 !docs/
 !docs/**
 /.quarto/
+
+# Quarto build/cache
+.quarto/
+_freeze/
