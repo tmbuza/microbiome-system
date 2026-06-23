@@ -7,24 +7,25 @@ date: last-modified
 date-format: "MMM YYYY"
 
 book:
-  title: "Microbiome System"
+  title: "Microbiome AnalysisSystem"
   subtitle: "From Microbial Communities to Defensible Biological Insights"
   author: "Teresia Mrema Buza | Complex Data Insights"
   chapters:
     - index.qmd
-    - 00-preface-and-overview.qmd
-    - 01-study-design-and-metadata.qmd
-    - 02-sampling-and-sequencing.qmd
-    - 03-data-acquisition.qmd
-    - 04-quality-control.qmd
-    - 05-feature-generation.qmd
-    - 06-taxonomic-profiling.qmd
-    - 07-diversity-analysis.qmd
-    - 08-functional-profiling.qmd
-    - 09-differential-analysis.qmd
-    - 10-biological-interpretation.qmd
-    - 11-reproducible-reporting.qmd
-    - 12-workforce-readiness.qmd
+    - 00-preface.qmd
+    - 01-system-overview.qmd
+    - 02-study-design-and-metadata.qmd
+    - 03-sample-collection-and-sequencing.qmd
+    - 04-data-acquisition.qmd
+    - 05-quality-control.qmd
+    - 06-feature-generation.qmd
+    - 07-taxonomic-profiling.qmd
+    - 08-diversity-analysis.qmd
+    - 09-functional-profiling.qmd
+    - 10-differential-analysis.qmd
+    - 11-biological-interpretation.qmd
+    - 12-reproducible-reporting.qmd
+    - 13-workforce-readiness.qmd
 
   appendices:
     - 999-appendix.qmd

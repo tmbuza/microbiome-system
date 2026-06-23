@@ -1,0 +1,104 @@
+# Preface {-}
+
+:::cdi-message
+- **ID:** MICROB-000
+- **Type:** Preface
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Microbiome as a complete analytical system
+:::
+
+## Welcome
+
+Microbiome research has become one of the fastest-growing areas of modern biology. Advances in sequencing technologies now allow researchers to characterize microbial communities across humans, animals, plants, soils, oceans, and many other environments.
+
+Despite the availability of powerful analytical tools, generating reliable biological insights requires more than processing sequencing data. Every result depends on a chain of decisions that begins with study design and continues through data acquisition, quality control, statistical analysis, interpretation, and reporting.
+
+This guide approaches microbiome analysis as a complete system rather than a collection of independent analytical steps.
+
+## Why a System Matters
+
+Microbiome analysis is often presented as a series of software commands:
+
+- Process sequencing data
+- Generate taxonomic profiles
+- Calculate diversity metrics
+- Perform statistical analyses
+- Create visualizations
+
+While these steps are important, they represent only part of the process.
+
+A biological conclusion is only as reliable as the workflow that produced it. Poor study design, incomplete metadata, inadequate quality control, inappropriate statistical methods, or weak interpretation can undermine otherwise correct computational analyses.
+
+A systems perspective helps connect each stage of the workflow to the biological question being investigated.
+
+## The CDI Perspective
+
+Throughout this guide, microbiome analysis is treated as an end-to-end analytical system rather than a collection of isolated tasks.
+
+The objective is not simply to generate outputs but to understand:
+
+- What was measured
+- How the data were generated
+- How the data were processed
+- What assumptions were made
+- What conclusions are supported by the evidence
+
+By understanding these connections, researchers can produce results that are reproducible, interpretable, and defensible.
+
+## What You Will Learn
+
+By working through this guide, you will learn how to:
+
+- Understand the role of study design in microbiome research
+- Evaluate microbiome sequencing data quality
+- Generate and interpret taxonomic profiles
+- Understand functional profiling approaches
+- Perform diversity analyses
+- Conduct differential analyses
+- Interpret results within a biological context
+- Translate statistical findings into biological insights
+- Produce reproducible analytical reports
+
+## Who This Guide Is For
+
+This guide is intended for:
+
+- Students learning microbiome analysis
+- Biologists working with microbial community data
+- Bioinformaticians building reproducible workflows
+- Data scientists interested in omics analyses
+- Researchers seeking stronger interpretation practices
+
+## How to Use This Guide
+
+The chapters are organized according to the progression of a complete microbiome workflow.
+
+Readers are encouraged to think beyond individual analysis steps and focus on how decisions made at one stage influence downstream results.
+
+For example:
+
+- Study design influences statistical power.
+- Metadata influences interpretation.
+- Sample collection influences data quality.
+- Quality control influences reliability.
+- Statistical analysis influences conclusions.
+
+Understanding these relationships is essential for producing trustworthy biological insights.
+
+## CDI Philosophy
+
+Complex Data Insights (CDI) emphasizes systems thinking, reproducibility, and interpretation.
+
+The goal is not simply to perform an analysis, but to produce conclusions that are:
+
+- Reproducible
+- Transparent
+- Interpretable
+- Defensible
+- Reusable
+
+The most valuable microbiome workflow is not the one that produces the largest number of figures. It is the one that produces conclusions that can be understood, justified, and reproduced.
+
+## What Comes Next
+
+The next chapter introduces the Microbiome System Architecture and provides a high-level view of the complete workflow before we examine individual components in detail.

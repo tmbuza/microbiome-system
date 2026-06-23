@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Preface and System Overview – Microbiome System</title>
+<title>Sample Collection and Sequencing – Microbiome System</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01-study-design-and-metadata.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./999-appendix.html" rel="next">
+<link href="./02-study-design-and-metadata.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -105,10 +70,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
-<meta name="mermaid-theme" content="forest">
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="assets/css/cdi.css">
@@ -123,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./00-preface-and-overview.html"><span class="chapter-title">Preface and System Overview</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-sample-collection-and-sequencing.html"><span class="chapter-title">Sample Collection and Sequencing</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -155,67 +116,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00-preface-and-overview.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Preface and System Overview</span></a>
+  <a href="./00-preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-study-design-and-metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Study Design and Metadata</span></a>
+  <a href="./01-system-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">System Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-sampling-and-sequencing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Sampling and Sequencing</span></a>
+  <a href="./02-study-design-and-metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Study Design and Metadata</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-data-acquisition.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Data Acquisition</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./04-quality-control.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Quality Control</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./05-feature-generation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Feature Generation</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./06-taxonomic-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Taxonomic Profiling</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./07-diversity-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Diversity Analysis</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./08-functional-profiling.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Functional Profiling</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./09-differential-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Differential Analysis</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./10-biological-interpretation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Biological Interpretation</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./11-reproducible-reporting.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Reproducible Reporting</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./12-workforce-readiness.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">CDI Workforce Readiness</span></a>
+  <a href="./03-sample-collection-and-sequencing.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Sample Collection and Sequencing</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -250,7 +167,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#system-map" id="toc-system-map" class="nav-link active" data-scroll-target="#system-map">System map</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#why-sample-collection-matters" id="toc-why-sample-collection-matters" class="nav-link" data-scroll-target="#why-sample-collection-matters">Why Sample Collection Matters</a></li>
+  <li><a href="#common-sample-types" id="toc-common-sample-types" class="nav-link" data-scroll-target="#common-sample-types">Common Sample Types</a></li>
+  <li><a href="#sample-collection-considerations" id="toc-sample-collection-considerations" class="nav-link" data-scroll-target="#sample-collection-considerations">Sample Collection Considerations</a></li>
+  <li><a href="#sample-preservation-and-storage" id="toc-sample-preservation-and-storage" class="nav-link" data-scroll-target="#sample-preservation-and-storage">Sample Preservation and Storage</a></li>
+  <li><a href="#dna-extraction" id="toc-dna-extraction" class="nav-link" data-scroll-target="#dna-extraction">DNA Extraction</a></li>
+  <li><a href="#sequencing-approaches" id="toc-sequencing-approaches" class="nav-link" data-scroll-target="#sequencing-approaches">Sequencing Approaches</a>
+  <ul class="collapse">
+  <li><a href="#s-rrna-gene-sequencing" id="toc-s-rrna-gene-sequencing" class="nav-link" data-scroll-target="#s-rrna-gene-sequencing">16S rRNA Gene Sequencing</a></li>
+  <li><a href="#shotgun-metagenomic-sequencing" id="toc-shotgun-metagenomic-sequencing" class="nav-link" data-scroll-target="#shotgun-metagenomic-sequencing">Shotgun Metagenomic Sequencing</a></li>
+  </ul></li>
+  <li><a href="#sequencing-platforms" id="toc-sequencing-platforms" class="nav-link" data-scroll-target="#sequencing-platforms">Sequencing Platforms</a></li>
+  <li><a href="#sources-of-technical-variation" id="toc-sources-of-technical-variation" class="nav-link" data-scroll-target="#sources-of-technical-variation">Sources of Technical Variation</a></li>
+  <li><a href="#from-samples-to-fastq-files" id="toc-from-samples-to-fastq-files" class="nav-link" data-scroll-target="#from-samples-to-fastq-files">From Samples to FASTQ Files</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What Comes Next</a></li>
   </ul>
 </nav>
     </div>
@@ -259,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Preface and System Overview</span></h1>
+<h1 class="title"><span class="chapter-title">Sample Collection and Sequencing</span></h1>
 </div>
 
 
@@ -283,50 +215,151 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cdi-message">
-<p>The CDI Microbiome System is an end-to-end workflow for moving from microbial community data to reproducible biological interpretation.</p>
+<ul>
+<li><strong>ID:</strong> MICROB-003</li>
+<li><strong>Type:</strong> System Component</li>
+<li><strong>Audience:</strong> Students, researchers, analysts, and practitioners</li>
+<li><strong>Theme:</strong> From biological samples to sequencing data</li>
+</ul>
 </div>
-<section id="system-map" class="level2">
-<h2 class="anchored" data-anchor-id="system-map">System map</h2>
-<div class="cell" data-layout-align="default">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>flowchart TD</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  A[Biological Question] --&gt; B[Study Design and Metadata]</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  B --&gt; C[Sampling and Sequencing]</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  C --&gt; D[Data Acquisition]</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  D --&gt; E[Quality Control]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  E --&gt; F[Feature Generation]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  F --&gt; G[Taxonomic Profiling]</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  G --&gt; H[Diversity Analysis]</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  H --&gt; I[Functional Profiling]</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  I --&gt; J[Differential Analysis]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  J --&gt; K[Biological Interpretation]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  K --&gt; L[Reproducible Reporting]</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  L --&gt; M[CDI Workforce Readiness]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-  A[Biological Question] --&gt; B[Study Design and Metadata]
-  B --&gt; C[Sampling and Sequencing]
-  C --&gt; D[Data Acquisition]
-  D --&gt; E[Quality Control]
-  E --&gt; F[Feature Generation]
-  F --&gt; G[Taxonomic Profiling]
-  G --&gt; H[Diversity Analysis]
-  H --&gt; I[Functional Profiling]
-  I --&gt; J[Differential Analysis]
-  J --&gt; K[Biological Interpretation]
-  K --&gt; L[Reproducible Reporting]
-  L --&gt; M[CDI Workforce Readiness]
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Once a study has been designed and metadata have been collected, the next stage involves obtaining biological material and generating sequencing data.</p>
+<p>The quality of microbiome analyses depends heavily on how samples are collected, stored, processed, and sequenced.</p>
+<p>For this reason, sample collection and sequencing form a critical link between study design and downstream bioinformatics analyses.</p>
+</section>
+<section id="why-sample-collection-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-sample-collection-matters">Why Sample Collection Matters</h2>
+<p>Microbial communities are highly sensitive to environmental conditions and collection procedures.</p>
+<p>Differences in sampling methods can introduce variation that may be mistaken for biological differences.</p>
+<p>Consistent protocols help ensure that observed patterns reflect biology rather than technical variation.</p>
+</section>
+<section id="common-sample-types" class="level2">
+<h2 class="anchored" data-anchor-id="common-sample-types">Common Sample Types</h2>
+<p>Microbiome studies may involve a wide variety of sample types.</p>
+<p>Examples include:</p>
+<ul>
+<li>Stool samples</li>
+<li>Oral samples</li>
+<li>Skin samples</li>
+<li>Soil samples</li>
+<li>Water samples</li>
+<li>Plant-associated samples</li>
+<li>Environmental samples</li>
+</ul>
+<p>The sample type influences downstream laboratory and analytical procedures.</p>
+</section>
+<section id="sample-collection-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="sample-collection-considerations">Sample Collection Considerations</h2>
+<p>Important considerations during sample collection include:</p>
+<ul>
+<li>Collection method</li>
+<li>Collection timing</li>
+<li>Environmental conditions</li>
+<li>Sample labeling</li>
+<li>Metadata recording</li>
+<li>Transport procedures</li>
+</ul>
+<p>Standardized collection protocols improve consistency across samples.</p>
+</section>
+<section id="sample-preservation-and-storage" class="level2">
+<h2 class="anchored" data-anchor-id="sample-preservation-and-storage">Sample Preservation and Storage</h2>
+<p>Samples often require preservation before laboratory processing.</p>
+<p>Common approaches include:</p>
+<ul>
+<li>Immediate freezing</li>
+<li>Stabilization buffers</li>
+<li>Refrigerated transport</li>
+<li>Controlled storage conditions</li>
+</ul>
+<p>Improper storage can alter microbial composition and affect downstream analyses.</p>
+</section>
+<section id="dna-extraction" class="level2">
+<h2 class="anchored" data-anchor-id="dna-extraction">DNA Extraction</h2>
+<p>DNA extraction isolates microbial genetic material from collected samples.</p>
+<p>Extraction methods can influence:</p>
+<ul>
+<li>DNA yield</li>
+<li>DNA quality</li>
+<li>Representation of microbial taxa</li>
+</ul>
+<p>Consistent extraction procedures help reduce technical variability.</p>
+</section>
+<section id="sequencing-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="sequencing-approaches">Sequencing Approaches</h2>
+<p>Two common approaches dominate microbiome research.</p>
+<section id="s-rrna-gene-sequencing" class="level3">
+<h3 class="anchored" data-anchor-id="s-rrna-gene-sequencing">16S rRNA Gene Sequencing</h3>
+<p>16S sequencing targets conserved regions of the bacterial and archaeal ribosomal RNA gene.</p>
+<p>Advantages include:</p>
+<ul>
+<li>Lower cost</li>
+<li>Simpler analysis workflows</li>
+<li>Broad taxonomic characterization</li>
+</ul>
+<p>Limitations include reduced functional resolution.</p>
+</section>
+<section id="shotgun-metagenomic-sequencing" class="level3">
+<h3 class="anchored" data-anchor-id="shotgun-metagenomic-sequencing">Shotgun Metagenomic Sequencing</h3>
+<p>Shotgun metagenomics sequences DNA fragments from all organisms present in a sample.</p>
+<p>Advantages include:</p>
+<ul>
+<li>Higher taxonomic resolution</li>
+<li>Functional profiling capabilities</li>
+<li>Gene-level analyses</li>
+</ul>
+<p>Limitations include higher cost and computational requirements.</p>
+</section>
+</section>
+<section id="sequencing-platforms" class="level2">
+<h2 class="anchored" data-anchor-id="sequencing-platforms">Sequencing Platforms</h2>
+<p>Several sequencing platforms are commonly used.</p>
+<p>Examples include:</p>
+<ul>
+<li>Illumina MiSeq</li>
+<li>Illumina NextSeq</li>
+<li>Illumina NovaSeq</li>
+</ul>
+<p>Platform choice influences read length, throughput, and project cost.</p>
+</section>
+<section id="sources-of-technical-variation" class="level2">
+<h2 class="anchored" data-anchor-id="sources-of-technical-variation">Sources of Technical Variation</h2>
+<p>Potential sources of variation include:</p>
+<ul>
+<li>Collection procedures</li>
+<li>Preservation methods</li>
+<li>DNA extraction protocols</li>
+<li>Library preparation methods</li>
+<li>Sequencing runs</li>
+</ul>
+<p>Recognizing these factors is important during downstream interpretation.</p>
+</section>
+<section id="from-samples-to-fastq-files" class="level2">
+<h2 class="anchored" data-anchor-id="from-samples-to-fastq-files">From Samples to FASTQ Files</h2>
+<p>The primary output of sequencing is typically a set of FASTQ files.</p>
+<p>FASTQ files contain:</p>
+<ul>
+<li>Sequence reads</li>
+<li>Base quality scores</li>
+<li>Read identifiers</li>
+</ul>
+<p>These files represent the starting point for computational microbiome analyses.</p>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<p>Sample collection and sequencing strongly influence data quality.</p>
+<p>Researchers should strive to:</p>
+<ul>
+<li>Use consistent collection procedures.</li>
+<li>Record complete metadata.</li>
+<li>Apply standardized laboratory protocols.</li>
+<li>Understand limitations of sequencing approaches.</li>
+<li>Minimize technical variation whenever possible.</li>
+</ul>
+</section>
+<section id="what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-comes-next">What Comes Next</h2>
+<p>The next chapter focuses on Data Acquisition, where sequencing data are organized, validated, and prepared for downstream bioinformatics analyses.</p>
 
 
 </section>
@@ -735,13 +768,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="index.html">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">index.html</span></span>
+      <a href="./02-study-design-and-metadata.html" class="pagination-link" aria-label="Study Design and Metadata">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Study Design and Metadata</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01-study-design-and-metadata.html" class="pagination-link" aria-label="Study Design and Metadata">
-        <span class="nav-page-text"><span class="chapter-title">Study Design and Metadata</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./999-appendix.html" class="pagination-link" aria-label="Technical Appendix">
+        <span class="nav-page-text"><span class="chapter-title">Technical Appendix</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

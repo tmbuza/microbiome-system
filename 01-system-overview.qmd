@@ -1,0 +1,78 @@
+# System Overview
+
+:::cdi-message
+- **ID:** MICROB-001
+- **Type:** System Overview
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Understanding the complete microbiome workflow
+:::
+
+## Introduction
+
+Every microbiome project begins with a biological question and ends with a biological conclusion. Between these two points lies a sequence of analytical stages that collectively form the Microbiome System.
+
+Each stage contributes information that influences downstream analyses and ultimately affects the conclusions that can be drawn from the data.
+
+Understanding how these components connect is essential for producing reliable, reproducible, and defensible microbiome research.
+
+## The Microbiome System
+
+```text
+Biological Question
+        ↓
+Study Design & Metadata
+        ↓
+Sample Collection
+        ↓
+DNA Extraction
+        ↓
+Sequencing
+        ↓
+Data Acquisition
+        ↓
+Quality Control
+        ↓
+Taxonomic Profiling
+        ↓
+Functional Profiling
+        ↓
+Diversity Analysis
+        ↓
+Differential Analysis
+        ↓
+Biological Interpretation
+        ↓
+Reproducible Reporting
+```
+
+## From Question to Data
+
+Every successful microbiome study begins with a clearly defined biological question. The question influences study design, sampling strategy, metadata collection, sequencing approach, and downstream analyses.
+
+## From Samples to Sequencing Data
+
+Biological samples are collected, processed, and sequenced. The resulting sequencing reads provide the raw material for microbiome analysis.
+
+## From Raw Data to Features
+
+Raw sequencing data undergo quality control before microbial features are generated. These features may include ASVs, OTUs, taxonomic profiles, and functional profiles.
+
+## From Features to Biological Patterns
+
+Researchers explore biological patterns using taxonomic profiling, functional profiling, diversity analyses, and differential analyses.
+
+## From Results to Biological Insight
+
+Analytical outputs must be interpreted within their biological context. Statistical significance alone does not guarantee biological relevance.
+
+## Reproducibility Throughout the System
+
+Reproducibility should be incorporated throughout the workflow through transparent methods, documented metadata, and reproducible analytical practices.
+
+## How the Chapters Connect
+
+The remaining chapters follow the progression of the Microbiome System. Each chapter focuses on one component while maintaining its connection to the larger workflow.
+
+## What Comes Next
+
+The next chapter begins with Study Design and Metadata, the foundation upon which every successful microbiome project is built.

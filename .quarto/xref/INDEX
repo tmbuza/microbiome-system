@@ -46,5 +46,17 @@
   },
   "999-references.qmd": {
     "999-references.html": "75391ba5"
+  },
+  "00-preface.qmd": {
+    "00-preface.html": "a60136cc"
+  },
+  "01-system-overview.qmd": {
+    "01-system-overview.html": "cae68628"
+  },
+  "02-study-design-and-metadata.qmd": {
+    "02-study-design-and-metadata.html": "a9f7a45f"
+  },
+  "03-sample-collection-and-sequencing.qmd": {
+    "03-sample-collection-and-sequencing.html": "b3848b55"
   }
 }

@@ -1,0 +1,158 @@
+# Sample Collection and Sequencing
+
+:::cdi-message
+- **ID:** MICROB-003
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** From biological samples to sequencing data
+:::
+
+## Introduction
+
+Once a study has been designed and metadata have been collected, the next stage involves obtaining biological material and generating sequencing data.
+
+The quality of microbiome analyses depends heavily on how samples are collected, stored, processed, and sequenced.
+
+For this reason, sample collection and sequencing form a critical link between study design and downstream bioinformatics analyses.
+
+## Why Sample Collection Matters
+
+Microbial communities are highly sensitive to environmental conditions and collection procedures.
+
+Differences in sampling methods can introduce variation that may be mistaken for biological differences.
+
+Consistent protocols help ensure that observed patterns reflect biology rather than technical variation.
+
+## Common Sample Types
+
+Microbiome studies may involve a wide variety of sample types.
+
+Examples include:
+
+- Stool samples
+- Oral samples
+- Skin samples
+- Soil samples
+- Water samples
+- Plant-associated samples
+- Environmental samples
+
+The sample type influences downstream laboratory and analytical procedures.
+
+## Sample Collection Considerations
+
+Important considerations during sample collection include:
+
+- Collection method
+- Collection timing
+- Environmental conditions
+- Sample labeling
+- Metadata recording
+- Transport procedures
+
+Standardized collection protocols improve consistency across samples.
+
+## Sample Preservation and Storage
+
+Samples often require preservation before laboratory processing.
+
+Common approaches include:
+
+- Immediate freezing
+- Stabilization buffers
+- Refrigerated transport
+- Controlled storage conditions
+
+Improper storage can alter microbial composition and affect downstream analyses.
+
+## DNA Extraction
+
+DNA extraction isolates microbial genetic material from collected samples.
+
+Extraction methods can influence:
+
+- DNA yield
+- DNA quality
+- Representation of microbial taxa
+
+Consistent extraction procedures help reduce technical variability.
+
+## Sequencing Approaches
+
+Two common approaches dominate microbiome research.
+
+### 16S rRNA Gene Sequencing
+
+16S sequencing targets conserved regions of the bacterial and archaeal ribosomal RNA gene.
+
+Advantages include:
+
+- Lower cost
+- Simpler analysis workflows
+- Broad taxonomic characterization
+
+Limitations include reduced functional resolution.
+
+### Shotgun Metagenomic Sequencing
+
+Shotgun metagenomics sequences DNA fragments from all organisms present in a sample.
+
+Advantages include:
+
+- Higher taxonomic resolution
+- Functional profiling capabilities
+- Gene-level analyses
+
+Limitations include higher cost and computational requirements.
+
+## Sequencing Platforms
+
+Several sequencing platforms are commonly used.
+
+Examples include:
+
+- Illumina MiSeq
+- Illumina NextSeq
+- Illumina NovaSeq
+
+Platform choice influences read length, throughput, and project cost.
+
+## Sources of Technical Variation
+
+Potential sources of variation include:
+
+- Collection procedures
+- Preservation methods
+- DNA extraction protocols
+- Library preparation methods
+- Sequencing runs
+
+Recognizing these factors is important during downstream interpretation.
+
+## From Samples to FASTQ Files
+
+The primary output of sequencing is typically a set of FASTQ files.
+
+FASTQ files contain:
+
+- Sequence reads
+- Base quality scores
+- Read identifiers
+
+These files represent the starting point for computational microbiome analyses.
+
+## Key Takeaways
+
+Sample collection and sequencing strongly influence data quality.
+
+Researchers should strive to:
+
+- Use consistent collection procedures.
+- Record complete metadata.
+- Apply standardized laboratory protocols.
+- Understand limitations of sequencing approaches.
+- Minimize technical variation whenever possible.
+
+## What Comes Next
+
+The next chapter focuses on Data Acquisition, where sequencing data are organized, validated, and prepared for downstream bioinformatics analyses.

@@ -1,0 +1,140 @@
+# Study Design and Metadata
+
+:::cdi-message
+- **ID:** MICROB-002
+- **Type:** System Component
+- **Audience:** Students, researchers, analysts, and practitioners
+- **Theme:** Building a strong foundation for microbiome studies
+:::
+
+## Introduction
+
+Every microbiome project begins long before sequencing data are generated.
+
+The reliability of downstream analyses depends heavily on decisions made during study design and metadata collection. A well-designed study increases the likelihood that observed microbial patterns reflect biological reality rather than technical artifacts or uncontrolled sources of variation.
+
+For this reason, study design and metadata form the foundation of the Microbiome System.
+
+## Why Study Design Matters
+
+Microbiome analyses are often computationally sophisticated, but even the most advanced analytical methods cannot compensate for a poorly designed study.
+
+Study design influences:
+
+- Statistical power
+- Biological interpretation
+- Reproducibility
+- Generalizability
+- Confidence in conclusions
+
+A strong study design helps ensure that the biological question can be answered using the available data.
+
+## Defining the Biological Question
+
+Every study should begin with a clearly defined biological question.
+
+Examples include:
+
+- Does diet influence gut microbial composition?
+- Are microbial communities different between healthy and diseased individuals?
+- How does antibiotic treatment affect microbiome diversity?
+- Which environmental factors influence soil microbial communities?
+
+The biological question guides all subsequent decisions throughout the workflow.
+
+## Common Study Designs
+
+### Cross-Sectional Studies
+
+Cross-sectional studies compare groups at a single point in time.
+
+### Longitudinal Studies
+
+Longitudinal studies collect repeated measurements over time.
+
+### Case-Control Studies
+
+Case-control studies compare individuals with a condition to matched controls.
+
+### Cohort Studies
+
+Cohort studies follow participants over time and observe outcomes as they occur.
+
+## Replication
+
+Replication is essential in microbiome research.
+
+### Biological Replication
+
+Biological replicates represent independent biological samples.
+
+### Technical Replication
+
+Technical replicates assess variation introduced during laboratory or sequencing procedures.
+
+## Metadata Collection
+
+Metadata describe the samples and conditions associated with microbiome measurements.
+
+Examples include:
+
+- Age
+- Sex
+- Location
+- Diet
+- Treatment status
+- Collection date
+- Environmental conditions
+
+## Confounding Variables
+
+A confounder influences both the exposure and outcome of interest.
+
+Examples include:
+
+- Age
+- Sex
+- Geography
+- Medication use
+- Diet
+
+## Batch Effects
+
+Batch effects are systematic technical differences unrelated to biology.
+
+Potential sources include:
+
+- DNA extraction batches
+- Sequencing runs
+- Laboratory personnel
+- Reagent lots
+
+## Sample Size Considerations
+
+Sample size influences statistical power and the ability to detect meaningful biological patterns.
+
+## Common Pitfalls
+
+Common microbiome study design challenges include:
+
+- Poorly defined biological questions
+- Missing metadata
+- Small sample sizes
+- Unbalanced groups
+- Confounding variables
+- Batch effects
+- Inconsistent sampling procedures
+
+## Key Takeaways
+
+Before generating sequencing data, researchers should ensure that:
+
+- The biological question is clearly defined.
+- Appropriate study designs are selected.
+- Metadata are collected consistently.
+- Confounding variables are considered.
+- Replication is incorporated whenever possible.
+
+## What Comes Next
+
+The next chapter examines Sample Collection and Sequencing, where biological material is transformed into sequencing data that can enter the analytical workflow.
